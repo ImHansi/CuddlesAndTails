@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head th:replace="~{ head :: headFragment}"></head>
+    <head>
+        <style>
+            body{
+                background-color: beige;
+                background-image: none;
+            }
+        </style>
+    </head>
+<body>
+    <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+
+      <!-- title area ends here -->
+      <div class="container">
+        <div class="row mt-2">
+
+        </div>
+
+                    <div class="row" style="
+                    margin-top: 80px;
+                ">
+                        <div class="col-6">
+                            <button type="button" class="btn btnall btn-primary" onclick="printChart()">
+                                <i class="fa-solid fa-print"></i>
+                              </button>
+                            <div class="chart">
+            
+                                <canvas id="barchart" width="500" height="500"></canvas>
+                            </div>
+                            <img id="viewChart" style="display: none; width:150px; height: 100px;">
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card" style="width: 15rem;">
+                                        <img class="card-img-top" src="/resources/images/dogcard.png" alt="Card image cap">
+                                        <div class="card-body">
+        
+                                            <div class="row text-center">
+                                                <a href="/pet" class="card-link">Pet Registration</a>
+                                            </div>
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card" style="width: 15rem;">
+                                        <img class="card-img-top" src="/resources/images/dogcard.png" alt="Card image cap">
+                                    
+                                        <div class="card-body">
+        
+                                            <div class="row text-center">
+                                                <a href="/appointment" class="card-link">Appointment</a>
+                                            </div>
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card" style="width: 15rem;">
+                                        <img class="card-img-top" src="/resources/images/dogcard.png" alt="Card image cap">
+                                    
+                                        <div class="card-body">
+    
+                                            <div class="row text-center">
+                                                <a href="consultation" class="card-link">Consultation</a>
+                                            </div>
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card" style="width: 15rem;">
+                                        <img class="card-img-top" src="/resources/images/dogcard.png" alt="Card image cap">
+                                    
+                                        <div class="card-body">
+        
+                                            <div class="row text-center">
+                                                <a href="vaccinationrecord" class="card-link">Vaccination</a>
+                                            </div>
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+  
+      </div>  
+
+       
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>">
+      <script src="chart1.js"></script>
+</body>
+</html>

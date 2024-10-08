@@ -1,0 +1,45 @@
+.div-title{
+    background-color: rgba(65, 98, 151, 0.882);
+    border-radius: 10;
+}
+
+body{
+    background-image: url(resources/images/group-portrait-adorable-puppies);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.div-card{
+    border: 2px solid rgba(164, 164, 164, 0.411);
+    background-color: rgba(53, 77, 119, 0.371);
+}
+
+.select-input{
+    width: 400px;
+    height: 35px;
+    border-radius: 5px;
+}
+
+textarea{
+    border-radius: 5px;
+}
+
+.btn{
+    width: 100px;
+    height: 33px;
+    margin: 10px;
+    border-radius: 20px;
+}
+
+.btn-clear{background-color: rgba(0, 255, 255, 0.923);}
+.btn-update{background-color: rgb(242, 245, 67);}
+.btn-add{background-color: rgb(241, 102, 171);}
+
+.btn:hover{
+    border: 3px solid rgba(223, 239, 79, 0.444);
+    background-color: rgba(185, 176, 51, 0.684);
+}
+
+.table-header{
+    background-color: rgba(69, 87, 160, 0.778);
+}

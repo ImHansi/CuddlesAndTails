@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <head th:replace="~{ head :: headFragment}"></head>
+
+  <!--link consultation.js-->
+  <script src="consultation.js"></script>
+  <script>
+    //to reset the form after clicking on the X mark
+   document.addEventListener("DOMContentLoaded", function(){
+    var consultationAddModal = document.getElementById('consultationAddModal');
+    var formConsultation = document.getElementById('formConsultation')
+
+    consultationAddModal.addEventListener('hidden.bs.modal', function(){
+      formConsultation.reset();
+    });
+   });
+ </script>
+
+</head>
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Consultation Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#consultationAddModal">
+          Add A Consultation Record
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableConsultation">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Consultation No</th>
+                    <th>Owner</th>
+                    <th>Pet</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Doctor</th>
+                    <th>Total</th>
+                    <th>Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                  
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!-- employee add model -->
+  <div class="modal" id="consultationAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Add a consultation Record</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formConsultation">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+                     <div class="row mt-2">
+                      <div class="col-4"></div>
+                      <div class="col-4">
+                        <div>
+                          <label for="selectAppNo" class="col-form-label fw-bold">
+                            Select Channeling No : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-stethoscope"></i>
+                          </span>
+
+                          <select name="appoNo" required id="selectAppNo"
+                              class="form-select form-input" onchange="selectDValidator(this,'','consultation','appointment_id'); generateOwnerName();">
+                              
+                              <option value="" selected disabled>
+                                Select Channeling No
+                              </option>
+                            </select>
+                        </div>
+                      </div>
+                      <div class="col-4"></div>
+                     </div>
+                     <div class="row mt-2">
+                      
+                      <div class="col-6">
+                        <div>
+                          <label for="selectOwner" class="col-form-label fw-bold">
+                            Owners Name : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-user"></i>
+                          </span>
+
+                          <select name="owner" required id="selectOwner"
+                              class="form-select form-input" onchange="selectDValidator(this,'','consultation','owner_id'); generateOwnerMobile();">
+                              
+                              <option value="" selected disabled>
+                                Select Owner
+                              </option>
+                            </select>
+                        </div>
+                      </div>
+                      <!--mobile starts here-->
+                      <div class="col-6">
+                        <div>
+                          <label for="textMobile" class="col-form-label fw-bold">
+                            Mobile : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-mobile"></i>
+                          </span>
+
+                          <input type="text" id="textMobile" class="form-control" placeholder="Enter Mobile"
+                            required onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','appointment','mobile')" />
+                        </div>
+                      </div>
+                     </div>
+                     <!-- pet name starts here -->
+                    <div class="row mt-2">
+                      <div class="col-6">
+                        <div>
+                          <label for="selectPet" class="col-form-label fw-bold">
+                            Pet Name : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-dog"></i>
+                          </span>
+
+                          <select name="pet" required id="selectPet"
+                              class="form-select form-input" onchange="selectDValidator(this,'','consultation','pet_id');">
+                              
+                              <option value="" selected disabled>
+                                Select Pet
+                              </option>
+                            </select>
+                        </div>
+                      </div>
+                      <!-- pet name ends here -->
+
+                      <!-- date of consultation starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="dateOfConsultation" class="col-form-label fw-bold">
+                            Date Of Consultation : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="date" class="form-control" required id="dateOfConsultation" onchange="textValidator(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','consultation','dateofconsultation')"/>
+                        </div>
+                      </div>
+                      <!-- date of consultation ends here -->
+
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- service starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="selectService" class="col-form-label fw-bold">
+                            Select a Service : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="service" required id="selectService" class="form-select form-input" onchange="selectDValidator(this,'','consultation','service_id'); generateServiceFee();">
+                            <option value="" selected disabled>
+                              Select A Service
+                            </option>
+                            
+                          </select>
+                        </div>
+                      </div>
+                      <!-- service ends here -->
+
+                      
+
+                      <!-- doctor starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="selectDoctor" class="col-form-label fw-bold">
+                            Select a Doctor : <span class="text-danger"></span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="doctor"  id="selectDoctor" class="form-select form-input" onchange="selectDValidator(this,'','consultation','doctor_id'); generateDoctorFee();">
+                            <option value="" selected disabled>
+                              Select A Doctor
+                            </option>
+                            
+                          </select>
+                        </div>
+                      </div>
+                      <!-- doctor ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- service fee starts here -->
+                      <div class="col-6">
+                        <div>
+                            <label for="textServiceFee" class="col-form-label fw-bold">
+                                Service Fee : <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Rs :</span>
+                            <input type="text" class="form-control" id="textServiceFee" placeholder="Enter service Fee" required readonly>
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+                    <!-- service fee ends here -->
+
+                    <!-- doctor fee starts here -->
+                    <div class="col-6">
+                        <div>
+                            <label for="textDoctorFee" class="col-form-label fw-bold">
+                                Doctor Fee : <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Rs :</span>
+                            <input type="text" class="form-control" id="textDoctorFee" placeholder="Enter Doctor Fee"  readonly>
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+                    <!-- doctor fee ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col-3"></div>
+                      <div class="col-6">
+                        <div class="form-floating" style="margin-top: 16px;">
+                          <textarea
+                            name="textareaNote"
+                            id="textNote"
+                            cols="80"
+                            rows="2"
+                            class="form-control"
+                            placeholder="Note"
+                            onkeyup="textValidator(this,'','consultation','note')"
+                          ></textarea>
+                          <label for="" class="form-label fw-bold">
+                            Medical Summary : <span class="text-danger">(optional)</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-3"></div>
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col-3"></div>
+                      <!-- total fee starts here -->
+                    <div class="col-6">
+                      <div class="d-flex justify-content-center">
+                          
+                        <button type="submit" class="btn btn-primary rounded-1" onclick="generateTotalFee()">Calculate Total Amount</button>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text fw-bold">Rs :</span>
+                        <input type="text" class="form-control" id="textTotalFee" placeholder="Click on the button" readonly required>
+                        <span class="input-group-text">.00</span>
+                    </div>
+                  </div>
+                  <!-- total fee ends here -->
+                      <div class="col-3"></div>
+                    </div>
+
+                    
+
+                      
+
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnEmpReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnConsulUpdate" onclick="buttonConsultationUpdate()">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnConsulAdd" onclick="buttonFormSubmit()">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

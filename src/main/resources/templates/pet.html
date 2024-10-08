@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+
+    
+    <script>
+      //to reset the form after clicking on the X mark
+     document.addEventListener("DOMContentLoaded", function(){
+      var petAddModal = document.getElementById('petAddModal');
+      var formPet = document.getElementById('formPet')
+  
+      petAddModal.addEventListener('hidden.bs.modal', function(){
+        formPet.reset();
+      });
+     });
+   </script>
+   <!--link pet.js-->
+   <script src="pet.js"></script>
+   <script src="owner.js"></script>
+  </head>
+  <body>
+    <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+
+    <div class="container-fluid">
+      <div class="row p-4"></div>
+      <!-- <div class="row mt-2">
+            <div class="col-1"></div>
+            <div class="col-10">-->
+
+      <!-- title area starts here -->
+      <div class="row p-3">
+        <div
+          class="col-12 p-3 d-flex justify-content-center div-title text-white"
+        >
+          <i class="fa-solid fa-dog fa-2x"></i>
+          <h2 class="h2 ms-3">Pet Management</h2>
+        </div>
+      </div>
+      <!-- title area ends here -->
+
+      <!-- toggle button starts -->
+      <div class="row mt-2">
+        <div class="col-3 text-end">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#customerAddModal"
+          >
+            Add a Owner
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#customerviewModal"
+          >
+            View Owners
+          </button>
+        </div>
+        <div class="col-8 text-end">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#petAddModal"
+          >
+            Add A Pet
+          </button>
+        </div>
+        <div class="col-1"></div>
+      </div>
+      <!-- toggle button ends -->
+
+      <div class="row mt-3">
+        <div class="col-1"></div>
+        <div class="col-10">
+          <div class="card div-card">
+            <div class="card-body">
+              <!-- table area starts here -->
+
+              <div class="row mt-3">
+                <table class="table table-hover table-bordered table-striped border-primary" id="tablePet">
+                  <thead class="table-header">
+                    <tr>
+                      <th>#</th>
+                      <!-- #,No,Index -->
+                      <th>Tag no</th>
+                      <th>Pet</th>
+                      <th>Type</th>
+                      <th>Gender</th>
+                      <th>Age</th>
+                      <th>Weight</th>
+                      <th>Owner</th>
+                      <th>Mobile</th>
+                      <th>Status</th>
+                      <th>Modify</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-light">
+                    
+                  </tbody>
+                </table>
+              </div>
+              <!-- table area ends here -->
+            </div>
+          </div>
+        </div>
+        <div class="col-1"></div>
+      </div>
+    </div>
+
+    <!--Pet form add model-->
+    <div
+      class="modal"
+      id="petAddModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">Add Pet Here</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- form area start here-->
+            <div class="row mt-2">
+              <div class="col-12">
+                <form onsubmit="return false;" id="formPet">
+                  <div class="card div-card">
+                    <div class="card-body">
+                      <!-- required mark -->
+                      <div class="row mt-2">
+                        <div class="col-12 text-end fw-bold">
+                          <span class="text-danger">*</span> Required
+                        </div>
+                      </div>
+                      <!-- required mark -->
+                  <form onsubmit="return false" id="formPet">
+
+                    <div class="row mt-2">
+                      <div class="col-4"></div>
+                      <div class="col-4">
+                        <div>
+                          <label
+                            for="selectOwner"
+                            class="col-form-label fw-bold"
+                          >
+                            Owner : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select
+                            name="owner"
+                            required
+                            id="selectOwner"
+                            class="form-select form-input"
+                            onchange="selectDValidator(this,'','pet','owner_id');"
+                          >
+                            <option value="" selected disabled>
+                              Select Owner
+                            </option>
+                            
+                          </select>
+                        </div>
+
+                      </div>
+                      
+                      <div class="col-4"> </div>
+                    </div>
+      
+
+                      <div class="row mt-2">
+                        <!-- pet name starts here -->
+                        <div class="col-4">
+                          <div>
+                            <label
+                              for="textPetName"
+                              class="col-form-label fw-bold"
+                            >
+                              Pet Name : <span class="text-danger">*</span>
+                            </label>
+                          </div>
+                          <div class="input-group">
+                            <span class="input-group-text">
+                              <i class="fa-solid fa-dog"></i>
+                            </span>
+
+                            <input
+                              type="text"
+                              id="textPetName"
+                              class="form-control"
+                              placeholder="Enter Pet Name"
+                              required
+                              onkeyup="textValidator(this, '^([A-Z][a-z]{2,20})$', 'pet','name')"
+                            />
+                          </div>
+                        </div>
+                        <!-- pet name ends here -->
+
+                        <!-- type starts here(dog, cat, rabbit,bird, other) -->
+                        <div class="col-3">
+                          <div>
+                            <label
+                              for="selectPetType"
+                              class="col-form-label fw-bold"
+                            >
+                              Type : <span class="text-danger">*</span>
+                            </label>
+                          </div>
+                          <div>
+                            <select
+                              name="pettype"
+                              required
+                              id="selectPetType"
+                              class="form-select form-input"
+                              onchange="selectDValidator(this,'','pet','pettype_id'); filterBreed();"
+                            >
+                              <option value="" selected disabled>
+                                Select Pet Type
+                              </option>
+                              
+                            </select>
+                          </div>
+                          <!-- collapse pettype form  -->
+                          <div class="collapse mt-2" id="collapsePettype">
+                            <div class="card card-body">
+                              <form
+                                onsubmit="return false"
+                                id="pettypeForm"
+                              >
+                                <div class="row">
+                                  <label for="" class="col-4 fw-bold"
+                                    >Name:
+                                  </label>
+                                  <div class="col-6">
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      placeholder="Enter name"
+                                      id="textPettypeName"
+                                      onkeyup="textValidator(this)"
+                                    />
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-12">
+                                    <button class="btn btn-success">
+                                      Add
+                                    </button>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                          <!-- collapse pettype form ends -->
+                        </div>
+                        <!-- type ends here -->
+
+                        <div class="col-1">
+                            <span>
+                                <a
+                                  class="btn btn-primary"
+                                  data-bs-toggle="collapse"
+                                  href="#collapsePettype"
+                                  role="button"
+                                  aria-expanded="false"
+                                  aria-controls="collapsePettype"
+                                  style="margin-top: 36px;"
+                                >
+                                  new
+                                </a>
+                              </span>
+                        </div>
+
+                        <!-- breed starts here -->
+                        <div class="col-4">
+                          <div>
+                            <label
+                              for="selectPetBreed"
+                              class="col-form-label fw-bold"
+                            >
+                              Breed : <span class="text-danger">*</span>
+                            </label>
+                          </div>
+                          <div>
+                            <select
+                              name="petbreed"
+                              required
+                              id="selectPetBreed"
+                              class="form-select form-input"
+                              onchange="selectDValidator(this,'','pet','breed_id')"
+                            >
+                              <option value="" selected disabled>
+                                Select Breed
+                              </option>
+                              
+                            </select>
+                          </div>
+                        </div>
+                        <!-- breed ends here -->
+                      </div>
+
+                      <div class="row mt-2">
+                        <!--weight starts here-->
+                        <div class="col-4">
+                          <div>
+                            <label
+                              for="textWeight"
+                              class="col-form-label fw-bold"
+                            >
+                              Weight :
+                              <span class="text-danger">(optional)</span>
+                            </label>
+                          </div>
+                          <div class="input-group">
+                            <span class="input-group-text">
+                              <i class="fa-solid fa-weight-scale"></i>
+                            </span>
+
+                            <input
+                              type="text"
+                              id="textWeight"
+                              class="form-control"
+                              placeholder="Enter Weight"
+                              onkeyup="textValidator(this,'^([1-9][0-9]{0,1})$','pet','weight')"
+                            />
+                          </div>
+                        </div>
+                        <!--weight ends here-->
+                        <!--gender starts here-->
+                        <div class="col-4">
+                          <div>
+                            <label for="radioMale" class="form-label fw-bold">
+                              Gender : <span class="text-danger">*</span>
+                            </label>
+                          </div>
+
+                          <div class="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              required
+                              id="radioGenderMale"
+                              value="Male"
+                              class="form-check-input"
+                              name="gender"
+                              onchange="pet.gender=this.value"
+                            />
+                            <label
+                              for="radioMale"
+                              class="form-check-label fw-bold"
+                            >
+                              Male</label
+                            >
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              required
+                              id="radioGenderFemale"
+                              value="Female"
+                              class="form-check-input"
+                              name="gender"
+                              onchange="pet.gender=this.value"
+                            />
+                            <label
+                              for="radioFemale"
+                              class="form-check-label fw-bold"
+                            >
+                              Female</label
+                            >
+                          </div>
+                        </div>
+                        <!--gender ends here-->
+                        <!--age starts here-->
+                        <div class="col-4">
+                          <div>
+                            <label
+                              for="textAge"
+                              class="col-form-label fw-bold"
+                            >
+                              Age : <span class="text-danger">*</span>
+                            </label>
+                          </div>
+                          <div>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Enter age"
+                              required
+                              id="textAge"
+                              onkeyup="textValidator(this,'^([1-9][0-9]{0,1})$','pet','age')"
+                            />
+                          </div>
+                        </div>
+                        <!--age ends here-->
+                      </div>
+
+                      <div class="row mt-2">
+                        <!-- image starts here -->
+                        <div class="col-6">
+                          <div>
+                            <label for="filePetImage" class="form-label fw-bold">
+                                Image : <span class="text-danger">(optional)</span>
+                              </label>
+                          </div>
+                          <div style="margin-top: 5px;">
+
+                            <input type="file" class="form-control" id="filePetImage" onchange="validateFileField(this,'pet','image','oldpet')">
+                        
+                          </div>
+                        </div>
+                        <!-- image ends here -->
+                        <!-- note starts here -->
+                        <div class="col-6">
+                            <div class="form-floating" style="margin-top: 16px;">
+                              <textarea
+                                name="textareaNote"
+                                id="textNote"
+                                cols="80"
+                                rows="2"
+                                class="form-control"
+                                placeholder="Note"
+                                onkeyup="textValidator(this,'','pet','note')"
+                              ></textarea>
+                              <label for="" class="form-label fw-bold">
+                                Note : <span class="text-danger">(optional)</span>
+                              </label>
+                            </div>
+                          </div>
+                          <!-- note ends here -->
+                      </div>
+
+                      <div class="row mt-2">
+                        <!-- clear button starts here-->
+                        <div class="col-4">
+                          <button
+                            class="btn btn-danger rounded-1"
+                            type="button"
+                            id="btnPetReset"
+                          >
+                            <i class="fa-solid fa-rotate-right"></i> Reset
+                          </button>
+                        </div>
+                        <!-- clear button ends here -->
+
+                        <div class="col-4"></div>
+
+                        <!-- update & add button starts here -->
+                        <div class="col-4 d-flex justify-content-center">
+                          <button
+                            class="btn btn-warning text-white rounded-1"
+                            disabled
+                            type="button"
+                            id="btnPetUpdate"
+                            onclick="buttonPetUpdate()"
+                          >
+                            <i class="fa-solid fa-arrows-rotate"></i> Update
+                          </button>
+                          <button
+                            class="btn btn-success rounded-1"
+                            type="submit"
+                            id="btnPetAdd"
+                            onclick="buttonFormSubmit()"
+                          >
+                            <i class="fa-solid fa-plus"></i> Submit
+                          </button>
+                        </div>
+                        <!-- update & add button ends here -->
+                      </div>
+                    </form>
+                  </div>
+                    </div>
+                  </div>
+                </form>
+                <!-- form area ends -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--owner table starts here-->
+
+    <div
+      class="modal"
+      id="customerviewModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">Owner Details</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            
+            <div class="row mt-2">
+              <div class="col-12">
+                <table class="table table-hover table-bordered table-striped border-primary" id="tableOwner">
+                  <thead class="table-header">
+                    <tr>
+                      <th>#</th>
+                      <!-- #,No,Index -->
+                      <th>Name</th>
+                      <th>NIC</th>
+                      <th>Mobile No</th>
+                      <th>Email</th>
+                      <th>Address</th>
+                      <th>Modify</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-light">
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--owner table ends here-->
+
+    <!--owner add modal-->
+    <div
+      class="modal"
+      id="customerAddModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">Add a Owner</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            
+            <div class="row mt-2">
+              <div class="col-12">
+                <form onsubmit="return false" id="formOwner">
+                  <h3>Enter Owner Details</h3>
+                  <div class="row mt-2">
+                      <!-- owners name starts here -->
+                      <div class="col-4">
+                          <div>
+                              <label for="textOwnersName" class="col-form-label fw-bold">
+                                  Owners Name : <span class="text-danger">*</span>
+                              </label>
+                          </div>
+                          <div class="input-group">
+                              
+                                  <span class="input-group-text">
+                                  <i class="fa-solid fa-user"></i>
+                                  </span>
+                              
+                              <input type="text" id="textOwnersName" class="form-control" placeholder="Enter Owners Name" required 
+                              onkeyup="textValidator(this,'^([A-Z][a-z]{2,15}[\\s]){1,10}([A-Z][a-z]{2,15}){1}$','owner','name')">
+                          </div>
+                      </div>
+                      <!-- owners name ends here -->
+      
+                      <!-- nic starts here -->
+                      <div class="col-4">
+                          <div>
+                              <label for="textNic" class="col-form-label fw-bold">
+                                  NIC : <span class="text-danger">*</span>
+                              </label>
+                          </div>
+                          <div class="input-group">
+                                  <span class="input-group-text">
+                                  <i class="fa-solid fa-id-badge"></i>
+                                  </span>
+                              
+                              <input type="text" id="textNic" class="form-control" placeholder="Enter NIC" 
+                              onkeyup="textValidator(this,'^([6789][0-9]{8}[VX])|(([1][9])|([2][0]))([0-9]{10})$','owner','nic')">
+                          </div>
+                      </div>
+                      <!-- nic ends here -->
+      
+                      <!-- mobile no starts here -->
+                      <div class="col-4">
+                          <div>
+                              <label for="textMobileNo" class="col-form-label fw-bold">
+                                  Mobile No : <span class="text-danger">*</span>
+                              </label>
+                          </div>
+                          <div class="input-group">
+                              <span class="input-group-text">
+                                  <i class="fa-solid fa-phone"></i>
+                              </span>
+                              
+                              <input type="text" id="textMobileNo" class="form-control" placeholder="Enter Mobile No" required 
+                              onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','owner','mobile')">
+                          </div>
+                      </div>
+                      <!-- mobile no ends here -->
+                  </div>
+      
+                  <div class="row mt-2">
+      
+                      <!-- email starts here -->
+                      <div class="col-6">
+                          <div>
+                              <label for="textEmail" class="col-form-label fw-bold">
+                                  Email : <span class="text-danger">*</span>
+                              </label>
+                          </div>
+                          <div class="input-group">
+                                  <span class="input-group-text">
+                                  <i class="fa-solid fa-envelope"></i>
+                                  </span>
+                              
+                              <input type="email" id="textEmail" class="form-control" placeholder="Enter Email" 
+                              onkeyup="textValidator(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','owner','email')">
+                          </div>
+                      </div>
+                      <!-- email ends here -->
+      
+                      <!-- address starts here -->
+                      <div class="col-6" style="padding-top: 18px;">
+                        <div class="form-floating">
+                          <textarea
+                            name="textareaAddress"
+                            id="textAddress"
+                            cols="80"
+                            rows="2"
+                            class="form-control"
+                            placeholder="Address"
+                            required
+                            onkeyup="textValidator(this,'^.*$','owner','address')"
+                          ></textarea>
+                          <label for="textAddress" class="form-label fw-bold">
+                            Address : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- address ends here -->
+      
+                  </div>
+                  <br><br>
+                  <div class="row mt-2">
+                    <!-- clear button starts here-->
+                    <div class="col-4">
+                      <button
+                        class="btn btn-danger rounded-1"
+                        type="button"
+                        id="btnOwnerReset"
+                      >
+                        <i class="fa-solid fa-rotate-right"></i> Reset
+                      </button>
+                    </div>
+                    <!-- clear button ends here -->
+
+                    <div class="col-4"></div>
+
+                    <!-- update & add button starts here -->
+                    <div class="col-4 d-flex justify-content-center">
+                      <button
+                        class="btn btn-warning text-white rounded-1"
+                        disabled
+                        type="button"
+                        id="btnOwnerUpdate"
+                        onclick="buttonOwnerUpdate()"
+                      >
+                        <i class="fa-solid fa-arrows-rotate"></i> Update
+                      </button>
+                      <button
+                        class="btn btn-success rounded-1"
+                        type="submit"
+                        id="btnOwnerAdd"
+                        onclick="buttonOwnerSubmit()"
+                      >
+                        <i class="fa-solid fa-plus"></i> Submit
+                      </button>
+                    </div>
+                    <!-- update & add button ends here -->
+                  </div>
+                  
+                 
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--owner add modal ends-->
+    
+  </body>
+</html>

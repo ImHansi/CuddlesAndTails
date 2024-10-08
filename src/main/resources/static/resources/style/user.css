@@ -1,0 +1,82 @@
+body{
+    background-image: url(../images/group-portrait-adorable-puppies.jpg);
+    background-size:cover ;
+    background-repeat: no-repeat;
+    font-size: large;
+}
+
+form{
+    background-color: rgba(137, 43, 226, 0.199);
+    width: 600px;
+    margin-top: 50px;
+    margin-left: 400px;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 30px;
+
+    box-shadow: 0px 5px 10px 0px rgba(255, 192, 203, 0.329);
+    transition: transform ease 0.5s, box-shadow ease 0.5s;
+}
+
+label{
+    font-weight: bold;
+}
+
+.td-label{
+    width: 200px;
+}
+
+.td-input{
+    width: 300px;
+}
+
+.form-input{
+    width: 280px;
+    height: 32px;
+    border-radius: 10px;
+}
+
+select{
+    width: 286px;
+    height: 32px;
+    border-radius: 10px;
+}
+
+.form-input:hover{
+    border: 3px solid blueviolet;
+    width: 285px;
+    height: 35px;
+}
+
+select:hover{
+    border: 3px solid blueviolet;
+    width: 290px;
+    height: 35px;
+
+}
+
+.btn{
+    width: 100px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 30px;
+}
+
+.btn:hover{
+    border: 3px solid blueviolet;
+}
+
+.btn-clear{background-color: rgba(0, 255, 255, 0.905);}
+.btn-update{background-color: rgba(180, 176, 46, 0.833);}
+.btn-add{background-color: rgba(183, 98, 165, 0.925);}
+
+button:hover{
+    border: 2px solid beige;
+    width: 100px;
+    height: 35px;
+
+}
+
+form:hover{
+    border: 3px solid blueviolet;
+}

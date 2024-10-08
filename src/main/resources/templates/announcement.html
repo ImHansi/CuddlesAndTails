@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <head th:replace="~{ head :: headFragment}"></head>
+
+  <!--link announcement.js-->
+  <script src="announcement.js"></script>
+  <script>
+    //to reset the form after clicking on the X mark
+   document.addEventListener("DOMContentLoaded", function(){
+    var announcementAddModal = document.getElementById('announcementAddModal');
+    var formAnnouncement = document.getElementById('formAnnouncement')
+
+    announcementAddModal.addEventListener('hidden.bs.modal', function(){
+      formAnnouncement.reset();
+    });
+   });
+ </script>
+
+</head>
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Announcement Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#announcementAddModal">
+          Add An Announcement
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableAnnouncement">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Published Date</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Image </th>
+                    <th>Date of event</th>
+                    <th>Duration</th>
+                    <th>Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                  
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!-- employee add model -->
+  <div class="modal" id="announcementAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Add an announcement</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formAnnouncement">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    <div class="row mt-2">
+                      <!-- date of publication starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="dateOfPublication" class="col-form-label fw-bold">
+                            Date Of Publication : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="date" class="form-control" required id="dateOfPublication" onchange="textValidator(this, '[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','announcement','dateofpublication')"/>
+                        </div>
+                      </div>
+                      <!-- date of publication ends here -->
+
+                      <!-- title name starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="textTitle" class="col-form-label fw-bold">
+                            Title :
+                            <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-newspaper"></i>
+                          </span>
+
+                          <input type="text" id="textTitle" class="form-control" placeholder="Enter Title" required/>
+                        </div>
+                      </div>
+                      <!-- title name ends here -->
+
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- description starts here -->
+                      <div class="col-6">
+                        <div class="form-floating">
+                          <textarea name="textareaDescription" id="textDescription" cols="80" rows="2" class="form-control"
+                            placeholder="Description"></textarea>
+                          <label for="textDescription" class="form-label fw-bold">
+                            Description : <span class="text-danger">(optional)</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- description ends here -->
+
+                      
+
+                      <!-- image starts here -->
+                      <div class="col-6">
+                          <label for="textImage" class="form-label fw-bold">
+                            Image : <span class="text-danger">(optional)</span>
+                          </label>
+                          <input type="file" class="form-control" id="fileAnnoImage" onchange="validateFileField(this,'announcement','image','imagename','oldannouncement')">
+                        
+                      </div>
+                      <!-- image ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- date of event starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="dateOfEvent" class="col-form-label fw-bold">
+                            Date Of Event : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="date" class="form-control" required id="dateOfEvent" />
+                        </div>
+                      </div>
+                      <!-- date of event ends here -->
+                      
+                      <!-- duration starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="textDuration" class="col-form-label fw-bold">
+                            Duration :
+                            <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-clock"></i>
+                          </span>
+
+                          <input type="text" id="textDuration" class="form-control" placeholder="Enter Duration" required/>
+                        </div>
+                      </div>
+                      <!-- duration ends here -->
+                    </div>
+
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnAnnounceReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnAnnounceUpdate" onclick="buttonAnnouncementUpdate()">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnAnnounceAdd" onclick="buttonFormSubmit()">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

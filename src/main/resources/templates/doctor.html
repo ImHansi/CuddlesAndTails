@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <head th:replace="~{ head :: headFragment}"></head>
+
+  <!--link doctor.js-->
+  <script src="doctor.js"></script>
+  <script src="availabilitydoc.js"></script>
+  <script>
+    //to reset the form after clicking on the X mark
+   document.addEventListener("DOMContentLoaded", function(){
+    var doctorAddModal = document.getElementById('doctorAddModal');
+    var formDoctor = document.getElementById('formDoctor')
+
+    doctorAddModal.addEventListener('hidden.bs.modal', function(){
+      formDoctor.reset();
+    });
+   });
+ </script>
+</head>
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Doctor Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-4">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#availabilityAddModal">
+          Doctor Availability
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#availabilityTableModal">
+          View Availability
+        </button>
+      </div>
+      <div class="col-6 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#doctorAddModal">
+          Add New Doctor
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableDoctor">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Doc No</th>
+                    <th>Full Name</th>
+                    <th>Lisence No</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Specialization</th>
+                    <th>Status</th>
+                    <th style="width: 140px;">Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                  
+                
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!-- doctor add model -->
+  <div class="modal" id="doctorAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Add Doctor</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formDoctor">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    <!-- full name starts here -->
+                    <div class="row mt-2">
+                      <label for="textFullName" class="col-3 col-form-label fw-bold">
+                        Full Name : <span class="text-danger"> * </span>
+                      </label>
+                      <div class="col-9">
+                        <input type="text" id="textFullName" class="form-control" placeholder="Enter Full Name"
+                          required onkeyup="textValidator(this,'^([A-Z][a-z]{2,15}[\\s]){1,10}([A-Z][a-z]{2,15}){1}$','doctor','fullname')"/>
+                      </div>
+                    </div>
+                    <!-- full name ends here-->
+
+                    <div class="row mt-2">
+                      <!-- Lisence No starts here -->
+                      <div class="col-3">
+                        <div>
+                          <label for="textLisenceNo" class="col-form-label fw-bold">
+                             Lisence No : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="text" id="textLisenceNo" class="form-control" placeholder="Enter Lisence No"
+                          required onkeyup="textValidator(this,'^[0-9]{5}$','doctor','licenseno')"/>
+                        </div>
+                      </div>
+                      <!-- Lisence No ends here -->
+
+                      <!-- nic starts here -->
+                      <div class="col-3">
+                        <div>
+                          <label for="textNic" class="col-form-label fw-bold">
+                            NIC : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="text" id="textNic" class="form-control" placeholder="Enter NIC" required onkeyup="textValidator(this,'^([6789][0-9]{8}[VX])|(([1][9])|([2][0]))([0-9]{10})$','doctor','nic')"/>
+                        </div>
+                      </div>
+                      <!-- nic ends here -->
+
+                      <!-- gender starts here -->
+                      <div class="col-3">
+                        <div>
+                          <label for="radioMale" class="form-label fw-bold">
+                            Gender : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                          <input type="radio" required id="radioGenderMale" value="Male" class="form-check-input"
+                            name="gender" onchange="doctor.gender=this.value"/>
+                          <label for="radioMale" class="form-check-label fw-bold">
+                            Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input type="radio" required id="radioGenderFemale" value="Female" class="form-check-input"
+                            name="gender" onchange="doctor.gender=this.value"/>
+                          <label for="radioFemale" class="form-check-label fw-bold">
+                            Female</label>
+                        </div>
+                      </div>
+                      <!-- gender ends here -->
+
+                      <!-- date of birth starts here -->
+                      <div class="col-3">
+                        <div>
+                          <label for="dateOfBirth" class="col-form-label fw-bold">
+                            Date Of Birth : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="date" class="form-control" required id="dateOfBirth" onchange="textValidator(this,'^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','doctor','dob')"/>
+                        </div>
+                      </div>
+                      <!-- date of birth ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- mobile no starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textMobileNo" class="col-form-label fw-bold">
+                            Mobile No : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-mobile"></i>
+                          </span>
+
+                          <input type="text" id="textMobileNo" class="form-control" placeholder="Enter Mobile No"
+                            required onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','doctor','mobileno','olddoctor')"/>
+                        </div>
+                      </div>
+                      <!-- mobile no ends here -->
+
+                      <!-- land no starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textLandNo" class="col-form-label fw-bold">
+                            Land No :
+                            <span class="text-danger">(optional)</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-phone"></i>
+                          </span>
+
+                          <input type="text" id="textLandNo" class="form-control" placeholder="Enter Land No" onkeyup="textValidator(this,'^[0][1234568][12345678][0-9]{7}$','doctor','landno')"/>
+                        </div>
+                      </div>
+                      <!-- land no ends here -->
+
+                      <!-- email starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textEmail" class="col-form-label fw-bold">
+                            Email : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-envelope"></i>
+                          </span>
+
+                          <input type="email" id="textEmail" class="form-control" placeholder="Enter Email Address"
+                            required onkeyup="textValidator(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','doctor','email')"/>
+                        </div>
+                      </div>
+                      <!-- email ends here -->
+                    </div>
+
+                    <div class="row mt-3">
+                      <!-- Address starts here -->
+                      <div class="col-6">
+                        <div class="form-floating">
+                          <textarea name="textareaAddress" id="textAddress" cols="80" rows="2" class="form-control"
+                            placeholder="Address" required onkeyup="textValidator(this,'^.*$','doctor','address')"></textarea>
+                          <label for="textAddress" class="form-label fw-bold">
+                            Address : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- Address ends here -->
+
+                      <!-- note starts here -->
+                      <div class="col-6">
+                        <div class="form-floating">
+                          <textarea name="textareaNote" id="textNote" cols="80" rows="2" class="form-control"
+                            placeholder="Note" onkeyup="textValidator(this,'','doctor','note')"></textarea>
+                          <label for="" class="form-label fw-bold">
+                            Note : <span class="text-danger">(optional)</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- note ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- Specialization starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="selectSpecialization" class="col-form-label fw-bold">
+                            Specialization : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          
+                          <select name="specialization" required id="selectSpecialization" class="form-select form-input" onchange="selectDValidator(this,'','doctor','specialization_id');generateDoctorFee();">
+                            <!--; updateSpecialization(this.value)-->
+                          
+                          </select>
+                      
+                        
+                        </div>
+                        <!-- collapse specialization for  -->
+                        <div class="collapse mt-2" id="collapseSpecial">
+                          <div class="card card-body">
+                           <form onsubmit="return false" id="specializationForm">
+                              <div class="row">
+                                  <label for="" class="col-4 fw-bold">Name: </label>
+                                  <div class="col-6">
+                                      <input type="text" class="form-control" placeholder="Enter name" id="textSpecializationName"
+                                      onkeyup="textValidator(this, '', 'specializationob', 'name', 'specializationoldob')">
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-12">
+                                      <button class="btn btn-success" onclick="btnSpecializationSubmit()"> Add </button>
+                                  </div>
+                              </div>
+                          </form>
+                          </div>
+                        </div>
+                        <!-- collapse specialization for ends -->
+                        </div>
+                      <!-- Specialization ends here -->
+                       <div class="col-1">
+
+                        <span>
+                          <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseSpecial" role="button" aria-expanded="false" aria-controls="collapseSpecial" style="margin-top: 36px;">
+                             new
+                            </a>
+                      </span>
+                       </div>
+
+                      <!-- civilstatus starts here -->
+                      <div class="col-3">
+                        <div>
+                          <label for="selectCivilstatus" class="col-form-label fw-bold">
+                            Civil Status : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="civilstatus" required id="selectCivilstatus" class="form-select form-input" onchange="selectStaticValidator(this,'','doctor','civilstatus')">
+                            <option value="" selected disabled>
+                              Select Civilstatus
+                            </option>
+                            <option value="married">Married</option>
+                            <option value="unmarried">Unmarried</option>
+                          </select>
+                        </div>
+                      </div>
+                      <!-- civilstatus ends here -->
+
+                      <!-- employee status starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="selectEmployeeStatus" class="col-form-label fw-bold">
+                            Employee Status :
+                            <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="employeeStatus" required id="selectEmployeeStatus"
+                            class="form-select form-input" onchange="selectDValidator(this,'','doctor','employeestatus_id')">
+                            <!--; updateEmployeeStatus(this.value)-->
+                            <!-- <option value="" disabled selected>
+                              Select Employee Status
+                            </option> -->
+                            
+                          </select>
+                        </div>
+                      </div>
+                      <!-- employee status ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col-2"> </div>
+                      <div class="col-4">
+                        <div>
+                          <label for="textDoctorFee" class="col-form-label fw-bold">
+                            Doctor Fee :
+                            <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                          </span>
+
+                          <input type="text" id="textDoctorFee"required readonly class="form-control" placeholder="Doctor Fee" onkeyup="textValidator(this,'','doctor','doctorfee')"/>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div>
+                          <label for="selectAvailableType" class="col-form-label fw-bold">
+                            Available Type : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="availabletype" required id="selectAvailableType" class="form-select form-input" onchange="selectStaticValidator(this,'','doctor','doctoravailabilitytype')">
+                            <option value="" selected disabled>
+                              Select Available Type
+                            </option>
+                            <option value="housedoctor">House Doctor</option>
+                            <option value="visitingdoctor">Visiting Doctor</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-2"> </div>
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnDoctorReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnUpdateDoctor" onclick="buttonDoctorUpdate()">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnAddDoctor" onclick="buttonFormSubmit()">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--availability form-->
+  <div class="modal" id="availabilityAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Availability of Doctor</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formAvailabilityDoctor">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                   
+                    <div class="row mt-2">
+
+                      <!-- doctor select -->
+                      <div class="col-6">
+                        <div>
+                          <label for="selectDoctor" class="col-form-label fw-bold">
+                            Doctor : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="doctor" required id="selectDoctor" class="form-select form-input" onchange="selectDValidator(this,'','doctoravailability','doctor_id')">
+                            
+                          </select>
+                        </div>
+                      </div>
+                       <!-- doctor select ends here -->
+
+                        <!-- Month select -->
+                      <div class="col-6">
+                        <div>
+                          <label for="textMonth" class="col-form-label fw-bold">
+                            Month : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          
+                          <input type="month" class="form-control" required id="textMonth" onchange="textValidator(this,'','doctoravailability','month');"/>
+                        </div>
+                      </div>
+                       <!-- Month select here-->
+                      
+                    </div>
+                    
+
+                    <div class="row mt-2">
+
+                      <!-- start date here-->
+                      <div class="col-6">
+                        <div>
+                          <label for="startDate" class="col-form-label fw-bold">
+                            Start Date : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="date" class="form-control" required id="startDate" onchange="textValidator(this,'^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','doctoravailability','startdate'); getSeventhDay();"/>
+                        </div>
+                      </div>
+                       <!-- start date ends here-->
+
+                        <!-- end date here-->
+                      <div class="col-6">
+                        <div>
+                          <label for="endDate" class="col-form-label fw-bold">
+                            End Date : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="date" class="form-control" required id="endDate" 
+                          onchange="textValidator(this,'^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','doctoravailability','enddate')"/>
+                        </div>
+                      </div>
+                       <!-- start date ends here-->
+                      
+                    </div>
+
+                    <div class="row mt-3">
+
+                      <div class="card div-card">
+                        <div class="card-body"  id="formAvailability">
+                            <div class="row mt-2">
+                             <!--date-->
+                             <div class="col-6">
+   
+                               <div>
+                                 <label for="availableDate" class="col-form-label fw-bold">
+                                   Date : <span class="text-danger">*</span>
+                                 </label>
+                               </div>
+                               <div>
+                                
+                          <input type="date" class="form-control" required id="availableDate" 
+                          onchange="textValidator(this,'^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','availability','date'); validateSelectedDate();"/>
+                                </div>
+   
+                             </div>
+                             <!--availability yes no-->
+                             <div class="col-6">
+                               <div>
+                                 <label for="radioYes" class="form-label fw-bold">
+                                   Available : <span class="text-danger">*</span>
+                                 </label>
+                               </div>
+       
+                               <div class="form-check form-check-inline">
+                                 <input type="radio" id="radioAvailableYes" value="Yes" class="form-check-input"
+                                   name="available" onchange="availability.availableornot=this.value"/>
+                                 <label for="radioYes" class="form-check-label fw-bold">
+                                   Yes</label>
+                               </div>
+                               <div class="form-check form-check-inline">
+                                 <input type="radio" id="radioAvailableNo" value="No" class="form-check-input"
+                                   name="available" onchange="availability.availableornot=this.value"/>
+                                 <label for="radioNo" class="form-check-label fw-bold">
+                                   No</label>
+                               </div>
+                             </div>
+                            </div>
+   
+                            <div class="row mt-2">
+                             <div class="col-6">
+                               <div>
+                                 <label for="startTime" class="col-form-label fw-bold">
+                                   Start Time : <span class="text-danger">*</span>
+                                 </label>
+                               </div>
+                               <div>
+                                 <input type="time" class="form-control" id="startTime" onchange="textValidator(this,'','availability','strat_time')"/>
+                               </div>
+                             </div>
+                             <div class="col-6">
+                               <div>
+                                 <label for="endTime" class="col-form-label fw-bold">
+                                   End Time : <span class="text-danger">*</span>
+                                 </label>
+                               </div>
+                               <div>
+                                 <input type="time" class="form-control" id="endTime" onchange="textValidator(this,'','availability','end_time')"/>
+                               </div>
+                             </div>
+   
+                            </div>
+                            <div class="row mt-2">
+                             <div class="col-4"></div>
+                             <!-- update & add button starts here -->
+                               <div class="col-4 d-flex justify-content-center">
+                                 <button type="reset" class="btn btn-danger rounded-1" id="btnResetAvailability">
+                                   <i class="fa-solid fa-rotate-right"></i> Reset
+                                 </button>
+                                 <button type="submit" class="btn btn-success rounded-1" id="btnAddAvailability" onclick="innerSubmit()">
+                                   <i class="fa-solid fa-plus"></i> Add
+                                 </button>
+                               </div>
+                             <!-- update & add button ends here -->
+                             <div class="col-4"></div>
+                            </div>
+
+                            <div class="row mt-2">
+                              <table class="table table-hover table-bordered table-striped border-primary" id="tableInner">
+                                <thead class="table-header">
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Start time</th>
+                                    <th>End time</th>
+                                  </tr>
+                                </thead>
+                                <tbody class="table-light">
+                                  
+                                </tbody>
+                                
+                              </table>
+                            </div>
+   
+                        
+                        </div>
+                      </div>
+
+                      
+                      
+                    </div>
+
+                    
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnAVDoctorReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnUpdateAVDoctor" onclick="buttonADoctorUpdate()">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnAddAVDoctor" onclick="buttonAVSubmit()">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--availability form ends-->
+
+  <!--availability table starts here-->
+  <div class="modal" id="availabilityTableModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Availability of Doctor Table</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mt-3">
+            <table class="table table-hover table-bordered table-striped border-primary" id="tableDoctorAvailability">
+              <thead class="table-header">
+                <tr>
+                  <th>#</th>
+                  <th>Doctor</th>
+                  <th>Month</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th style="width: 140px;">Modify</th>
+                </tr>
+              </thead>
+              <tbody class="table-light">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--availability table ends here-->
+</body>
+
+</html>

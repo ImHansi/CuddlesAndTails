@@ -1,0 +1,16 @@
+.btnall{
+    width: 130px;
+    height: 33px;
+    margin: 10px;
+    border-radius: 20px;
+    margin-right: 5px;
+}
+
+.btn-clear{background-color: rgba(0, 255, 255, 0.923);}
+.btn-update{background-color: rgb(242, 245, 67);}
+.btn-add{background-color: rgb(241, 102, 171);}
+
+.btn:hover{
+    border: 3px solid blueviolet;
+    background-color: rgba(171, 109, 228, 0.684);
+}

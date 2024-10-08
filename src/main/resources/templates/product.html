@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+  
+    <!--link appointment.js-->
+    <script src="product.js"></script>
+    <!--<script>
+      //to reset the form after clicking on the X mark
+     document.addEventListener("DOMContentLoaded", function(){
+      var appointmentAddModal = document.getElementById('appointmentAddModal');
+      var formAppointment = document.getElementById('formAppointment')
+  
+      appointmentAddModal.addEventListener('hidden.bs.modal', function(){
+        formAppointment.reset();
+      });
+     });
+   </script>-->
+  
+  
+  </head>
+
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Product Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stockAddModal">
+          Add New Stock
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productAddModal">
+          Add New Product
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableProduct">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>Net Weight</th>
+                    <th>Sales Price</th>
+                    <th>Quantity</th>
+                    <th>Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                  <tr>
+                    <td>1</td>
+                    <td>Water Trout</td>
+                    <td>Happy Cat MIS Culinary Spring</td>
+                    <td>85g</td>
+                    <td>5</td>
+                    <td>Rs.450.00</td>
+                    <td>
+                      <button type="button" class="btn btnall btn-info">
+                        <i class="fa-solid fa-pen-to-square"></i> Update</button>
+                      <button type="button" class="btn btnall btn-danger">
+                        <i class="fa-solid fa-trash"></i> Delete</button>
+                      <button type="button" class="btn btnall btn-success">
+                        <i class="fa-solid fa-eye"></i> Print</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!-- product add model -->
+  <div class="modal" id="productAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Add Product</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formProduct">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    <!-- Product code starts here -->
+                    <div class="row mt-2">
+                      <div class="col-3"></div>
+                        <div class="col-2 d-flex justify-content-end">
+                        <label for="textProductCode" class="col-form-label fw-bold">
+                            Product Code : <span class="text-danger">*</span>
+                        </label>
+                        </div>
+                        <div class="col-4">
+                        <input type="text" id="textProductCode" class="form-control" placeholder="Enter Product Code" required>
+                        </div>
+                        <div class="col-3"></div>
+                    </div>
+                    <!-- Product code ends here-->
+
+                    <div class="row mt-2">
+                      <!-- brand name starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="selectbrand" class="col-form-label fw-bold">
+                              Brand : <span class="text-danger">*</span>
+                          </label>
+                          </div>
+                          <div>
+                          <select name="brand" id="selectbrand" class="form-select" required>
+                              <option value="" selected disabled>Select Brand</option>
+                              <option value="a">A</option>
+                              <option value="b">B</option>
+                          </select>
+                          </div>
+                      </div>
+                      <!-- brand name ends here -->
+
+                      <!-- product name starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textProductName" class="col-form-label fw-bold">
+                              Product Name : <span class="text-danger">*</span>
+                          </label>
+                      </div>
+                      <div>
+                          <input type="text" id="textProductName" class="form-control" placeholder="Enter Product Name" required>
+                      </div>
+                      </div>
+                      <!-- product name ends here -->
+
+                      <!-- weight starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textWeight" class="col-form-label fw-bold">
+                              Weight : <span class="text-danger">*</span>
+                          </label>
+                      </div>
+                        <div class="input-group">
+                          <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Unit</button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item">Kg</a>
+                              <a class="dropdown-item">g</a>
+                              <a class="dropdown-item">L</a>
+                              <a class="dropdown-item">ml</a>
+                              <a class="dropdown-item"></a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- weight ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- purchase price starts here -->
+                      <div class="col-6">
+                        <div>
+                            <label for="textpurchaseprice" class="col-form-label fw-bold">
+                                Purchase Price : <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Rs :</span>
+                            <input type="text" class="form-control" id="textpurchaseprice" placeholder="Enter Purchase Price" required>
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+                    <!-- purchase price ends here -->
+
+                    <!-- sales price starts here -->
+                    <div class="col-6">
+                        <div>
+                            <label for="" class="col-form-label fw-bold">
+                                Sales Price : <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Rs :</span>
+                            <input type="text" class="form-control" id="textsalesprice" placeholder="Enter Sales Price" required>
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+                    <!-- sales price ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnProductReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnProductUpdate">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnProductAdd">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--new stock add modal-->
+  <div class="modal" id="stockAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Add New Stock</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formStock">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    <div class="row mt-2">
+                      <!-- brand name starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="selectbrand" class="col-form-label fw-bold">
+                              Brand : <span class="text-danger">*</span>
+                          </label>
+                          </div>
+                          <div>
+                          <select name="brand" id="selectbrand" class="form-select" required>
+                              <option value="" selected disabled>Select Brand</option>
+                              <option value="a">A</option>
+                              <option value="b">B</option>
+                          </select>
+                          </div>
+                      </div>
+                      <!-- brand name ends here -->
+
+                      <!-- product name starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textProductName" class="col-form-label fw-bold">
+                              Product Name : <span class="text-danger">*</span>
+                          </label>
+                      </div>
+                      <div>
+                          <input type="text" id="textProductName" class="form-control" placeholder="Enter Product Name" required>
+                      </div>
+                      </div>
+                      <!-- product name ends here -->
+
+                      <!-- weight starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textWeight" class="col-form-label fw-bold">
+                              Weight : <span class="text-danger">*</span>
+                          </label>
+                      </div>
+                        <div class="input-group">
+                          <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Unit</button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item">Kg</a>
+                              <a class="dropdown-item">g</a>
+                              <a class="dropdown-item">L</a>
+                              <a class="dropdown-item">ml</a>
+                              <a class="dropdown-item"></a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- weight ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- Quantity starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="textQuantity" class="col-form-label fw-bold">
+                               Quantity : <span class="text-danger">*</span>
+                          </label>
+                      </div>
+                      <div>
+                          <input type="text" id="textQuantity" class="form-control" placeholder="Enter Quantity" required>
+                      </div>
+                      </div>
+                      <!-- Quantity ends here -->
+
+                      
+                      <!-- Stocked date starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="dateOfBirth" class="col-form-label fw-bold">
+                            Stocked date : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <input type="date" class="form-control" required id="dateOfBirth" />
+                        </div>
+                      </div>
+                      <!-- Stocked date ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnProductReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnProductUpdate">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnProductAdd">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--new stock add modal ends-->
+
+</body>
+
+</html>

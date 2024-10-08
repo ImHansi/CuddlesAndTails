@@ -1,0 +1,120 @@
+
+<head th:fragment="headFragment">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Dashboard : BIT Project 2023</title>
+    <link rel="icon" href="/src/main/resources/static/resources/images/cat1.png" />
+
+    <!-- link bootstrap min css file --> 
+    <link rel="stylesheet"href="/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css"/>
+
+    <!-- link bootstrap js file -->
+    <script src="/resources/bootstrap-5.2.3/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+
+    <!-- link fontawesome css file -->
+    <link rel="stylesheet"href="/resources/fontawesome-free-6.4.2/fontawesome-free-6.4.2/css/all.css"/>
+
+    <!--link query js file-->
+    <script src="/resources/script/jQuery.js"></script>
+
+    <!--link jquery datatable css file-->
+    <link rel="stylesheet" href="/resources/dataTables-1.13.6/css/jquery.dataTables.css">
+
+    <!-- link sweetalert js file -->
+    <script src="/resources/sweetalert2/sweetalert2.all.js"></script>
+
+    <!-- link sweetalert js file -->
+    <script src="/resources/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <!--link sweetalert2 css file-->
+    <link rel="stylesheet" href="/resources/sweetalert2/sweetalert2.css">
+
+    <script src="/resources/dataTables-1.13.6/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet" href="/resources/style/employee.css" />
+    <link rel="stylesheet" href="/resources/style/button.css" />
+
+    <!--link tableCommonFunction js-->
+    <script src="/resources/script/tableCommonFunction.js"></script>
+
+    <!--link validationFunction js-->
+    <script src="/resources/script/validationFunction.js"></script>
+
+    <!--link commonFunction js-->
+    <script src="/resources/script/commonFunction.js"></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+      * {
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+      }
+
+      .div-title {
+        background-color: rgb(65, 98, 151);
+        border-radius: 10px;
+      }
+
+      .div-card {
+        border: 2px solid rgba(164, 164, 164, 0.411);
+        background-color: rgba(65, 98, 151, 0.526);
+      }
+
+      .table-header {
+        background-color: rgba(69, 87, 160, 0.778);
+      }
+
+      .bg-grey {
+        background: #eeeeee;
+      }
+
+      body {
+        background: url("resources/images/group-portrait-adorable-puppies.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+        color: black;
+        font-size: 1.1rem;
+      }
+
+      .custom-table th {
+        background: #0dcaf0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: white;
+      }
+
+      .custom-table td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: black;
+      }
+
+      .custom-table tr {
+        border-bottom: 1px solid #f3f3f3;
+      }
+
+      .custom-table tr:hover td {
+        background: rgba(13, 202, 240, 0.31);
+        color: white;
+      }
+
+      .btnall {
+        width: 105px;
+        height: 33px;
+        margin: 10px;
+        border-radius: 20px;
+      }
+
+      .btn:hover {
+        border: 3px solid blueviolet;
+        background-color: rgba(171, 109, 228, 0.684);
+      }
+    </style>
+  </head>

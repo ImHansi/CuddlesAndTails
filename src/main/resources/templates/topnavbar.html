@@ -1,0 +1,87 @@
+
+<nav class="navbar bg-body-tertiary fixed-top" style="background-color: rgba(59, 59, 166, 0.825);" th:fragment="topnavbarFragment">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" th:text="${logusername}"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h3 class="offcanvas-title" id="offcanvasNavbarLabel">Cuddles and Tails Pet Care Clinic</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/index">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Administration
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/employee">Employee</a></li>
+                  <li><a class="dropdown-item" href="/user">User</a></li>
+                  <li><a class="dropdown-item" href="/privilege">Privilege</a></li>
+                  <li><a class="dropdown-item" href="/doctor">Doctor</a></li>
+                </ul>
+              </li>
+            </li>
+            <li class="nav-item">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Clinic Management
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/pet">Pet</a></li>
+                  <li><a class="dropdown-item" href="/appointment">Appointment</a></li>
+                  <li><a class="dropdown-item" href="/vaccinationrecord">Vaccination</a></li>
+                  <li><a class="dropdown-item" href="/consultation">Consultation</a></li>
+                </ul>
+              </li>
+            </li>
+            <li class="nav-item">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Shop
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/order">Order</a></li>
+                  <li><a class="dropdown-item" href="/product">Product</a></li>
+                </ul>
+              </li>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/payment">Payment</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/announcement">Announcement</a>
+            </li>
+            <li class="nav-item">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Report
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/reportonleaveemployee">Employee Report</a></li>
+                  <li><a class="dropdown-item" href="/product">Pet Report</a></li>
+                  <li><a class="dropdown-item" href="/reportappointmentbydoctorstatus">Appointment Report</a></li>
+                </ul>
+              </li>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/login">Logout</a>
+            </li>
+
+            
+          </ul>
+          <form class="d-flex mt-3" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>

@@ -1,0 +1,97 @@
+.div-title{
+    background-color: rgba(65, 98, 151, 0.882);
+    border-radius: 10;
+}
+
+body{
+    background-image: url(../images/group-portrait-adorable-puppies.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.div-card{
+    border: 2px solid rgba(41, 145, 189, 0.668);
+    background-color: rgba(48, 118, 159, 0.541);
+}
+
+.select-input{
+    width: 400px;
+    height: 35px;
+    border-radius: 5px;
+}
+
+textarea{
+    border-radius: 5px;
+}
+
+.table-header{
+    background-color: rgba(69, 87, 160, 0.778);
+}
+
+.status-working{
+    padding: 10px;
+    background-color: rgba(89, 255, 47, 0.571);
+    padding:10px;
+
+}
+
+.status-Onleave{
+    padding: 10px;
+    background-color: rgba(255, 255, 0, 0.905);
+    padding: 10px;
+
+}
+
+.status-Resign{
+    padding: 10px;
+    background-color: red;
+    padding: 10px;
+
+}
+
+.status-Delete{
+    padding: 10px;
+    background-color: red;
+    padding: 10px;
+
+}
+
+.status-Active{
+    padding: 10px;
+    background-color: rgba(26, 255, 0, 0.732);
+    padding: 10px;
+
+}
+
+.status-Alive{
+    padding: 10px;
+    background-color: rgba(26, 255, 0, 0.732);
+    padding: 10px;
+
+}
+
+.status-Deseased{
+    padding: 10px;
+    background-color: rgba(224, 47, 47, 0.647);
+    padding: 10px;
+
+}
+.status-Complete{
+    padding: 10px;
+    background-color: rgba(103, 236, 70, 0.647);
+    padding: 10px;
+
+}
+.status-Pending{
+    padding: 10px;
+    background-color: rgba(226, 229, 66, 0.555);
+    padding: 10px;
+
+}
+.status-Deleted{
+    padding: 10px;
+    background-color: rgba(224, 47, 47, 0.647);
+    padding: 10px;
+
+}
+

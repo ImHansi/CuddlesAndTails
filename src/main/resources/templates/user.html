@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <head th:replace="~{ head :: headFragment}"></head>
+
+    <!--link user.js-->
+    <script src="user.js"></script>
+
+    <script>
+        //to reset the form after clicking on the X mark
+       document.addEventListener("DOMContentLoaded", function(){
+        var userAddModal = document.getElementById('userAddModal');
+        var formUser = document.getElementById('formUser')
+    
+        userAddModal.addEventListener('hidden.bs.modal', function(){
+            formUser.reset();
+        });
+       });
+     </script>
+
+    
+
+</head>
+
+<body>
+    <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+    <div class="container-fluid">
+        <div class="row p-4">
+
+        </div>
+
+
+        <!-- title area starts here -->
+        <div class="row p-3">
+            <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+                <i class="fa-solid fa-user-tie fa-2x"></i>
+                <h2 class="h2 ms-3">User Management</h2>
+            </div>
+        </div>
+        <!-- title area ends here -->
+
+        <!-- toggle button starts -->
+        <div class="row mt-2">
+            <div class="col-1"></div>
+            <div class="col-10 text-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userAddModal">
+                    Add A User
+                </button>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- toggle button ends here -->
+
+        <div class="row mt-3">
+            <div class="col-1"></div>
+            <div class="col-10">
+
+                <div class="card div-card">
+                    <div class="card-body">
+                        <!-- table area starts here -->
+
+                        <div class="row mt-3">
+                            <table class="table table-hover table-bordered table-striped border-primary" id="tabeleUser">
+                                <thead class="table-header">
+                                    <tr>
+
+                                        <th>#</th>
+                                        <!-- #,No,Index -->
+                                        <!--<th>Employee</th>-->
+                                        <!--<th>Doctor</th>-->
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Modify</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="table-light">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table area ends here -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+        <!--User add modal starts here-->
+        <div class="modal" id="userAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title">Add A User Here</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mt-2">
+                            <div class="col-12">
+
+                                <!-- form area start here-->
+                                <form onsubmit="return false;" id="formUser">
+                                    <div class="card div-card">
+                                        <div class="card-body">
+
+                                            <!-- required mark -->
+                                            <div class="row mt-2">
+                                                <div class="col-12 text-end fw-bold">
+                                                    <span class="text-danger">*</span> Required
+                                                </div>
+                                            </div>
+                                            <!-- required mark -->
+
+
+                                            <div class="row mt-2">
+                                                <!-- employee starts here -->
+                                        
+                                                    <div>
+                                                        <label for="selectEmployee" class="col-form-label fw-bold">
+                                                            Employee : <span class="text-danger"></span>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <select name="sltEmployee" aria-label="Default select example" onchange="selectDValidator(this,'','user','employee_id'); generateUserEmail();" id="selectEmployee"
+                                                            class="form-select">
+                                                            <option value="" selected disabled>Select Employee</option>
+                                                        </select>
+                                                    </div>
+                                        
+                                                <!-- employee ends here -->
+                                            </div>
+
+                                            <div class="row mt-2">
+                                                <!-- doctor starts here -->
+                                        
+                                                    <div>
+                                                        <label for="selectDoctor" class="col-form-label fw-bold">
+                                                            Doctor : <span class="text-danger"></span>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <select name="sltEmployee" aria-label="Default select example" onchange="selectDValidator(this,'','user','doctor_id'); generateDocUserEmail();" id="selectDoctor"
+                                                            class="form-select">
+                                                            <option value="" selected disabled>Select Doctor</option>
+                                                        </select>
+                                                    </div>
+                                        
+                                                <!-- doctor ends here -->
+                                            </div>
+
+                                            <div class="row mt-2">
+                                                <!-- Username starts here -->
+
+                                                <div>
+                                                    <label for="textUsername" class="col-form-label fw-bold">
+                                                        Username : <span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="input-group">
+
+                                                    <span class="input-group-text">
+                                                        <i class="fa-solid fa-user"></i>
+                                                    </span>
+
+                                                    <input type="text" id="textUsername" class="form-control"
+                                                        placeholder="Enter Username" required onkeyup="textValidator(this,'^[A-Za-z0-9]{5,10}$','user','username')"/>
+                                                </div>
+
+                                                <!-- username ends here -->
+
+                                            </div>
+                                            <div class="row mt-2">
+                                                <!-- Password starts here -->
+
+                                                <div>
+                                                    <label for="textPassword" class="col-form-label fw-bold">
+                                                        Password : <span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">
+                                                        <i class="fa-solid fa-id-badge"></i>
+                                                    </span>
+
+                                                    <input type="password" id="textPassword" class="form-control"
+                                                        placeholder="Enter Password" required onkeyup="textValidator(this,'^[1-9]{4,6}$','user','password')">
+                                                </div>
+
+                                                <!-- Password ends here -->
+                                            </div>
+                                            <div class="row mt-2">
+                                                <!-- Re-password starts here -->
+                                                
+                                                    <div>
+                                                        <label for="textRePassword" class="col-form-label fw-bold">
+                                                            Re-Password : <span class="text-danger">*</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">
+                                                            <i class="fa-solid fa-id-badge"></i>
+                                                        </span>
+
+                                                        <input type="password" id="textRePassword" class="form-control"
+                                                            placeholder="Enter Password again" required onkeyup="retypePasswordVali()">
+                                                    </div>
+                                                
+                                                <!-- Re-password ends here -->
+                                            </div>
+
+
+                                            <div class="row mt-2">
+                                                <!-- email starts here -->
+                                                
+                                                    <div>
+                                                        <label for="textEmail" class="col-form-label fw-bold">
+                                                            Email : <span class="text-danger">*</span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">
+                                                            <i class="fa-solid fa-envelope"></i>
+                                                        </span>
+
+                                                        <input type="email" id="textEmail" class="form-control"
+                                                            placeholder="Enter Email" required onkeyup="textValidator(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','user','email')">
+                                                    </div>
+                                    
+                                                <!-- email ends here -->
+
+                                            </div>
+
+                                            <div class="row mt-2" id="rolesDiv">
+                                                <!--roles starts here-->
+                                                    <div>
+                                                        <label for="textRole" class="form-label fw-bold">
+                                                            Role : <span class="text-danger">*</span>
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-check form-check-inline">
+                                                        <div class="form-check form-check-inline">
+                                                        <label for="textRole" class="form-check-label fw-bold checkbox-inline">
+                                                        <input type="checkbox" required id="checkboxRoleManager" value="manager" class="form-check-input" name="Role">
+                                                         Manager</label>
+                                                        </div>
+                                                    
+                                                         <div class="form-check form-check-inline">
+                                                        <label for="textRole" class="form-check-label fw-bold checkbox-inline">
+                                                            <input type="checkbox" required id="checkboxRoleReceptionist"
+                                                            value="receptionist" class="form-check-input" name="role">
+                                                            Receptionist</label>
+                                                        </div>
+                                                    
+                                                        <div class="form-check form-check-inline">
+                                                        <label for="textRole" class="form-check-label fw-bold checkbox-inline">
+                                                            <input type="checkbox" required id="checkboxRoleStaffMember"
+                                                            value="staffmember" class="form-check-input" name="role">
+                                                            Staff-Member</label>
+                                                        </div>
+
+                                                        <div class="form-check form-check-inline">
+                                                            <label for="textRole" class="form-check-label fw-bold checkbox-inline">
+                                                                <input type="checkbox" required id="checkboxRoleDoctor"
+                                                                value="doctor" class="form-check-input" name="role">
+                                                                Doctor</label>
+                                                            </div>
+                                                    </div>
+                                                
+                                                <!--roles ends here-->
+
+                                                
+
+
+                                            </div>
+
+                                            <!--status starts here-->
+                                            <div class="class row mt-2">
+                                                <div>
+                                                    <label for="textStatus" class="form-label fw-bold">
+                                                        Status : <span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" required id="checkStatus" value="status" class="form-check-input" name="Status" 
+                                                            onchange="checkBoxValidator(this,'','user','status',true,false,checklblStatus,'User Account is active','User Account is not active')">
+                                                        <label for="checkStatus" class="form-check-label fw-bold checkbox-inline" id="checklblStatus">
+                                                            
+                                                            <!-- User Account is active. -->
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--status ends here-->
+
+                                            <div class="row mt-2">
+                                                <!-- clear button starts here-->
+                                                <div class="col-4">
+                                                    <button class="btn btn-danger rounded-1" type="button"
+                                                        id="btnUserReset"><i class="fa-solid fa-rotate-right"></i>
+                                                        Reset</button>
+                                                </div>
+                                                <!-- clear button ends here -->
+
+                                                <div class="col-4"></div>
+
+                                                <!-- update & add button starts here -->
+                                                <div class="col-4 d-flex justify-content-center">
+                                                    <button disabled class="btn btn-warning text-white rounded-1"
+                                                        type="button" id="btnUserUpdate" onclick="userUpdate()"><i
+                                                            class="fa-solid fa-arrows-rotate"></i> Update</button>
+                                                    <button class="btn btn-success rounded-1" type="submit"
+                                                        id="btnUserAdd" onclick="userAdd()"><i class="fa-solid fa-plus"></i> Add
+                                                    </button>
+                                                </div>
+                                                <!-- update & add button ends here -->
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+                                </form>
+                                <!-- form area ends -->
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
+
+</body>
+
+</html>

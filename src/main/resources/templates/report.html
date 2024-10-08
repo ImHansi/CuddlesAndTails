@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+
+    <!--link employee.js-->
+    <script src="report.js"></script>
+
+    
+  </head>
+
+
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row mt-3">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Report Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+    <div class="row mt-2">
+      <div class="col-10">
+        <div class="row">
+          <div class="col"><select name="designation" required id="selectDesignation"
+            class="form-select form-input" ></select></div>
+          <div class="col"><select name="employeeStatus" required id="selectEmployeeStatus"
+            class="form-select form-input"></select></div>
+          <div class="col"><button type="button" class="btn btn-primary" onclick="generateReport()">Generate</button></div>
+        </div>
+
+      </div>
+      <div class="col-2">
+        <button type="button" class="btn btn-primary">Print</button>
+      </div>
+    </div>
+<!-- table area starts here -->
+
+<div class="row mt-3">
+  <table class="table table-hover table-bordered table-striped border-primary" id="tableEmployeerReport">
+    <thead class="table-header">
+      <tr>
+        <th>#</th>
+        <!-- #,No,Index -->
+        <th>EmpNo</th>
+        <!--calling name-->
+        <th>Name</th>
+        <th>NIC</th>
+        <th>Mobile</th>
+        <th>Email</th>
+        <th>U.ACC</th>
+        <th>Status</th>
+        <th>Designation</th>
+      </tr>
+    </thead>
+    <tbody class="table-light">
+      
+    </tbody>
+  </table>
+</div>
+<!-- table area ends here -->
+
+</body>
+
+</html>

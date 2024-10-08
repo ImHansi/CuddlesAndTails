@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+  
+    <!--link appointment.js-->
+    <script src="order.js"></script>
+    <script>
+      //to reset the form after clicking on the X mark
+     document.addEventListener("DOMContentLoaded", function(){
+      var orderAddModal = document.getElementById('orderAddModal');
+      var FormOrder = document.getElementById('FormOrder')
+  
+      orderAddModal.addEventListener('hidden.bs.modal', function(){
+        FormOrder.reset();
+      });
+     });
+   </script>
+  
+  
+  </head>
+
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Order Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderAddModal">
+          Add New Order
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableOrder">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Invoice No</th>
+                    <th>Owner</th>
+                    <th>Date</th>
+                    <th>Added User</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                  
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!-- order add model -->
+  <div class="modal" id="orderAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Add an Order</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="FormOrder">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    
+                    <div class="row mt-2">
+                      <!-- owner starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="selectOwner" class="col-form-label fw-bold">
+                            Owners Name : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-user"></i>
+                          </span>
+
+                          <select name="owner" required id="selectOwner"
+                              class="form-select form-input" onchange="selectDValidator(this,'','order','owner_id'); generateOwnerMobile();">
+                              
+                              <option value="" selected disabled>
+                                Select Owner
+                              </option>
+                            </select>
+                        </div>
+                      </div>
+                        <!-- owner ends here -->
+                         <!-- owner mobile starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="textMobile" class="col-form-label fw-bold">
+                            Mobile : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-mobile"></i>
+                          </span>
+
+                          <input type="text" id="textMobile" class="form-control" placeholder="Enter Mobile"
+                            required onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','order','mobileno')" />
+                        </div>
+                      </div>
+                      <!-- owner mobile ends here-->
+                    </div>
+                    
+
+                    <div class="row mt-2">
+                      <!--note starts here-->
+                      <div class="col-6">
+                        <div class="form-floating" style="margin-top: 16px;">
+                          <textarea
+                            name="textareaNote"
+                            id="textNote"
+                            cols="80"
+                            rows="2"
+                            class="form-control"
+                            placeholder="Note"
+                            onkeyup="textValidator(this,'','order','note')"
+                          ></textarea>
+                          <label for="" class="form-label fw-bold">
+                            Note: <span class="text-danger">(optional)</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!--note ends here-->
+                      <!--total starts here-->
+                      <div class="col-6">
+                        <div>
+                          <label for="textTotalFee" class="col-form-label fw-bold">
+                            Total Amount : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textTotalFee" placeholder="Click on the button" required onkeyup="textValidator(this,'','order','totalamount')">
+                          <span class="input-group-text">.00</span>
+                      </div>
+                      </div>
+                      <!--total ends here-->
+                    </div>
+
+                    <!--innerform starts here-->
+                    <div class="row mt-3">
+                      <div class="card div-card">
+                        <div class="card-body">
+                          <div class="row mt-2">
+                            <div class="col-6">
+                              <div>
+                                <label for="selectProduct" class="col-form-label fw-bold">
+                                  Product : <span class="text-danger">*</span>
+                                </label>
+                              </div>
+                              <div class="input-group">
+                                <select name="product" id="selectProduct"
+                                    class="form-select form-input" onchange="selectDValidator(this,'','orderhasproducts','product_id'); generateUnitPrice();">
+                                    
+                                    <option value="" selected disabled>
+                                      Select Product
+                                    </option>
+                                  </select>
+                              </div>
+                            </div>
+                            <div class="col-6">
+
+                              <div>
+                                <label for="productPrice" class="col-form-label fw-bold">
+                                    Unit Price : <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                
+                                <input type="number" class="form-control" id="productPrice" name="productPrice" step="0.01" onkeyup="textValidator(this,'','orderhasproducts','price')">
+                                
+                            </div>
+
+                            </div>
+                          </div>
+
+                          <div class="row mt-2">
+                            <!--sales price-->
+                            <div class="col-6">
+
+                              <div>
+                                <label for="txtQuantity" class="col-form-label fw-bold">
+                                     Quantity : <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <div>
+                              <input type="number" class="form-control" id="txtQuantity" name="quantity" placeholder="Enter quantity"  onkeyup="textValidator(this,'','orderhasproducts','quantity'); textQtyValidator();">
+                            </div>
+                              
+                            </div>
+                            <!--sales price-->
+                            
+      
+                            <!-- Quantity starts here -->
+                            <div class="col-6">
+                              <div>
+                                <label for="productLinePrice" class="col-form-label fw-bold">
+                                    Line Price : <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                
+                                <input type="number" class="form-control" id="productLinePrice" name="productlinePrice" step="0.01" onkeyup="textValidator(this,'','orderhasproducts','lineprice')">
+                                
+                            </div>
+                              
+                            </div>
+                            <!-- Quantity ends here -->
+                            
+                             
+                          </div>
+                          <div class="row mt-2">
+                            <h2>Order Details</h2>
+                          </div>
+      
+                          <div class="row mt-2">
+                            <table class="table table-hover table-bordered table-striped border-primary" id="InnerTable">
+                              <thead class="table-header">
+                                <tr>
+                                  <th>#</th>
+                                  <!-- #,No,Index -->
+                                  <th>Product</th>
+                                  <th>Qunatity</th>
+                                  <th>Unit Price</th>
+                                  <th>Line Price</th>
+                                  <th>Modify</th>
+                                  
+                                </tr>
+                              </thead>
+                              <tbody class="table-light">
+                                
+                              </tbody>
+                              
+                            </table>
+      
+                          </div>
+      
+                          <div class="row mt-2">
+                            <!-- clear button starts here-->
+                            <div class="col-4">
+                              <button type="reset" class="btn btn-danger rounded-1" id="btnInnerReset">
+                                <i class="fa-solid fa-rotate-right"></i> Reset
+                              </button>
+                            </div>
+                            <!-- clear button ends here -->
+      
+                            <div class="col-4"></div>
+      
+                            <!-- update & add button starts here -->
+                            <div class="col-4 d-flex justify-content-center">
+                              <button type="submit" class="btn btn-success rounded-1" id="buttonInnerAdd" onclick="btnInnerAdd()">
+                                <i class="fa-solid fa-plus"></i> Add
+                              </button>
+                            </div>
+                            <!-- update & add button ends here -->
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <!--innerform ends here-->
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button
+                          type="reset"
+                          class="btn btn-danger rounded-1"
+                          id="btnOrderReset"
+                        >
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button
+                          disabled
+                          type="submit"
+                          class="btn btn-warning text-white rounded-1"
+                          id="btnUpdateOrder"
+                          onclick="buttonOrderUpdate()"
+                        >
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-success rounded-1"
+                          id="btnAddOrder"
+                          onclick="buttonFormSubmit()"
+                        >
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+
+                    
+                  </form>
+                  <!-- form area ends -->
+                  </div>
+                </div>
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</body>
+
+</html>
