@@ -81,16 +81,16 @@ public class OrderController {
         try {
             // set auto generate values
             // set added date time
-            order.setRecordstatus_id(recordstatusDao.getReferenceById(1));
-            order.setAdded_date(LocalDateTime.now());
+            //order.setorderstatus_id(recordstatusDao.getReferenceById(1));
+            //order.setaddeddatetime(LocalDateTime.now());
             order.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
             // set employee number
             String nextOrderNo = dao.getNextOrderNumber();
             if (nextOrderNo.equals(null) || nextOrderNo.equals("")) {
-                order.setInvoiceno("00001");
+                order.setOrdercode("0000000001");
             } else {
-                order.setInvoiceno(nextOrderNo);
+                order.setOrdercode(nextOrderNo);
             }
 
             // mek dann isslla purchaceorder_id ek block krnonh infinity recursion ekk ena
@@ -137,7 +137,7 @@ public class OrderController {
             extOrder.setDeletedatetime(LocalDateTime.now());
             extOrder.setDeleteuser_id(userDao.getUserByUsername(auth.getName()).getId());
             Recordstatus deleteStatus = recordstatusDao.getReferenceById(2);
-            extOrder.setRecordstatus_id(deleteStatus);
+            extOrder.setOrderstatus_id(deleteStatus);
 
             dao.save(extOrder);
 
@@ -171,8 +171,8 @@ public class OrderController {
         // check duplicate
 
         try {
-            order.setLastmodifydatetime(LocalDateTime.now());
-            order.setLastmodifyuser_id(userDao.getUserByUsername(auth.getName()).getId());
+            order.setUpdatedatetime(LocalDateTime.now());
+            order.setLastupdateduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
             // mek dann isslla purchaceorder_id ek block krnonh infinity recursion ekk ena
             // nisa, ek block krlm tibila hariyann naa save krgnnd ek required nisa, itim me

@@ -1,4 +1,4 @@
-package com.cuddlesandtails.appointment;
+package com.cuddlesandtails.supplier;
 
 import java.util.List;
 
@@ -6,15 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-public class RecordstatusController {
+public class SupplierstatusController {
 
     @Autowired
-    private RecordstatusRepository dao;
+    private SupplierstatusRepository dao;
 
-    @GetMapping(value = "/recordstatus/showRecordstatus", produces = "application/json")
-    public List<Recordstatus> showAllData(){
+    @GetMapping(value = "supplierstatus/showSupplierstatus", produces = "application/json")
+    public List<Supplierstatus> showAllData(){
         return dao.findAll();
     }
     

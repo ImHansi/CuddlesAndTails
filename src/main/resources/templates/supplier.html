@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head th:replace="~{ head :: headFragment}"></head>
+
+    <!--link supplier.js-->
+  <script src="supplier.js"></script>
+  <script>
+    //to reset the form after clicking on the X mark
+   document.addEventListener("DOMContentLoaded", function(){
+    var supplierAddModal = document.getElementById('supplierAddModal');
+    var formSupplier = document.getElementById('formSupplier')
+
+    supplierAddModal.addEventListener('hidden.bs.modal', function(){
+      formSupplier.reset();
+    });
+   });
+ </script>
+    
+</head>
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Supplier Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-6"></div>
+      <div class="col-6 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierAddModal">
+          Add New Supplier
+        </button>
+      </div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableSupplier">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Supplier Name</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Products</th>
+                    <th>Status</th>
+                    <th style="width: 140px;">Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!--Supplier Add model-->
+  <div class="modal" id="supplierAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title">Manage Supplier</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formSupplier">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    <!--Supplier full name starts here -->
+                    <div class="row mt-2">
+                      <label for="textFullName" class="col-3 col-form-label fw-bold">
+                        Supplier Name : <span class="text-danger"> * </span>
+                      </label>
+                      <div class="col-9">
+                        <input type="text" id="textFullName" class="form-control" placeholder="Enter Full Name"
+                          required onkeyup="textValidator(this,'^([A-Z][a-z]{2,15}[\\s]){1,10}([A-Z][a-z]{2,15}){1}$','supplier','name')"/>
+                      </div>
+                    </div>
+                    <!--Supplier full name ends here-->
+                   
+                    <div class="row mt-2">
+
+                        <div class="col-6">
+                        <div>
+                          <label for="textContactName" class="col-form-label fw-bold">
+                            Contact person name : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-mobile"></i>
+                          </span>
+
+                          <input type="text" id="textContactName" class="form-control" placeholder="Enter Contact Person Name"
+                            required onkeyup="textValidator(this,'^([A-Z][a-z]{2,15}[\\s]){1,10}([A-Z][a-z]{2,15}){1}$','supplier','contactpersonname')"/>
+                        </div>
+                        </div>
+                      
+
+                       <!-- email starts here -->
+                      <div class="col-6">
+                        <div>
+                          <label for="textEmail" class="col-form-label fw-bold">
+                            Email : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-envelope"></i>
+                          </span>
+
+                          <input type="email" id="textEmail" class="form-control" placeholder="Enter Email Address"
+                            required onkeyup="textValidator(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','supplier','email')"/>
+                        </div>
+                      </div>
+                      <!-- email ends here -->
+                      
+                    </div>
+                    
+
+                    <div class="row mt-2">
+
+                      <!-- mobile no starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textMobileNo" class="col-form-label fw-bold">
+                            Mobile No : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-mobile"></i>
+                          </span>
+
+                          <input type="text" id="textMobileNo" class="form-control" placeholder="Enter Mobile No"
+                            required onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','supplier','mobile')"/>
+                        </div>
+                      </div>
+                      <!-- mobile no ends here -->
+
+                      <!-- land no starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textLandNo" class="col-form-label fw-bold">
+                            Land No : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-solid fa-phone"></i>
+                          </span>
+
+                          <input type="text" id="textLandNo" class="form-control" placeholder="Enter Land No"
+                            required onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','supplier','landno')"/>
+                        </div>
+                      </div>
+                      <!-- land no ends here -->
+
+                      <!-- Address starts here -->
+                      <div class="col-4">
+                        <div class="form-floating">
+                          <textarea name="textareaAddress" id="textAddress" cols="80" rows="2" class="form-control"
+                            placeholder="Address" required onkeyup="textValidator(this,'^.*$','supplier','address')"></textarea>
+                          <label for="textAddress" class="form-label fw-bold">
+                            Address : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- Address ends here -->
+                      
+                    </div>
+
+                    <div class="row mt-2">
+
+                      <!-- supplier status starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="selectSupplierStatus" class="col-form-label fw-bold">
+                            Supplier Status :
+                            <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="supplierStatus" required id="selectSupplierStatus"
+                            class="form-select form-input" onchange="selectDValidator(this,'','supplier','supplierstatus_id')">
+                          </select>
+                        </div>
+                      </div>
+                      <!-- supplier status ends here -->
+
+                      <!-- note starts here -->
+                      <div class="col-4">
+                        <div class="form-floating">
+                          <textarea name="textareaNote" id="textNote" cols="80" rows="2" class="form-control"
+                            placeholder="Note" onkeyup="textValidator(this,'','supplier','note')"></textarea>
+                          <label for="" class="form-label fw-bold">
+                            Note : <span class="text-danger">(optional)</span>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- note ends here -->
+
+                      <!-- supplier bank name starts here-->
+                       <div class="col-4">
+                         <label for="textBankAccName" class="col-3 col-form-label fw-bold">
+                          Bank Account Name : <span class="text-danger"> * </span>
+                        </label>
+                        <div class="col-9">
+                        <input type="text" id="textBankAccName" class="form-control" placeholder="Enter Bank Account Name"
+                          required onkeyup="textValidator(this,'^([A-Z][a-z]{2,15}[\\s]){1,10}([A-Z][a-z]{2,15}){1}$','supplier','supplierbankname')"/>
+                        </div>
+                       </div>
+                      <!-- supplier bank name ends here-->
+
+                    </div>
+
+                    <div class="row mt-2">
+
+                      <!-- supplier bank account no starts here-->
+                       <div class="col-4">
+                         <label for="textBankAccNo" class="col-3 col-form-label fw-bold">
+                          Bank Account No : <span class="text-danger"> * </span>
+                        </label>
+                        <div class="col-9">
+                        <input type="text" id="textBankAccNo" class="form-control" placeholder="Enter Bank Account No"
+                          required onkeyup="textValidator(this,'','supplier','bankaccountno')"/>
+                        </div>
+                       </div>
+                      <!-- supplier bank account no ends here-->
+
+                      <!-- supplier bank name starts here-->
+                       <div class="col-4">
+                         <label for="textBankName" class="col-3 col-form-label fw-bold">
+                          Bank Name : <span class="text-danger"> * </span>
+                        </label>
+                        <div class="col-9">
+                        <input type="text" id="textBankName" class="form-control" placeholder="Enter Bank Account Name"
+                          required onkeyup="textValidator(this,'','supplier','bankname')"/>
+                        </div>
+                       </div>
+                      <!-- supplier bank name ends here-->
+
+                      <!-- branch town starts here-->
+                       <div class="col-4">
+                         <label for="textBranchTown" class="col-3 col-form-label fw-bold">
+                          Branch Town : <span class="text-danger"> * </span>
+                        </label>
+                        <div class="col-9">
+                        <input type="text" id="textBranchTown" class="form-control" placeholder="Enter Branch Town"
+                          required onkeyup="textValidator(this,'','supplier','branchtown')"/>
+                        </div>
+                       </div>
+                      <!-- branch town ends here-->
+
+                    </div>
+
+                    <div class="row mt-3">
+
+                      <div class="card div-card">
+                        <div class="card-body"  id="formSupplierProduct">
+                            <div class="row mt-2">
+                             <!--select supplier product-->
+                              <div class="col-12">
+                                <div>
+                                  <label for="selectSupplierProduct" class="col-form-label fw-bold">
+                                    Product :
+                                    <span class="text-danger">*</span>
+                                  </label>
+                                </div>
+                                <div>
+                                  <select name="supplierProduct" required id="selectSupplierProduct"
+                                    class="form-select form-input" onchange="selectDValidator(this,'','supplier','')">
+                                  </select>
+                                </div>
+                              </div>
+                              <!--select supplier product ends here-->
+                             
+                            </div>
+   
+                            <div class="row mt-2">
+                             <div class="col-4"></div>
+                             <!-- update & add button starts here -->
+                               <div class="col-4 d-flex justify-content-center">
+                                 <button type="reset" class="btn btn-danger rounded-1" id="btnResetSupplierProduct">
+                                   <i class="fa-solid fa-rotate-right"></i> Reset
+                                 </button>
+                                 <button type="submit" class="btn btn-success rounded-1" id="btnAddSupplierProduct" onclick="innerSubmit()">
+                                   <i class="fa-solid fa-plus"></i> Add
+                                 </button>
+                               </div>
+                             <!-- update & add button ends here -->
+                             <div class="col-4"></div>
+                            </div>
+
+                            <div class="row mt-2">
+                              <table class="table table-hover table-bordered table-striped border-primary" id="tableInner">
+                                <thead class="table-header">
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                  </tr>
+                                </thead>
+                                <tbody class="table-light">
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnSupplierReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnUpdateSupplier" onclick="buttonSupplierUpdate()">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnAddSupplier" onclick="buttonFormSubmit()">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Supplier form ends-->
+
+  
+</body>
+</html>

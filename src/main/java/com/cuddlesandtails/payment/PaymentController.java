@@ -82,12 +82,12 @@ public class PaymentController {
             return "Payment save not completed : You don't have permission";
         }
 
-        Payment extPaymentInvoice = PaymentDao.getInvoiceNoByOrderId(payment.getOrder_id().getId());
+        /* Payment extPaymentInvoice = PaymentDao.getInvoiceNoByOrderId(payment.getOrder_id().getId());
         if (extPaymentInvoice != null) {
 
             return "Save not completed : This Invoice is already existing..!";
             
-        }
+        } */
 
         Payment extPaymentVaccineNo = PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
         if (extPaymentVaccineNo != null) {
@@ -183,14 +183,14 @@ public class PaymentController {
         }
 
         //check duplicate
-        Payment extPaymentInvoive = PaymentDao.getInvoiceNoByOrderId(payment.getOrder_id().getId());
+        /* Payment extPaymentInvoive = PaymentDao.getInvoiceNoByOrderId(payment.getOrder_id().getId());
         if (extPaymentInvoive != null && extPaymentInvoive.getOrder_id().getInvoiceno().equals(extPaymentInvoive)) {
 
             return "Update not completed : Invoice is already existing..!";
             
-        }
+        } */
 
-        Payment extPaymentVaccineNo = PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
+        /* Payment extPaymentVaccineNo = PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
         if (extPaymentVaccineNo != null && extPaymentVaccineNo.getVaccinationrecord_id().getVaccino().equals(extPaymentVaccineNo)) {
 
             return "Update not completed : Vaccination No is already existing..!";
@@ -202,7 +202,7 @@ public class PaymentController {
 
             return "Update not completed : Consultation No is already existing..!";
             
-        }
+        } */
 
         try {
             payment.setLastmodifydatetime(LocalDateTime.now());

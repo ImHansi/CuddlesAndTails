@@ -1,4 +1,4 @@
-package com.cuddlesandtails.product;
+package com.cuddlesandtails.suppayment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,43 +14,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import com.cuddlesandtails.privilege.PrivilegeController;
 
 @RestController
-@RequestMapping(value = "/product")
-public class ProductController {
+@RequestMapping(value = "/supplierpayment")
+public class SuppaymentController {
+
     @Autowired
-    private ProductRepository ProductDao;
+    private SuppaymentRepository SuppaymentDao;
 
     @Autowired
     private PrivilegeController privilegeController;
 
-    //create mapping UI service [/product -- return product UI]
+    //create mapping UI service [/suppayment -- return product UI]
     @GetMapping()
-    public ModelAndView productUI(){
+    public ModelAndView suppaymentUI(){
 
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
-        ModelAndView productView = new ModelAndView();
-        productView.addObject("logusername", auth.getName());
-        productView.addObject("title","Product Management : BIT Project 2024");
-        productView.setViewName("product.html");
-        return productView; 
+        ModelAndView suppaymentView = new ModelAndView();
+        suppaymentView.addObject("logusername", auth.getName());
+        suppaymentView.addObject("title","Supplier Payment Management : BIT Project 2024");
+        suppaymentView.setViewName("suppayment.html");
+        return suppaymentView; 
     }
 
     @GetMapping(value = "/showall" , produces = "application/json")
-    public List<Product> showAll(){
+    public List<Suppayment> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Product");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Suppayment");
         //check privilege
         if(!logUserPrivi.get("select")){
-            return new ArrayList<Product>();
+            return new ArrayList<Suppayment>();
         }
-        return ProductDao.findAll(Sort.by(Direction.DESC,"id"));
+        return SuppaymentDao.findAll(Sort.by(Direction.DESC,"id"));
     }
+    
     
 }

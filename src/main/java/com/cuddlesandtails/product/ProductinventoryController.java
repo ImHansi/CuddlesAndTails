@@ -14,43 +14,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import com.cuddlesandtails.privilege.PrivilegeController;
 
 @RestController
-@RequestMapping(value = "/product")
-public class ProductController {
+@RequestMapping(value = "/productinventory")
+public class ProductinventoryController {
+
     @Autowired
-    private ProductRepository ProductDao;
+    private ProductinventoryRepository ProductinventoryDao;
 
     @Autowired
     private PrivilegeController privilegeController;
 
-    //create mapping UI service [/product -- return product UI]
+    //create mapping UI service [/productinventory -- return productinventory UI]
     @GetMapping()
-    public ModelAndView productUI(){
+    public ModelAndView productinventoryUI(){
 
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
-        ModelAndView productView = new ModelAndView();
-        productView.addObject("logusername", auth.getName());
-        productView.addObject("title","Product Management : BIT Project 2024");
-        productView.setViewName("product.html");
-        return productView; 
+        ModelAndView productinventoryView = new ModelAndView();
+        productinventoryView.addObject("logusername", auth.getName());
+        productinventoryView.addObject("title","Product Inventory Management : BIT Project 2024");
+        productinventoryView.setViewName("productin.html");
+        return productinventoryView; 
     }
 
     @GetMapping(value = "/showall" , produces = "application/json")
-    public List<Product> showAll(){
+    public List<Productinventory> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Product");
         //check privilege
         if(!logUserPrivi.get("select")){
-            return new ArrayList<Product>();
+            return new ArrayList<Productinventory>();
         }
-        return ProductDao.findAll(Sort.by(Direction.DESC,"id"));
+        return ProductinventoryDao.findAll(Sort.by(Direction.DESC,"id"));
     }
     
 }

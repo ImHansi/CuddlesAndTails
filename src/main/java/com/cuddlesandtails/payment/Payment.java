@@ -1,5 +1,6 @@
 package com.cuddlesandtails.payment;
 
+import java.math.BigDecimal;
 import java.time.*;
 
 import org.hibernate.validator.constraints.Length;
@@ -45,15 +46,15 @@ public class Payment {
 
     @Column(name = "totalamount")
     @NotNull
-    private String totalamount;
+    private BigDecimal totalamount;
 
     @Column(name = "paidamount")
     @NotNull
-    private String paidamount;
+    private BigDecimal paidamount;
 
     @Column(name = "balanceamount")
     @NotNull
-    private String balanceamount;
+    private BigDecimal balanceamount;
 
     @Column(name = "addeduser_id")
     private Integer addeduser_id;
@@ -75,13 +76,10 @@ public class Payment {
     private LocalDateTime deletedatetime;
 
     @Column(name = "vaccinationfee")
-    private String vaccinationfee;
+    private BigDecimal vaccinationfee;
 
     @Column(name = "consultationfee")
-    private String consultationfee;
-
-    @Column(name = "orderfee")
-    private String orderfee;
+    private BigDecimal consultationfee;
 
     @ManyToOne
     @JoinColumn(name = "paymentmethod_id",referencedColumnName = "id")
