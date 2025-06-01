@@ -153,7 +153,7 @@ public class DoctorController {
             //EmployeeStatus deleteStatus = employeeStatusDao.getReferenceById(3);
             
             extDoctor.setEmployeestatus_id(employeeStatusDao.getReferenceById(3));
-            //extDoctor.setDeletedatetime(LocalDateTime.now());
+            extDoctor.setDeletedatetime(LocalDateTime.now());
             DoctorDao.save(extDoctor);
 
 

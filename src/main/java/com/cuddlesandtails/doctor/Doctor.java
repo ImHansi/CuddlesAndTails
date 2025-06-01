@@ -84,9 +84,6 @@ public class Doctor {
     @NotNull
     private String civilstatus;
 
-    @Column(name = "doctorfee")
-    private String doctorfee;
-
     @Column(name = "doctoravailabilitytype")
     @NotNull
     private String doctoravailabilitytype;

@@ -263,7 +263,7 @@ const printFunc =(ob, rowIndex)=>{
 //function for print
 function printpage() { 
     window.print(); 
-    }
+}
 
 //create function for check error
 const checkOrderFormError =() =>{

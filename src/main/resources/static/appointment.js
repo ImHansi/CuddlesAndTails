@@ -213,60 +213,62 @@ const buttonAppointmentUpdate = ()=>{
     console.log(appointment);
     console.log(oldappointment);
 
-    //check errors
-    const errors = checkAppointmentFormError();
-    if(errors == ""){
-        
-    //check available update
-    let updates = checkFormUpdate();
-    if(updates ==""){
-        alert("Nothing Updated");
-    }else{
-
-        //get user confirmation
-        let userConfirm = confirm("Are you sure to do the following changes..? \n" + updates);
-
-        if(userConfirm){
-            //call put service
-            let putServiceresponce;
-
-            $.ajax("/appointment" ,{
-                type:"PUT",
-                contentType:"application/json",
-                async: false,
-                data: JSON.stringify(appointment),
-                success: function(data){
-                    putServiceresponce=data;
-                }, error:function(resData){
-                    putServiceresponce=resData;
-                }
-
-            });
-            if (putServiceresponce == "OK"){
-                alert("Updated Successfully..!");
-                $('#appointmentAddModal').modal('hide');
-                refreshAppointmentTable();
-                formAppointment.reset();
-                refreshAppointmentForm();
-
-            }else{
-                alert("failed to update beacuse of following error..\n"+ putServiceresponce);
-
-            }
-
-        }
-
-        
-
-    }
-
-    
-
-    }else {
-
-        alert("Following errors can be seen in the form..!\n" + errors);
-
-    }
+   //2) check form errors
+   let errors = checkAppointmentFormError();
+   if (errors == "") {
+       //3) check what we have to update
+       let updates = checkFormUpdate();
+       if (updates == "") {
+           Swal.fire({
+               icon: 'info',
+               html: 'Nothing to Update..!',
+               showConfirmButton: true,
+           });
+       } else {
+           //4) get user confirmation
+           Swal.fire({
+               title: 'Are you sure to UPDATE the following record?',
+               html: updates,
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: 'Yes, update it!'
+           }).then((result) => {
+               if (result.isConfirmed) {
+                   //5) call put service
+                   let putServiceResponce = ajaxRequestBody("/appointment", "PUT", appointment)
+                   //6) check put service response
+                   if (putServiceResponce == "OK") {
+                       Swal.fire({
+                           icon: 'success',
+                           html: 'Updated Successfully',
+                           showConfirmButton: true,
+                       }).then(() => {
+                        refreshAppointmentTable();
+                        FormAppointment.reset();
+                        refreshAppointmentForm();
+                        $('#appointmentAddModal').modal('hide');
+                       });
+                   } else {
+                       Swal.fire({
+                           icon: 'error',
+                           html: 'Failed to Update Appointment Details',
+                           text: putServiceResponce,
+                           showConfirmButton: true,
+                       });
+                   }
+               }
+           });
+       }
+   } else {
+       Swal.fire({
+           icon: 'error',
+           html: 'Form has some errors... please check the form again..',
+           text: errors,
+           showConfirmButton: true,
+       });
+   }
 
 }
 
@@ -283,50 +285,43 @@ const deleteFunc =(ob,rowIndex)=>{
 
     console.log(ob);
 
-    //need a time to change the color
+   //need a time to change the color
     setTimeout(function () {
-        const userConfirm = confirm('Are you sure to REMOVE following appointment? \n'
-            + '\n Pet is ' + ob.pet_id.name
-            + '\n Owner is ' + ob.owner_id.name
-            + '\n Appointment date is ' + ob.dateofappointment
-        );
-
-        if (userConfirm) {
-
-
-            //call delete service
-            let deleteServerResponse;
-
-            $.ajax("/appointment" , {
-                type:"DELETE",
-                data: JSON.stringify(ob) ,
-                contentType: "application/json" ,
-                async: false,
-                success: function (data) {
-                    console.log("Success "+data);
-                    deleteServerResponse = data;
-                },
-                error:function (resData) {
-                    console.log("Success "+resData);
-                    deleteServerResponse = resData;
-                }
-            });
-
-            if (deleteServerResponse == 'OK') {
-                alert('Delete Successfully...!!');
+    // get user confirmation
+    // Get user confirmation using SweetAlert2
+    Swal.fire({
+        title: 'Confirm Delete Details',
+        html: 'Are you sure to REMOVE following Appointment? <br>'
+            + 'Pet is : ' + ob.pet_id.name
+            + '<br> Owner is : ' + ob.owner_id.name
+            + '<br> Date of Appointment is : ' + ob.dateofappointment,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // call delete service
+            let deleteServerResponce = ajaxRequestBody("/appointment", "DELETE", ob);
+            // check delete service responce
+            if (deleteServerResponce == "Ok") {
                 refreshAppointmentTable();
+
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Appointment Deleted Successfully!',
+                    icon: 'success'
+                });
             } else {
-                alert('Delete not completed. You have following error \n' + deleteServerResponse);
+                Swal.fire({
+                    title: 'Form Error',
+                    text: 'Failed to delete selected appointment \n' + deleteServerResponce,
+                    icon: 'error'
+                });
             }
-        } 
-        
-        /* else {
-            row.classList.remove('table-danger')
         }
-          else {
-             refreshAppointmentTable();
-             } */
-             refreshAppointmentTable();
+    });
 
     }, 500);
 
@@ -382,42 +377,51 @@ const buttonFormSubmit = ()=>{
     console.log('add appointment',appointment);
     console.log(window['appointment']);
 
-    
-
     const formErrors = checkAppointmentFormError();
+     // If no errors
     if (formErrors == '') {
-        //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following appointment? \n'
-                                    + '\n Owner Name is : ' + appointment.owner_id.name
-                                    + '\n Pet is : ' + appointment.pet_id.name
-                                    + '\n date is : ' + appointment.dateofappointment);
-
-
-            if (userConfirm) {
-
-
-                //pass data into backend
-                //check server response
-                let postServiceResponse = ajaxRequestBody("/appointment", "POST", appointment);
-
-
-                if (postServiceResponse === 'OK') {
-                    alert("Save successfully.. !");
-                    refreshAppointmentTable();
-                    formAppointment.reset();
-                    refreshAppointmentForm();
-                    $("#appointmentAddModal").modal("hide");
-                    
+        // Get user confirmation using SweetAlert2
+        Swal.fire({
+            title: 'Confirm Addition',
+            html: 'Are you sure to add following Appointment? <br>'
+                + '<br> Owner is : ' + appointment.owner_id.name
+                + '<br> Pet is : ' + appointment.pet_id.name
+                + '<br> Date is : ' + appointment.dateofappointment,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, add it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call POST service
+                let postServerResponce = ajaxRequestBody("/appointment", "POST", appointment);
+                // Check post service response
+                if (postServerResponce == "OK") {
+                    Swal.fire({
+                        title: 'Success',
+                        html: 'Saved successfully!',
+                        icon: 'success'
+                    });
                 } else {
-                    alert('Save not completed..You have following errors \n' + postServiceResponse);
+                    Swal.fire({
+                        title: 'Form Error',
+                        html: 'Failed to submit the appointment \n' + postServerResponce,
+                        icon: 'error'
+                    });
                 }
+                refreshAppointmentTable();
+                FormAppointment.reset();
+                refreshAppointmentForm();
+                $('#appointmentAddModal').modal('hide');
             }
-    
-        
+        });
     } else {
-
-        //form has errors
-        alert("form has following errors..\n" + formErrors);
+        Swal.fire({
+            title: 'Form Error',
+            html: 'The form has the following errors. Please check the form again:\n' + formErrors,
+            icon: 'error'
+        });
     }
  
 }

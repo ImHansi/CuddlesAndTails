@@ -8,8 +8,6 @@ window.addEventListener('load',()=>{
 
     refreshDoctorForm();//call form refresh function
 
-    
-
 
     //call designation form refresh function
     refreshSpecializationForm();
@@ -29,8 +27,8 @@ const refreshDoctorTable = () => {
 
         success:function(data){
             console.log("success"+ data);
-            doctors = data.filter(doctor => doctor?.employeestatus_id.id !== 3);
-            //doctors = data;
+            // doctors = data.filter(doctor => doctor?.employeestatus_id.id !== 3);
+            doctors = data;
         },
 
         error: function(resOb) {
@@ -274,84 +272,71 @@ const checkFormUpdate=()=>{
     return updates;
 }
 
+
 //function for doctor update button
 const buttonDoctorUpdate = ()=>{
-    //1) check update button
-    console.log("Update");
-    console.log(doctor);
-    console.log(olddoctor);
+   //1) check update button
+   console.log("update");
+   console.log(doctor);
+   console.log(olddoctor);
 
-
-    //2) check form errors
-    const errors = checkDoctorFormError();
-    if(errors == ""){
-        
-    //3) check available update
-    let updates = checkFormUpdate();
-    if(updates ==""){
-        Swal.fire({
-            icon: 'info',
-            html: 'Nothing to update..!',
-            showConfirmButton: true,
-        });
-    }else{
-        //4) get user confirmation
-        let userConfirm = confirm("Are you sure to do the following changes..? \n" + updates);
-
-        if(userConfirm){
-            
-            let employeeStatusId = doctor.employeestatus_id.id;
-            let specializationId = doctor.specialization_id.id;
-
-            /*let dobDate = doctor.dob;
-            let convertedDOB = dobDate + "T00:00:00"
-            let payload = {
-                ...doctor,
-               
-                dob: convertedDOB,
-            }*/
-
-            //5) call put service
-            let putServiceresponce;
-            //6) check put service response
-            $.ajax("/doctor" ,{
-                type:"PUT",
-                contentType:"application/json",
-                async: false,
-                data: JSON.stringify(doctor),
-                success: function(data){
-                    putServiceresponce=data;
-                }, error:function(resData){
-                    putServiceresponce=resData;
-                }
-
-            });
-            if (putServiceresponce == "OK"){
-                alert("Updated Successfully..!");
-                $('#doctorAddModal').modal('hide');
-                refreshDoctorTable();
-                formDoctor.reset();
-                refreshDoctorForm();
-
-            }else{
-                alert("failed to update following error..\n"+ putServiceresponce);
-
-            }
-
-        }
-
-        
-
-    }
-
-    
-
-    }else {
-
-        alert("Following errors can be seen in the form..!\n" + errors);
-
-    }
-
+   //2) check form errors
+   let errors = checkDoctorFormError();
+   if (errors == "") {
+       //3) check what we have to update
+       let updates = checkFormUpdate();
+       if (updates == "") {
+           Swal.fire({
+               icon: 'info',
+               html: 'Nothing to Update..!',
+               showConfirmButton: true,
+           });
+       } else {
+           //4) get user confirmation
+           Swal.fire({
+               title: 'Are you sure to UPDATE the following record?',
+               html: updates,
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: 'Yes, update it!'
+           }).then((result) => {
+               if (result.isConfirmed) {
+                   //5) call put service
+                   let putServiceResponce = ajaxRequestBody("/doctor", "PUT", doctor)
+                   //6) check put service response
+                   if (putServiceResponce == "OK") {
+                       Swal.fire({
+                           icon: 'success',
+                           html: 'Updated Successfully..!',
+                           showConfirmButton: true,
+                       }).then(() => {
+                        $('#doctorAddModal').modal('hide');
+                        refreshDoctorTable();
+                        FormDoctor.reset();
+                        refreshDoctorForm();
+                        
+                       });
+                   } else {
+                       Swal.fire({
+                           icon: 'error',
+                           html: 'Failed to Update doctor Details',
+                           text: putServiceResponce,
+                           showConfirmButton: true,
+                       });
+                   }
+               }
+           });
+       }
+   } else {
+       Swal.fire({
+           icon: 'error',
+           html: 'Form has some errors... please check the form again..',
+           text: errors,
+           showConfirmButton: true,
+       });
+   }
 }
 
 const editFunc =(ob)=>{
@@ -361,54 +346,52 @@ const editFunc =(ob)=>{
 
 //function for delete doctor record
 const deleteFunc =(ob,rowIndex)=>{
-    // tableDoctor.children[1].children[rowIndex].style.backgroundColor = 'red'
+    //tableDoctor.children[1].children[rowIndex].style.backgroundColor = 'red';
+
     const row = tableDoctor.children[1].children[rowIndex];
     row.classList.add('table-danger');
+
+    console.log(ob);
     
-    console.log(ob)
 
     //need a time to change the color
     setTimeout(function () {
-        const userConfirm = confirm('Are you sure to REMOVE following Doctor? \n'
-            + '\n Name is ' + ob.fullname
-            + '\n NIC is ' + ob.nic
-            + '\n Status is ' + ob.employeestatus_id.name
-        );
-
-        if (userConfirm) {
-            //call delete service
-            let deleteServerResponse;
-
-            $.ajax("/doctor" , {
-                type:"DELETE",
-                data: JSON.stringify(ob) ,
-                contentType: "application/json" ,
-                async: false,
-                success: function (data) {
-                    console.log("Success "+data);
-                    deleteServerResponse = data;
-                },
-                error:function (resData) {
-                    console.log("Success "+resData);
-                    deleteServerResponse = resData;
-                }
-            });
-
-            if (deleteServerResponse == 'OK') {
-                alert('Delete Successfully...!!');
+    // get user confirmation
+    // Get user confirmation using SweetAlert2
+    Swal.fire({
+        title: 'Confirm Delete Details',
+        html: 'Are you sure to REMOVE following Doctor? <br>'
+            + 'Name is : ' + ob.fullname
+            + '<br> NIC is : ' + ob.nic
+            + '<br> Mobile No is : ' + ob.mobileno,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // call delete service
+            let deleteServerResponce = ajaxRequestBody("/doctor", "DELETE", ob);
+            // check delete service responce
+            if (deleteServerResponce == "OK") {
                 refreshDoctorTable();
+
+               Swal.fire({
+                    title: 'Success',
+                    text: 'Doctor Deleted Successfully!',
+                    icon: 'success'
+                });
             } else {
-                alert('Delete not completed. You have following error \n' + deleteServerResponse);
+                
+                 Swal.fire({
+                    title: 'Form Error',
+                    text: 'Failed to delete Doctor details \n' + deleteServerResponce,
+                    icon: 'error'
+                });
             }
         }
-        
-        /* else {
-            row.classList.remove('table-danger')
-        }
-         else {
-             refreshDoctorTable();
-             } */
-             refreshDoctorTable();
+    });
 
     }, 500);
 
@@ -523,48 +506,59 @@ const checkDoctorFormError =() =>{
 
 }
 
-//create function for submit to add doctor
+//create function for add a doctor
 const buttonFormSubmit = ()=>{
+    //)check button 
     console.log('add doctor',doctor);
     console.log(window['doctor']);
 
-
-    //need to check error
-    //alert(checkDoctorFormError());
-
+    // Check form error
     const formErrors = checkDoctorFormError();
+    // If no errors
     if (formErrors == '') {
-        //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following doctor? \n'
-                                    + '\n Full Name is : ' + doctor.fullname
-                                    + '\n NIC is : ' + doctor.nic
-                                    + '\n email is : ' + doctor.email
-                                    + '\n status is : ' + doctor.employeestatus_id.name);
-
-
-            if (userConfirm) {
-                //pass data into backend
-                //check server response
-                let postServiceResponse = ajaxRequestBody("/doctor", "POST", doctor);
-
-
-                if (postServiceResponse === 'OK') {
-                    alert("Save successfully.. !");
-                    refreshDoctorTable();
-                    formDoctor.reset();
-                    refreshDoctorForm();
-                    $("#doctorAddModal").modal("hide");
-                    
+        // Get user confirmation using SweetAlert2
+        Swal.fire({
+            title: 'Confirm Addition',
+            html: 'Are you sure to add following Doctor? <br>'
+                + '<br> Name is : ' + doctor.fullname
+                + '<br> NIC is : ' + doctor.nic
+                + '<br> Email is : ' + doctor.email
+                + '<br> Status is : ' + doctor.employeestatus_id.name,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, add it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call POST service
+                let postServerResponce = ajaxRequestBody("/doctor", "POST", doctor);
+                // Check post service response
+                if (postServerResponce == "OK") {
+                    Swal.fire({
+                        title: 'Success',
+                        html: 'Saved successfully!',
+                        icon: 'success'
+                    });
                 } else {
-                    alert('Save not completed..You have following errors \n' + postServiceResponse);
+                    Swal.fire({
+                        title: 'Form Error',
+                        html: 'Failed to submit doctor \n' + postServerResponce,
+                        icon: 'error'
+                    });
                 }
+                refreshDoctorTable();
+                FormDoctor.reset();
+                refreshDoctorForm();
+                $('#doctorAddModal').modal('hide');
             }
-    
-        
+        });
     } else {
-
-        //form has errors
-        alert("form has following errors..\n" + formErrors);
+        Swal.fire({
+            title: 'Form Error',
+            html: 'The form has the following errors. Please check the form again:\n' + formErrors,
+            icon: 'error'
+        });
     }
  
 }

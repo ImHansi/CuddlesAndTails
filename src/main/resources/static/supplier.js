@@ -53,14 +53,14 @@ const refreshSupplierTable = () => {
 
     console.log("Suppliers List", suppliers)
     //disable delete button
-    /*doctors.forEach((element , index) => {
-        if (element.employeestatus_id.name == "Resign") {
+    suppliers.forEach((element , index) => {
+        if (element.supplierstatus_id.name == "inactive") {
             if (userPrivilege.delete) {
-                tableDoctor.children[1].children[index].children[9].children[3].disabled ="disabled";
+                tableSupplier.children[1].children[index].children[7].children[3].disabled ="disabled";
             }
             
         }
-    });*/
+    });
 
    $('#tableSupplier').dataTable();
 
@@ -68,7 +68,7 @@ const refreshSupplierTable = () => {
 }
 
 //create function getSupplierStatus 
-const getEmployeeStgetSupplierStatusatus=(ob)=>{
+const getSupplierStatus=(ob)=>{
     //return 'ss';
     //return ob.supplierstatus_id.name;
     if(ob.supplierstatus_id.name == 'Active'){
@@ -137,6 +137,8 @@ const supplierFormRefill =(ob,rowIndex)=>{
     btnAddSupplier.disabled="disabled";
     $("#btnAddSupplier").css("cursor","not-allowed");
 
+    refreshInnerFormAndTable();
+
 }
 
 //create function for check form update
@@ -194,74 +196,68 @@ const checkFormUpdate=()=>{
 }
 
 //function for supplier update button
-const btnUpdateSupplier = ()=>{
-    //1) check update button
-    console.log("Update");
-    console.log(supplier);
-    console.log(oldsupplier);
+const buttonSupplierUpdate = ()=>{
+   //1) check update button
+   console.log("update");
+   console.log(supplier);
+   console.log(oldsupplier);
 
-
-    //2) check form errors
-    const errors = checkSupplierFormError();
-    if(errors == ""){
-        
-    //3) check available update
-    let updates = checkFormUpdate();
-    if(updates ==""){
-        Swal.fire({
-            icon: 'info',
-            html: 'Nothing to update..!',
-            showConfirmButton: true,
-        });
-    }else{
-        //4) get user confirmation
-        let userConfirm = confirm("Are you sure to do the following changes..? \n" + updates);
-
-        if(userConfirm){
-            
-            let supplierStatusId = supplier.supplierstatus_id.id;
-
-            //5) call put service
-            let putServiceresponce;
-            //6) check put service response
-            $.ajax("/supplier" ,{
-                type:"PUT",
-                contentType:"application/json",
-                async: false,
-                data: JSON.stringify(supplier),
-                success: function(data){
-                    putServiceresponce=data;
-                }, error:function(resData){
-                    putServiceresponce=resData;
-                }
-
-            });
-            if (putServiceresponce == "OK"){
-                alert("Updated Successfully..!");
-                $('#supplierAddModal').modal('hide');
-                refreshSupplierTable();
-                formSupplier.reset();
-                refreshSupplierForm();
-
-            }else{
-                alert("failed to update following error..\n"+ putServiceresponce);
-
-            }
-
-        }
-
-        
-
-    }
-
-    
-
-    }else {
-
-        alert("Following errors can be seen in the form..!\n" + errors);
-
-    }
-
+   //2) check form errors
+   let errors = checkSpplierFormError();
+   if (errors == "") {
+       //3) check what we have to update
+       let updates = checkFormUpdate();
+       if (updates == "") {
+           Swal.fire({
+               icon: 'info',
+               html: 'Nothing to Update..!',
+               showConfirmButton: true,
+           });
+       } else {
+           //4) get user confirmation
+           Swal.fire({
+               title: 'Are you sure to UPDATE the following record?',
+               html: updates,
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: 'Yes, update it!'
+           }).then((result) => {
+               if (result.isConfirmed) {
+                   //5) call put service
+                   let putServiceResponce = ajaxRequestBody("/supplier", "PUT", supplier)
+                   //6) check put service response
+                   if (putServiceResponce == "OK") {
+                       Swal.fire({
+                           icon: 'success',
+                           html: 'Update Successfully',
+                           showConfirmButton: true,
+                       }).then(() => {
+                        refreshSupplierTable();
+                        FormSupplier.reset();
+                        refreshSupplierForm();
+                        $('#supplierAddModal').modal('hide');
+                       });
+                   } else {
+                       Swal.fire({
+                           icon: 'error',
+                           html: 'Failed to Update order Details',
+                           text: putServiceResponce,
+                           showConfirmButton: true,
+                       });
+                   }
+               }
+           });
+       }
+   } else {
+       Swal.fire({
+           icon: 'error',
+           html: 'Form has some errors... please check the form again..',
+           text: errors,
+           showConfirmButton: true,
+       });
+   }
 }
 
 const editFunc =(ob)=>{
@@ -271,54 +267,50 @@ const editFunc =(ob)=>{
 
 //function for delete supplier record
 const deleteFunc =(ob,rowIndex)=>{
-    // tableSupplier.children[1].children[rowIndex].style.backgroundColor = 'red'
+    //tableEmployee.children[1].children[rowIndex].style.backgroundColor = 'red';
+
     const row = tableSupplier.children[1].children[rowIndex];
     row.classList.add('table-danger');
+
+    console.log(ob);
     
-    console.log(ob)
 
     //need a time to change the color
     setTimeout(function () {
-        const userConfirm = confirm('Are you sure to REMOVE following Supplier? \n'
-            + '\n Supplier Name is ' + ob.name
-            + '\n Mobile is ' + ob.mobile
-            + '\n Email is ' + ob.email
-        );
-
-        if (userConfirm) {
-            //call delete service
-            let deleteServerResponse;
-
-            $.ajax("/supplier" , {
-                type:"DELETE",
-                data: JSON.stringify(ob) ,
-                contentType: "application/json" ,
-                async: false,
-                success: function (data) {
-                    console.log("Success "+data);
-                    deleteServerResponse = data;
-                },
-                error:function (resData) {
-                    console.log("Success "+resData);
-                    deleteServerResponse = resData;
-                }
-            });
-
-            if (deleteServerResponse == 'OK') {
-                alert('Delete Successfully...!!');
+    // get user confirmation
+    // Get user confirmation using SweetAlert2
+    Swal.fire({
+        title: 'Confirm Delete Details',
+        html: 'Are you sure to REMOVE following Supplier? <br>'
+            + 'Name is : ' + ob.name
+            + '<br> Mobile is : ' + ob.mobile,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // call delete service
+            let deleteServerResponce = ajaxRequestBody("/supplier", "DELETE", ob);
+            // check delete service responce
+            if (deleteServerResponce == "Ok") {
                 refreshSupplierTable();
+
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Supplier has been deleted Successfully!',
+                    icon: 'success'
+                });
             } else {
-                alert('Delete not completed. You have following error \n' + deleteServerResponse);
+                Swal.fire({
+                    title: 'Form Error',
+                    text: 'Failed to delete supplier \n' + deleteServerResponce,
+                    icon: 'error'
+                });
             }
         }
-        
-        /* else {
-            row.classList.remove('table-danger')
-        }
-         else {
-             refreshSupplierTable();
-             } */
-             refreshSupplierTable();
+    });
 
     }, 500);
 
@@ -329,6 +321,10 @@ const deleteFunc =(ob,rowIndex)=>{
 const printFunc =(ob, rowIndex)=>{
     console.log('print');
 
+}
+//function for print
+function printpage() { 
+    window.print(); 
 }
 
 //add function
@@ -407,47 +403,58 @@ const checkSupplierFormError =() =>{
 
 }
 
-//create function for submit to add a supplier
+//create function for submit to add order
 const buttonFormSubmit = ()=>{
+    //)check button 
     console.log('add supplier',supplier);
     console.log(window['supplier']);
 
-
-    //need to check error
-    //alert(checkSupplierFormError());
-
+    // Check form error
     const formErrors = checkSupplierFormError();
+    // If no errors
     if (formErrors == '') {
-        //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following supplier? \n'
-                                    + '\n Full Name is : ' + supplier.name
-                                    + '\n Mobile No is : ' + supplier.mobile
-                                    + '\n Email is : ' + supplier.email);
-
-
-            if (userConfirm) {
-                //pass data into backend
-                //check server response
-                let postServiceResponse = ajaxRequestBody("/supplier", "POST", supplier);
-
-
-                if (postServiceResponse === 'OK') {
-                    alert("Save successfully.. !");
+        // Get user confirmation using SweetAlert2
+        Swal.fire({
+            title: 'Confirm Addition',
+            html: 'Are you sure to add following Supplier? <br>'
+                + '<br> Suppliers Name is : ' + supplier.name
+                + '<br> Mobile No is : ' + supplier.mobile,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, add it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call POST service
+                let postServerResponce = ajaxRequestBody("/supplier", "POST", supplier);
+                // Check post service response
+                if (postServerResponce == "OK") {
                     refreshSupplierTable();
-                    formSupplier.reset();
+                    FormSupplier.reset();
                     refreshSupplierForm();
-                    $("#supplierAddModal").modal("hide");
-                    
+                    $('#supplierAddModal').modal('hide');
+
+                    Swal.fire({
+                        title: 'Success',
+                        html: 'Saved Supplier successfully!',
+                        icon: 'success'
+                    });
                 } else {
-                    alert('Save not completed..You have following errors \n' + postServiceResponse);
+                    Swal.fire({
+                        title: 'Form Error',
+                        html: 'Failed to submit Supplier \n' + postServerResponce,
+                        icon: 'error'
+                    });
                 }
             }
-    
-        
+        });
     } else {
-
-        //form has errors
-        alert("form has following errors..\n" + formErrors);
+        Swal.fire({
+            title: 'Form Error',
+            html: 'The form has the following errors. Please check the form again:\n' + formErrors,
+            icon: 'error'
+        });
     }
  
 }
@@ -494,4 +501,122 @@ const refreshSupplierForm = () =>{
         $("#btnAddSupplier").css("cursor","not-allowed");
     }
 
+    refreshInnerFormAndTable();
+
 }
+
+//inner form area starts here
+
+const refreshInnerFormAndTable = ()=>{
+    
+    supplierhasproducts = {};
+
+    products = ajaxRequestHere("/product/showall");
+    fillDataIntoSelect(selectSupplierProduct,'Select Products',products,'name');
+
+    //refresh innertable
+    let displayPropertyList = [
+        { dataType: "function", propertyName: getProductName },
+    ];
+
+    fillDataIntoInnerTable(InnerTable,supplier.supplierhasproductsList,displayPropertyList, deleteInnerForm);
+
+    selectSupplierProduct.style.border = "1px solid #ced4da";
+
+}
+
+const deleteInnerForm = (innerOb) => {
+    Swal.fire({
+        title: 'Confirm Delete Details',
+        html: 'Are You sure to remove this product..? <br>'
+            + '<br> Product Name : ' + innerOb.product_id.name,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let extIndex = supplier.supplierhasproductsList.map(suphpro => suphpro.product_id.id).indexOf(innerOb.product_id.id);
+            if (extIndex != -1) {
+                supplier.supplierhasproductsList.splice(extIndex, 1);
+                refreshInnerFormAndTable();
+
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Product Removed Successfully...!',
+                    icon: 'success'
+                });
+            }
+        }
+    });
+}
+
+const getProductName = (innerOb) => {
+    return innerOb.product_id.name;
+}
+
+
+const checkInnerFormError = () => {
+    let errors = "";
+
+    if (supplierhasproducts.product_id.id == null) {
+        errors = errors + "Please select product \n";
+    }
+    return errors;
+}
+
+const btnInnerAdd = () => {
+    //check duplicate 
+    let selectInProduct = JSON.parse(selectSupplierProduct.value);
+    let extPro = false;
+
+    for (const suphpro of supplier.supplierhasproductsList) {
+        if (selectInProduct.id == suphpro.product_id.id) {
+            extPro = true;
+            break;
+        }
+    }
+    if (extPro) {
+        Swal.fire({
+            title: "Selected Product Already Exist",
+            html: "(select another Product)",
+            icon: "warning"
+        });
+        supplierhasproducts = {};
+        selectSupplierProduct.style.border = "1px solid #ced4da";
+        
+    
+    } else {
+        let errors = checkInnerFormError();
+        if (errors == "") {
+            swal.fire({
+                title: 'Confirm Addition',
+                html: 'Are you Sure to Submit selected Product? <br>'
+                    + '<br> Product Name :' + supplierhasproducts.product_id.name,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, add it!',
+                cancelButtonText: 'No, cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    supplier.supplierhasproductsList.push(supplierhasproducts);
+                    refreshInnerFormAndTable();
+                }
+                Swal.fire({
+                    title: 'Success',
+                    html: 'Product added successfully!',
+                    icon: 'success'
+                });
+            });
+        } else {
+            Swal.fire({
+                title: 'Form Error',
+                html: 'Inner Form Has Following errors <br>' + errors,
+                icon: 'error'
+            });
+        }
+    }
+    }
+
