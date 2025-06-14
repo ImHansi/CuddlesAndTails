@@ -1,9 +1,7 @@
 
 <nav class="navbar bg-body-tertiary fixed-top" style="background-color: rgba(59, 59, 166, 0.825);" th:fragment="topnavbarFragment">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#" th:text="${logusername}">
-        <img src="/resources/images/Logopic1.png" width="90" height="30" alt="">
-      </a>
+      <a class="navbar-brand" href="#" th:text="${logusername}"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -53,6 +51,7 @@
                   <li><a class="dropdown-item" href="/product">Product</a></li>
                   <li><a class="dropdown-item" href="/supplier">Supplier</a></li>
                   <li><a class="dropdown-item" href="/receive">Receive Notes</a></li>
+                  <li><a class="dropdown-item" href="/suppayment">Supplier Payment</a></li>
                 </ul>
               </li>
             </li>

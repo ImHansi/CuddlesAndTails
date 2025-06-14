@@ -144,17 +144,61 @@ const fillDataIntoSelectTwo = (feildId, message, dataList, property, propertyTwo
     });
 }
 
-const fillDataIntoDataList = (feildId,dataList, property,propertyTwo,selectedValue) => {
+
+const fillDataIntoSelectNew = (feildId, message, dataList, property, propertyTwo, selectedValue) => {
+
+    //feildId eke athule tiyen ek null krno
+    feildId.innerHTML = '';
+
+    //create option tag
+    const optionMsg = document.createElement("option");
+    //put a message into that 
+    optionMsg.innerText = message;
+    //ek selected disabled krnw
+    optionMsg.selected = "selected";
+    optionMsg.disabled = "disabled";
+    feildId.appendChild(optionMsg);
+
+    //foreach eken datalist ekt value tika gannw 
+    dataList.forEach(element => {
+        //Isslama opton tag ekk hadagnnw 
+        const option = document.createElement('option');
+        //ita psse element eke property ek genn gannwa tag eke innertext ek athulata
+        option.innerText =  element[property] + " - " + element[propertyTwo];
+        //meka dynamic drop down ekk,json string ekk create krgnn oni nisa (convert javascript object into json string -> option element value type is string)
+        option.value = JSON.stringify(element);
+
+        //refill ekedi select krl tibba data ek pirenn meken 
+        if (selectedValue == element[property]) {
+            option.selected = "selected";
+        }
+        feildId.appendChild(option);
+    });
+}
+
+
+//function for the search on datalists
+const fillDataIntoDataList = (feildId,dataList, property) => {
     feildId.innerHTML="";
-
-
-
     dataList.forEach(element => {
         const option = document.createElement('option');
-        option.value= element[property] +" " + element[propertyTwo];
+        option.value= element[property];
 
 
         feildId.appendChild(option);
         
     });
+}
+
+//clear uploaded image (not delete)
+const buttonClearImage = (ob) => {
+    if (ob.image != null) {
+        let userConfirmImgDlt = confirm("Are You Sure To Delete This image?");
+        if (userConfirmImgDlt) {
+            ob.image = null;
+            fileDocImage.value = "";
+        } else {
+            alert("Cancelled")
+        }
+    }
 }

@@ -9,7 +9,7 @@ window.addEventListener('load',()=>{
     refreshDoctorForm();//call form refresh function
 
 
-    //call designation form refresh function
+    //call specialization form refresh function
     refreshSpecializationForm();
 });
 
@@ -48,6 +48,7 @@ const refreshDoctorTable = () => {
                               {dataType:'text',propertyName:'mobileno'},
                               {dataType:'text',propertyName:'email'},
                               {dataType:'function',propertyName:getDoctorSpecialization},
+                              {dataType:'function',propertyName:getHasUserAccount},
                               {dataType:'function',propertyName:getEmployeeStatus},
                               
     ];
@@ -66,6 +67,17 @@ const refreshDoctorTable = () => {
             
         }
     });*/
+
+    doctors.forEach((element, index) => {
+    if (element.employeestatus_id.name === "Resign") {
+        const row = tableDoctor.children[1].children[index];
+        const deleteButton = row.querySelector('.btn-danger');
+        const editButton = row.querySelector('.btn-success');
+
+        if (deleteButton) deleteButton.disabled = true;
+        if (editButton) editButton.disabled = true;
+    }
+    });
 
    $('#tableDoctor').dataTable();
 
@@ -151,9 +163,10 @@ const doctorFormRefill =(ob,rowIndex)=>{
     textLandNo.value = doctor.landno;
     textAddress.value = doctor.address;
     textNote.value = doctor.note;
-    textDoctorFee.value= doctor.doctorfee;
+    textDoctorFee.value= doctor.specialization_id.doctorfee;
     selectCivilstatus.value = doctor.civilstatus;
     selectAvailableType.value = doctor.doctoravailabilitytype;
+
 
  
 
@@ -215,59 +228,59 @@ const doctorFormRefill =(ob,rowIndex)=>{
 const checkFormUpdate=()=>{
     let updates = "";
     if(doctor.fullname != olddoctor.fullname){
-        updates = updates + "fullname has updated," + olddoctor.fullname + "into" + doctor.fullname + "\n";
+        updates = updates + "fullname has updated," + olddoctor.fullname + " into " + doctor.fullname + "\n";
     }
 
     if(doctor.licenseno != olddoctor.licenseno){
-        updates = updates + "licenseno has updated," + olddoctor.licenseno + "into" + doctor.licenseno + "\n";
+        updates = updates + "licenseno has updated," + olddoctor.licenseno + " into " + doctor.licenseno + "\n";
     }
 
     if(doctor.nic != olddoctor.nic){
-        updates = updates + "nic has updated," + olddoctor.nic + "into" + doctor.nic + "\n";
+        updates = updates + "nic has updated," + olddoctor.nic + " into " + doctor.nic + "\n";
     }
 
     if(doctor.mobileno != olddoctor.mobileno){
-        updates = updates + "mobileno has updated," + olddoctor.mobileno + "into" + doctor.mobileno + "\n";
+        updates = updates + "mobileno has updated," + olddoctor.mobileno + " into " + doctor.mobileno + "\n";
     }
 
     if(doctor.landno != olddoctor.landno){
-        updates = updates + "landno has updated," + olddoctor.landno + "into" + doctor.landno + "\n";
+        updates = updates + "landno has updated," + olddoctor.landno + " into " + doctor.landno + "\n";
     }
 
     if(doctor.dateOfBirth != olddoctor.dateOfBirth){
-        updates = updates + "dob has updated," + olddoctor.dateOfBirth + "into" + doctor.dateOfBirth + "\n";
+        updates = updates + "dob has updated," + olddoctor.dateOfBirth + " into " + doctor.dateOfBirth + "\n";
     }
 
     if(doctor.email != olddoctor.email){
-        updates = updates + "email has updated," + olddoctor.email + "into" + doctor.email + "\n";
+        updates = updates + "email has updated," + olddoctor.email + " into " + doctor.email + "\n";
     }
 
     if(doctor.address != olddoctor.address){
-        updates = updates + "address has updated," + olddoctor.address + "into" + doctor.address + "\n";
+        updates = updates + "address has updated," + olddoctor.address + " into " + doctor.address + "\n";
     }
 
     if(doctor.note != olddoctor.note){
-        updates = updates + "note has updated," + olddoctor.note + "into" + doctor.note + "\n";
+        updates = updates + "note has updated," + olddoctor.note + " into " + doctor.note + "\n";
     }
 
     if(doctor.doctorfee != olddoctor.doctorfee){
-        updates = updates + "doctorfee has updated," + olddoctor.doctorfee + "into" + doctor.doctorfee + "\n";
+        updates = updates + "doctorfee has updated," + olddoctor.doctorfee + " into " + doctor.doctorfee + "\n";
     }
 
     if(doctor.doctoravailabilitytype != olddoctor.doctoravailabilitytype){
-        updates = updates + "doctoravailabilitytype has updated," + olddoctor.doctoravailabilitytype + "into" + doctor.doctoravailabilitytype + "\n";
+        updates = updates + "doctoravailabilitytype has updated," + olddoctor.doctoravailabilitytype + " into " + doctor.doctoravailabilitytype + "\n";
     }
 
     if(doctor.civilstatus != olddoctor.civilstatus){
-        updates = updates + "civilstatus has updated," + olddoctor.civilstatus + "into" + doctor.civilstatus + "\n";
+        updates = updates + "civilstatus has updated," + olddoctor.civilstatus + " into " + doctor.civilstatus + "\n";
     }
 
     if(doctor.employeestatus_id.name != olddoctor.employeestatus_id.name){
-        updates = updates + "Employee Status has updated,"+ olddoctor.employeestatus_id.name + "into" + doctor.employeestatus_id.name + "\n";
+        updates = updates + "Employee Status has updated,"+ olddoctor.employeestatus_id.name + " into " + doctor.employeestatus_id.name + "\n";
     }
 
     if(doctor.specialization_id.name != olddoctor.specialization_id.name){
-        updates = updates + "specialization has updated," + olddoctor.specialization_id.name + "into" + doctor.specialization_id.name +"\n";
+        updates = updates + "specialization has updated," + olddoctor.specialization_id.name + " into " + doctor.specialization_id.name +"\n";
     }
     return updates;
 }
@@ -352,7 +365,6 @@ const deleteFunc =(ob,rowIndex)=>{
     row.classList.add('table-danger');
 
     console.log(ob);
-    
 
     //need a time to change the color
     setTimeout(function () {
@@ -383,6 +395,7 @@ const deleteFunc =(ob,rowIndex)=>{
                     icon: 'success'
                 });
             } else {
+
                 
                  Swal.fire({
                     title: 'Form Error',
@@ -390,7 +403,7 @@ const deleteFunc =(ob,rowIndex)=>{
                     icon: 'error'
                 });
             }
-        }
+        } 
     });
 
     }, 500);
@@ -402,6 +415,51 @@ const deleteFunc =(ob,rowIndex)=>{
 const printFunc =(ob, rowIndex)=>{
     console.log('print');
 
+    //open view modal
+    $('#doctorViewModal').modal('show');
+
+    viewFullname.innerHTML = ob.fullname;
+    viewLisenceNo.innerHTML = ob.licenseno;
+    viewNic.innerHTML = ob.nic;
+    viewEmail.innerHTML = ob.email;
+    viewMobileno.innerHTML = ob.mobileno;
+    viewLandno.innerHTML = ob.landno;
+    viewDob.innerHTML = ob.dob;
+    viewAddress.innerHTML = ob.address;
+    viewNote.innerHTML = ob.note;
+    viewSpecialization.innerHTML = ob.specialization_id.name;
+    viewCivilstatus.innerHTML = ob.civilstatus;
+    viewEmployeestatus.innerHTML = ob.employeestatus_id.name;
+    viewDoctorfee.innerHTML = ob.specialization_id.doctorfee;
+    viewAvailabilitytype.innerHTML = ob.doctoravailabilitytype;
+    viewImage.src = `/doctor/image/${ob.id}`;
+
+}
+
+//function for print
+function printpage() { 
+    let modalContent = document.getElementById('doctorViewModal').innerHTML;
+    
+    let newWindow = window.open('', '', 'width=800,height=600');
+
+    newWindow.document.write(`
+        <html>
+            <head>
+                <title>Print Modal</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                </style>
+            </head>
+            <body>
+                ${modalContent}
+            </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+    newWindow.focus();
+    newWindow.print();
+    newWindow.close();
 }
 
 //add function
@@ -539,6 +597,11 @@ const buttonFormSubmit = ()=>{
                         title: 'Success',
                         html: 'Saved successfully!',
                         icon: 'success'
+                    }).then(() => {
+                        $('#doctorAddModal').modal('hide');
+                        refreshDoctorTable();
+                        FormDoctor.reset();
+                        refreshDoctorForm();    
                     });
                 } else {
                     Swal.fire({
@@ -546,11 +609,7 @@ const buttonFormSubmit = ()=>{
                         html: 'Failed to submit doctor \n' + postServerResponce,
                         icon: 'error'
                     });
-                }
-                refreshDoctorTable();
-                FormDoctor.reset();
-                refreshDoctorForm();
-                $('#doctorAddModal').modal('hide');
+                } 
             }
         });
     } else {
@@ -576,6 +635,10 @@ const refreshDoctorForm = () =>{
 
     employeeSatatueses = ajaxRequestHere("/employeestatus/showStatus");
     fillDataIntoSelect(selectEmployeeStatus,'Select Status',employeeSatatueses,'name');
+
+    selectEmployeeStatus.value = JSON.stringify(employeeSatatueses[0]);
+    doctor.employeestatus_id = employeeSatatueses[0];
+    selectEmployeeStatus.style.border = "2px solid green";
 
     //set text field value as a empty
     textFullName.style.border ='1px solid #ced4da';
@@ -712,17 +775,16 @@ const generateGenderDOB = (element) => {
 //specialization form refresh
 const refreshSpecializationForm =()=>{
     specializationob = new Object();
-    specializationoldob = null;
 
-    
 }
 
 //create function for submit Specialization form
 const btnSpecializationSubmit=()=>{
     console.log("submit Specialization form");
+    console.log(specializationob)
 
     if (specializationob.name != null) {
-        let userConfirm = confirm("Are you sure to add "+ specializationob.name + "specialization Value..?");
+        let userConfirm = confirm("Are you sure to add "+ specializationob.name + " specialization Value..?");
         if (userConfirm) {
             let postResponse = ajaxRequestBody("/specialization" , "POST" , specializationob);
             if (postResponse == "OK") {
@@ -752,3 +814,5 @@ const generateDoctorFee =()=>{
     doctor.doctorfee = textDoctorFee.value;
     textDoctorFee.style.border = "4px solid green";
 }
+
+

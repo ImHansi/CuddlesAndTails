@@ -6,13 +6,16 @@ window.addEventListener('load',()=>{
 
     //refreshAvailabilityTable(); //call table refresh function
 
+    $('#availabilityAddModal').on('shown.bs.modal', function () {
+    restrictToCurrentMonth();
+    });
     
     refreshDoctorAvailabilityTable();
     refreshAvailabilityForm();//call form refresh function
 
     //inner form and table
-    refreshAvailabilityTable();
-    refreshInnerAvailabilityForm();
+   
+    refreshInnerFormAndTable();
 
 });
 
@@ -106,7 +109,7 @@ const buttonAVSubmit = ()=>{
 
                 if (postServiceResponse === 'OK') {
                     alert("Save successfully.. !");
-                    //refreshAvailabilityTable();
+                    refreshAvailabilityTable();
                     formAvailabilityDoctor.reset();
                     refreshAvailabilityForm();
                     $("#availabilityAddModal").modal("hide");
@@ -144,7 +147,7 @@ const doctorAFormRefill =(ob,rowIndex)=>{
     startDate.value = doctor.nic;
     endDate.value = doctor.nic;
     
-    doctors = ajaxRequestHere("/doctor/showall");
+    doctors = ajaxRequestHere("/doctor/workingDoctors");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctor,'fullname',ob.doctor_id.fullname);
     
    
@@ -317,7 +320,7 @@ const refreshAvailabilityForm = () =>{
 
     doctoravailability.doctorhasavailabilityList = new Array();
 
-    doctors = ajaxRequestHere("/doctor/showall");
+    doctors = ajaxRequestHere("/doctor/workingDoctors");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname');
 
 
@@ -371,6 +374,7 @@ const getSeventhDay = () => {
     document.getElementById('endDate').value = formattedDate;
     document.getElementById('endDate').style.border = "4px solid green";
 
+    doctoravailability.enddate = formattedDate;
     console.log(formattedDate);
 };
 
@@ -419,8 +423,70 @@ const refreshInnerFormAndTable = ()=>{
 
 }
 
-const deleteInnerForm =(innerOb)=>{
+const deleteInnerForm =(innerOb ,rowIndex)=>{
+    const row = tableInner.children[1].children[rowIndex];
+    row.classList.add('table-danger');
 
+    console.log(innerOb);
+
+    
+    //need a time to change the color
+    setTimeout(function () {
+    // get user confirmation
+    // Get user confirmation using SweetAlert2
+    Swal.fire({
+        title: 'Confirm Delete Details',
+        html: 'Are you sure to REMOVE following Doctor Availability record? <br>'
+            + 'Date is : ' + innerOb.date
+            + '<br> Start time is : ' + innerOb.strat_time
+            + '<br> End time is : ' + innerOb.end_time,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // call delete service
+            let deleteServerResponce = ajaxRequestBody("/availability", "DELETE", innerOb);
+            // check delete service responce
+            if (deleteServerResponce == "OK") {
+                refreshInnerFormAndTable();
+
+               Swal.fire({
+                    title: 'Success',
+                    text: 'Availability Deleted Successfully!',
+                    icon: 'success'
+                });
+            } else {
+                
+                 Swal.fire({
+                    title: 'Form Error',
+                    text: 'Failed to delete Availability details \n' + deleteServerResponce,
+                    icon: 'error'
+                });
+            }
+        }
+    });
+
+    }, 500);
+
+}
+
+const checkInnerFormError =()=>{
+    let errors = "";
+
+    if(doctorhasavailability.date == null){
+        errors = errors + "date not selected "
+    }
+    if(doctorhasavailability.strat_time == null){
+        errors = errors + "Start time not selected "
+    }
+    if(doctorhasavailability.end_time == null){
+        errors = errors + "End time not selected "
+    }
+
+    return errors;
 }
 
 //inner form submit
@@ -431,7 +497,7 @@ const deleteInnerForm =(innerOb)=>{
     let extDate = false;
 
     for(const doclist of doctoravailability.doctorhasavailabilityList){
-        if(selectDate.value == doclist.date){
+        if(selectDate == doclist.date){
             extDate = true;
             break;
         }
@@ -463,3 +529,36 @@ const deleteInnerForm =(innerOb)=>{
         
     
 }
+
+const restrictToCurrentMonth = () => {
+    const input = document.getElementById("textMonth");
+    const now = new Date();
+ 
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const currentMonth = `${year}-${month}`;
+ 
+    input.value = currentMonth;
+    input.min = currentMonth;
+    input.max = currentMonth;
+    doctoravailability.month = input.value;
+
+ 
+    input.addEventListener('keydown', (e) => e.preventDefault());
+ 
+    input.addEventListener('change', function () {
+        if (input.value !== currentMonth) { 
+            input.value = currentMonth;
+ 
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Selection',
+                    text: 'You can only select the current month.'
+                });
+            } else {
+                alert('You can only select the current month.');
+            }
+        }
+    });
+};

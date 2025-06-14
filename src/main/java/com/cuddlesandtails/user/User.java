@@ -52,6 +52,9 @@ private String email;
 @Column(name = "status")
 private Boolean status;
 
+@Column(name = "image")
+private byte[] image;
+
 @Column(name = "added_datetime")
 @NotNull
 private LocalDateTime added_datetime; 

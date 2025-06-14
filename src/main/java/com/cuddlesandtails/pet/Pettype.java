@@ -23,8 +23,7 @@ public class Pettype {
 
     @Id //for pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //AI
-    @Column(name = "id", unique = true) //to map with column
-    @NotNull
+    @Column(name = "id", unique = true) //to map with column 
     private Integer id;
 
     @Column(name = "name")

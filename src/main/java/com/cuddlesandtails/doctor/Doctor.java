@@ -80,6 +80,9 @@ public class Doctor {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "image")
+    private byte[] image;
+
     @Column(name = "civilstatus") 
     @NotNull
     private String civilstatus;

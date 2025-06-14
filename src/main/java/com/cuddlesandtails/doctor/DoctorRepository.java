@@ -34,8 +34,13 @@ public interface DoctorRepository extends JpaRepository<Doctor,Integer>{
 
 
     
-    @Query("SELECT d FROM Doctor d WHERE d.employeestatus_id.id = 1 AND d.doctoravailabilitytype = 'housedoctor'")
-    List<Doctor> findDoctorsByStatusAndAvailability();
+    @Query("SELECT d FROM Doctor d WHERE d.employeestatus_id.id = 1")
+    List<Doctor> findDoctorsByStatus();
+    //AND d.doctoravailabilitytype = 'housedoctor'
     //SELECT * FROM cuddlesandtails.doctor where employeestatus_id = 1 and doctoravailabilitytype ="housedoctor";
     //"select d.id from Doctor d where d.employeestatus_id=1 and d.doctoravailabilitytype="housedoctor");
+
+    //create query to get 'working' doctors  to the given service
+    @Query(value = "select d from Doctor d where d.specialization_id in " +"(select s from Service se join se.specializations s where se.id = :serviceId) " +"and d.employeestatus_id.id = 1")
+    public List<Doctor> findWorkingDoctorsByService(@Param("serviceId") Integer serviceId);
 }

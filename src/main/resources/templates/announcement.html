@@ -165,7 +165,10 @@
                           <label for="textImage" class="form-label fw-bold">
                             Image : <span class="text-danger">(optional)</span>
                           </label>
-                          <input type="file" class="form-control" id="fileAnnoImage" onchange="validateFileField(this,'announcement','image','imagename','oldannouncement')">
+                          <button type="button" class="btn btn-primary" onclick="fileAnnoImage.click()" id="btnSelectImage"> Select Image</button>
+                              <button type="button" class="btn btn-info" id="btnClearImage" onclick="buttonClearImage()"> Clear Image</button>
+                              <img src="resources/images/consultationpic.png" style="height: 75px; width: 75px;" alt="aa" id="imageAnnoPhoto">
+                          <input type="file" class="form-control" id="fileAnnoImage" onchange="validateFileField(this,'announcement','image','imagename','oldannouncement',imageAnnoPhoto)">
                         
                       </div>
                       <!-- image ends here -->

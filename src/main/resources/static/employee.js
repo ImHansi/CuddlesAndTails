@@ -60,7 +60,8 @@ const refreshEmployeeTable = () => {
     employee = [];
     employees =ajaxRequestHere("/employee/showall");
 
-    $.ajax("/employee/showall",{
+    //normal way to do the Ajax request
+    /* $.ajax("/employee/showall",{
         type:"GET",
         contentType:"json",
         async: false,
@@ -74,7 +75,7 @@ const refreshEmployeeTable = () => {
             console.log("fail"+resOb);
             employee =[];
         }
-    });
+    }); */
 
 
     //text-> string , number, date
@@ -94,6 +95,7 @@ const refreshEmployeeTable = () => {
     //(tableID , dataArrayName, displaypropertyarea,refill function name, delete function name, print function name , button visibility, privilegeOb)
     fillDataIntoTable(tableEmployee, employees,displayproperty,employeeFormRefill,deleteFunc,printFunc,true, userPrivilege);
 
+    console.log("Employee List", employees)
     //disable delete button
  /*    employees.forEach((element , index) => {
         if (element.employeestatus_id.name == "Resign") {
@@ -181,6 +183,11 @@ const employeeFormRefill =(ob,rowIndex)=>{
     textNote.value = employee.note;
     selectCivilstatus.value = employee.civilstatus;
 
+    if(employee.image !=null){
+        imageEmpPhoto.src = atob(employee.image);
+    } else {
+        imageEmpPhoto.src = 'resources/images/user.png';
+    }
     
 
     //"M" --> this value must be equal to the ajaxresponse value in /showall
@@ -267,6 +274,11 @@ const checkFormUpdate=()=>{
     if(employee.designation_id.name != oldemployee.designation_id.name){
         updates = updates + "Designation has updated," + oldemployee.designation_id.name + "into" + employee.designation_id.name +"\n";
     }
+
+    if(employee.image != oldemployee.image){
+        updates = updates + "The Employee photo has been changed";
+    }
+
     return updates;
 }
 
@@ -735,6 +747,16 @@ const generateGenderDOB = (element) => {
 
     }
 } */
+
+//to clear the uploaded image before submitting 
+/* const buttonClearImage = ()=>{
+    if(employee.image != null){
+        let userConfirmImgDlt = confirm("Are you sure to delete this Image?");
+        if(userConfirmImgDlt){
+            employee.image = null;
+        }
+    }
+}     */
 
 
 //designation form refresh

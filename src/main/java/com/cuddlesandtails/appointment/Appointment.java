@@ -1,8 +1,8 @@
 package com.cuddlesandtails.appointment;
 
+import java.math.BigDecimal;
 import java.time.*;
 
-import org.hibernate.validator.constraints.Length;
 
 import com.cuddlesandtails.doctor.Doctor;
 import com.cuddlesandtails.pet.Owner;
@@ -37,24 +37,26 @@ public class Appointment {
 
     @Column(name = "channelingno", unique = true)
     @NotNull
-    @Length(max = 5)
-    private String channelingno;
+    private Integer channelingno;
 
     @Column(name = "dateofappointment")
     @NotNull
     private LocalDate dateofappointment;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "email")
-    private String email;
 
     @Column(name = "note")
     private String note;
 
     @Column(name = "mobile")
     private String mobile;
+
+    @Column(name = "servicefee")
+    private BigDecimal servicefee;
+
+    @Column(name = "starttime")
+    private LocalTime starttime;
+
+    @Column(name = "endtime")
+    private LocalTime endtime;
 
     @Column(name = "addeduser_id")
     private Integer addeduser_id;
@@ -77,14 +79,6 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "service_id",referencedColumnName = "id")
     private Service service_id;
-
-    @ManyToOne
-    @JoinColumn(name = "appointmenttime_id",referencedColumnName = "id")
-    private Appointmenttime appointmenttime_id;
-
-    @ManyToOne
-    @JoinColumn(name = "taxi_id",referencedColumnName = "id")
-    private Taxi taxi_id;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id",referencedColumnName = "id")

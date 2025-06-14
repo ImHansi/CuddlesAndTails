@@ -8,6 +8,12 @@ window.addEventListener('load',()=>{
 
     refreshPetForm();//call form refresh function
 
+    //call pettype form refresh function
+    refreshPettypeForm();
+
+    //call breed form refresh function
+    refreshBreedForm();
+
     
 });
 
@@ -55,14 +61,14 @@ const refreshPetTable = () => {
     fillDataIntoTable(tablePet, pets,displayproperty,petFormRefill,deleteFunc,printFunc,true, userPrivilege);
 
     //disable delete button
-    /*pets.forEach((element , index) => {
+    pets.forEach((element , index) => {
         if (element.status_id.name == "deseased") {
             if (userPrivilege.delete) {
                 tablePet.children[1].children[index].children[7].children[1].disabled ="disabled";
             }
             
         }
-    });*/
+    });
 
    $('#tablePet').dataTable();
 
@@ -131,11 +137,12 @@ const petFormRefill =(ob,rowIndex)=>{
 
     //set value into UI element
     //elementId.value = object.property
-    Ownerid.value= pet.owner_id;
+    textOwnerName.value= pet.owner_id.name;
     textPetName.value= pet.name;
+    selectPetType.value=pet.pettype_id.name;
+    selectPetBreed.value=pet.breed_id.name;
     textWeight.value= pet.weight;
     textAge.value= pet.age;
-    filePetImage.value= pet.image;
     textNote.value= pet.note;
     
 
@@ -153,6 +160,12 @@ const petFormRefill =(ob,rowIndex)=>{
     pettypes = ajaxRequestHere("/pettype/showPettype");
     fillDataIntoSelect(selectPetType,'Select Pet Type',pettypes,'name',pet.pettype_id.name);
 
+    //to add newly adding values to the select
+    selectPetType.addEventListener('change', (event) => {
+        const newPettypeId = JSON.parse(event.target.value);
+        updatePettype(newPettypeId)
+    })
+
     //to get owners
     owners = ajaxRequestHere("/owner/showOwner");
     fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',pet.owner_id.name);
@@ -162,6 +175,11 @@ const petFormRefill =(ob,rowIndex)=>{
     breeds = ajaxRequestHere("/breed/showBreed");
     fillDataIntoSelect(selectPetBreed,'Select Breed',breeds,'name',pet.breed_id.name);
     
+    //to add newly adding values to the select
+    selectPetBreed.addEventListener('change', (event) => {
+        const newPetbreedId = JSON.parse(event.target.value);
+        updatePetbreed(newPetbreedId)
+    })
 
     
 
@@ -209,9 +227,9 @@ const checkFormUpdate=()=>{
         updates = updates + "gender has been updated," + oldpet.gender + "into" + pet.gender + "\n";
     }
 
-    if(pet.image != oldpet.image){
+    /* if(pet.image != oldpet.image){
         updates = updates + "image has been updated," + oldpet.image + "into" + pet.image + "\n";
-    }
+    } */
 
     if(pet.note != oldpet.note){
         updates = updates + "note has been updated," + oldpet.note + "into" + pet.note + "\n";
@@ -235,60 +253,63 @@ const buttonPetUpdate = ()=>{
     console.log(pet);
     console.log(oldpet);
 
-    //check errors
-    const errors = checkPetFormError();
-    if(errors == ""){
-        
-    //check available update
-    let updates = checkFormUpdate();
-    if(updates ==""){
-        alert("Nothing Updated");
-    }else{
-
-        //get user confirmation
-        let userConfirm = confirm("Are you sure to do the following changes..? \n" + updates);
-
-        if(userConfirm){
-            //call put service
-            let putServiceresponce;
-
-            $.ajax("/pet" ,{
-                type:"PUT",
-                contentType:"application/json",
-                async: false,
-                data: JSON.stringify(pet),
-                success: function(data){
-                    putServiceresponce=data;
-                }, error:function(resData){
-                    putServiceresponce=resData;
-                }
-
-            });
-            if (putServiceresponce == "OK"){
-                alert("Updated Successfully..!");
-                $('#petAddModal').modal('hide');
-                refreshPetTable();
-                formPet.reset();
-                refreshPetForm();
-
-            }else{
-                alert("failed to update following error..\n"+ putServiceresponce);
-
-            }
-
-        }
-
-        
-
-    }
-
-    
-
-    }else {
-
-        alert("Following errors can be seen in the form..!\n" + errors);
-
-    }
+    //2) check form errors
+   let errors = checkPetFormError();
+   if (errors == "") {
+       //3) check what we have to update
+       let updates = checkFormUpdate();
+       if (updates == "") {
+           Swal.fire({
+               icon: 'info',
+               html: 'Nothing to Update..!',
+               showConfirmButton: true,
+           });
+       } else {
+           //4) get user confirmation
+           Swal.fire({
+               title: 'Are you sure to UPDATE the following record?',
+               html: updates,
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: 'Yes, update it!'
+           }).then((result) => {
+               if (result.isConfirmed) {
+                   //5) call put service
+                   let putServiceResponce = ajaxRequestBody("/pet", "PUT", pet)
+                   //6) check put service response
+                   if (putServiceResponce == "OK") {
+                       Swal.fire({
+                           icon: 'success',
+                           html: 'Updated Successfully..!',
+                           showConfirmButton: true,
+                       }).then(() => {
+                        $('#petAddModal').modal('hide');
+                        refreshPetTable();
+                        FormPet.reset();
+                        refreshPetForm();
+                        
+                       });
+                   } else {
+                       Swal.fire({
+                           icon: 'error',
+                           html: 'Failed to Update pet Details',
+                           text: putServiceResponce,
+                           showConfirmButton: true,
+                       });
+                   }
+               }
+           });
+       }
+   } else {
+       Swal.fire({
+           icon: 'error',
+           html: 'Form has some errors... please check the form again..',
+           text: errors,
+           showConfirmButton: true,
+       });
+   }
 
 }
 
@@ -309,41 +330,42 @@ const deleteFunc =(ob,rowIndex)=>{
 
     //need a time to change the color
     setTimeout(function () {
-        const userConfirm = confirm('Are you sure to REMOVE following pet? \n'
-            + '\n Name is ' + ob.name
-            + '\n owners name is ' + ob.owner_id.name
-        );
-
-        if (userConfirm) {
-            //call delete service
-            let deleteServerResponse;
-
-            $.ajax("/pet" , {
-                type:"DELETE",
-                data: JSON.stringify(ob) ,
-                contentType: "application/json" ,
-                async: false,
-                success: function (data) {
-                    console.log("Success "+data);
-                    deleteServerResponse = data;
-                },
-                error:function (resData) {
-                    console.log("Success "+resData);
-                    deleteServerResponse = resData;
-                }
-            });
-
-            if (deleteServerResponse == 'OK') {
-                alert('Delete Successfully...!!');
+    // get user confirmation
+    // Get user confirmation using SweetAlert2
+    Swal.fire({
+        title: 'Confirm Delete Details',
+        html: 'Are you sure to REMOVE following Pet? <br>'
+            + 'Name is : ' + ob.name
+            + '<br> Owner is : ' + ob.owner_id.name,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // call delete service
+            let deleteServerResponce = ajaxRequestBody("/pet", "DELETE", ob);
+            // check delete service responce
+            if (deleteServerResponce == "OK") {
                 refreshPetTable();
+
+               Swal.fire({
+                    title: 'Success',
+                    text: 'Pet Deleted Successfully!',
+                    icon: 'success'
+                });
             } else {
-                alert('Delete not completed. You have following error \n' + deleteServerResponse);
+
+                
+                 Swal.fire({
+                    title: 'Form Error',
+                    text: 'Failed to delete Pet details \n' + deleteServerResponce,
+                    icon: 'error'
+                });
             }
-        }
-        /*  else {
-             refreshEmployeeTable();
-             } */
-             refreshPetTable();
+        } 
+    });
 
     }, 500);
 
@@ -386,13 +408,18 @@ const checkPetFormError =() =>{
         //textCallingName.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    //if (pet.owner_id == null) {
-       // errors = errors +"Please Enter owners details..\n";
-        //selectPetType.style.background = 'rgba(255,0,0,0,1)';
+    /* if (pet.owner_id == null) {
+        errors = errors +"Please Enter owners details..\n";
+        selectPetType.style.background = 'rgba(255,0,0,0,1)';
         
-    //}
+    } */
     if (pet.pettype_id == null) {
-        errors = errors +"Please Enter a civil status..\n";
+        errors = errors +"Please Enter a pet type..\n";
+        selectPetType.style.background = 'rgba(255,0,0,0,1)';
+        
+    }
+    if (pet.breed_id == null) {
+        errors = errors +"Please Enter a pet breed..\n";
         selectPetType.style.background = 'rgba(255,0,0,0,1)';
         
     }
@@ -411,38 +438,52 @@ const buttonFormSubmit = ()=>{
 
 
     const formErrors = checkPetFormError();
+     // If no errors
     if (formErrors == '') {
-        //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following pet? \n'
-                                    + '\n Name is : ' + pet.name
-                                    + '\n owner is : ' + pet.owner_id.name
-                                    + '\n type is : ' + pet.pettype_id.name);
-
-
-            if (userConfirm) {
-                //pass data into backend
-                //check server response
-                let postServiceResponse = ajaxRequestBody("/pet", "POST", pet);
-
-
-
-                if (postServiceResponse === 'OK') {
-                    alert("Save successfully.. !");
-                    refreshPetTable();
-                    formPet.reset();
-                    refreshPetForm();
-                    $("#petAddModal").modal("hide");
-                    
+        // Get user confirmation using SweetAlert2
+        Swal.fire({
+            title: 'Confirm Addition',
+            html: 'Are you sure to add following Pet? <br>'
+                + '<br> Name is : ' + pet.name
+                + '<br> Owner is : ' + pet.owner_id.name
+                + '<br> Pet type is : ' + pet.pettype_id.name
+                + '<br> Breed is : ' + pet.breed_id.name,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, add it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call POST service
+                let postServerResponce = ajaxRequestBody("/pet", "POST", pet);
+                // Check post service response
+                if (postServerResponce == "OK") {
+                    Swal.fire({
+                        title: 'Success',
+                        html: 'Saved successfully!',
+                        icon: 'success'
+                    }).then(() => {
+                        $('#petAddModal').modal('hide');
+                        refreshPetTable();
+                        FormPet.reset();
+                        refreshPetForm();    
+                    });
                 } else {
-                    alert('Save not completed..You have following errors \n' + postServiceResponse);
-                }
+                    Swal.fire({
+                        title: 'Form Error',
+                        html: 'Failed to submit pet \n' + postServerResponce,
+                        icon: 'error'
+                    });
+                } 
             }
-    
-        
+        });
     } else {
-
-        //form has errors
-        alert("form has following errors..\n" + formErrors);
+        Swal.fire({
+            title: 'Form Error',
+            html: 'The form has the following errors. Please check the form again:\n' + formErrors,
+            icon: 'error'
+        });
     }
  
 }
@@ -460,31 +501,24 @@ const refreshPetForm = () =>{
 
     //to get owners
     owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
+    //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
+    fillDataIntoDataList(ownerList,owners,'name');
     
 
-    pettypes = ajaxRequestHere("/pettype/showPettype");
-
+    pettypes = ajaxRequestHere("/pettype/showPettype"); 
     fillDataIntoSelect(selectPetType,'Select pet type',pettypes,'name');
 
 
-    breeds = ajaxRequestHere("/breed/showBreed");
-
+    breeds = ajaxRequestHere("/breed/showBreed"); 
     fillDataIntoSelect(selectPetBreed,'Select Breed',breeds,'name');
 
     //set text field value as a empty
-    selectOwner.style.border ='1px solid #ced4da';
-    textNic.style.border ='1px solid #ced4da';
-    //callingNamelist.innerHTML = '1px solid #ced4da';
-    textMobileNo.style.border ='1px solid #ced4da';
-    textEmail.style.border='1px solid #ced4da';
-    textAddress.style.border='1px solid #ced4da';
-    textPetName.style.border='1px solid #ced4da';
+    textOwnerName.style.border ='1px solid #ced4da';
+    textPetName.style.border ='1px solid #ced4da';
     selectPetType.style.border='1px solid #ced4da';
     selectPetBreed.style.border='1px solid #ced4da';
     textWeight.style.border='1px solid #ced4da';
     textAge.style.border='1px solid #ced4da';
-    filePetImage.style.border='1px solid #ced4da';
     textNote.style.border='1px solid #ced4da';
 
     //radio button set check false
@@ -526,7 +560,6 @@ const refreshPetForm = () =>{
 //pettype form refresh
 const refreshPettypeForm =()=>{
     pettypeob = new Object();
-    pettypeoldob = null;
 }
 
 //create function for submit pet type form
@@ -534,7 +567,7 @@ const btnPettypeSubmit=()=>{
     console.log("submit pet type form");
 
     if (pettypeob.name != null) {
-        let userConfirm = confirm("Are you sure to add "+ pettypeob.name + "pet type Value..?");
+        let userConfirm = confirm("Are you sure to add "+ pettypeob.name + " pet type Value..?");
         if (userConfirm) {
             let postResponse = ajaxRequestBody("/pettype" , "POST" , pettypeob);
             if (postResponse == "OK") {
@@ -556,6 +589,41 @@ const btnPettypeSubmit=()=>{
     }
 }
 
+//petbreed form refresh
+const refreshPetbreedForm =()=>{
+    petbreedob = new Object();
+
+    pettypes = ajaxRequestHere("/pettype/showPettype"); 
+    fillDataIntoSelect(selectPetTypeForBreed,'Select pet type',pettypes,'name');
+}
+
+//create function for submit pet breed form
+const btnPetbreedSubmit=()=>{
+    console.log("submit pet breed form");
+
+    if (petbreedob.name != null) {
+        let userConfirm = confirm("Are you sure to add "+ petbreedob.name + " pet breed Value..?");
+        if (userConfirm) {
+            let postResponse = ajaxRequestBody("/breed" , "POST" , petbreedob);
+            if (postResponse == "OK") {
+                alert("Save successfully..!");
+ 
+                breeds = ajaxRequestHere("/breed/showBreed"); 
+                fillDataIntoSelect(selectPetBreed,'Select Breed',breeds,'name',selectPetBreed.value);
+                selectPetBreed.style.border = "2px solid green";
+                //bind value 
+                pet.breed_id =JSON.parse(selectPetBreed.value);
+                refreshPetbreedForm();
+                $("#collapsePetbreed").collapse('hide');
+            } else {
+                alert("Save NOT completed...! has following error \n" +postResponse);
+            }
+        }
+    }else{
+        alert("please enter breed...!");
+    }
+}
+
 //define function to filter breed according to pet type
 const filterBreed=()=>{
 
@@ -573,6 +641,12 @@ const generateOwnerId =()=>{
     Ownerid.style.border = "4px solid green";
 }
 
+const dataListValidator = (elementId,object,property)=>{
+
+    let elementValue = elementId.value;
+    elementId.style.border = "4px solid green";
+    
+}
   
 
 

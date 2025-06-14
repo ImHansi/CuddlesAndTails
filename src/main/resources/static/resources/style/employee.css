@@ -78,19 +78,25 @@ textarea{
 }
 .status-Complete{
     padding: 10px;
-    background-color: rgba(103, 236, 70, 0.647);
+    background-color: rgba(211, 70, 236, 0.647);
     padding: 10px;
 
 }
 .status-Pending{
     padding: 10px;
-    background-color: rgba(226, 229, 66, 0.555);
+    background-color: rgba(66, 188, 229, 0.555);
     padding: 10px;
 
 }
 .status-Deleted{
     padding: 10px;
     background-color: rgba(224, 47, 47, 0.647);
+    padding: 10px;
+
+}
+.status-Confirm{
+    padding: 10px;
+    background-color: rgba(43, 223, 100, 0.647);
     padding: 10px;
 
 }

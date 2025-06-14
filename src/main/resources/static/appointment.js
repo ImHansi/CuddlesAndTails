@@ -39,13 +39,14 @@ const refreshAppointmentTable = () => {
     //text-> string , number, date
     //function ->object, array, boolean, create function 
     //column count == object count
-    const displayproperty = [ {dataType:'text',propertyName:'channelingno'},
+    const displayproperty = [ {dataType:'function',propertyName:getChannelingNo},
                               {dataType:'function',propertyName:getOwnerName},
                               {dataType:'function',propertyName:getPetName},
                               {dataType:'text',propertyName:'mobile'},
                               {dataType:'function',propertyName:getDoctor},
                               {dataType:'text',propertyName:'dateofappointment'},
-                              {dataType:'function',propertyName:getTime},
+                              {dataType:'text',propertyName:'starttime'},
+                              {dataType:'function',propertyName:getService},
                               {dataType:'function',propertyName:getAppointmentStatus},
     ];
 
@@ -63,6 +64,17 @@ const refreshAppointmentTable = () => {
         }
     });*/
 
+    appointments.forEach((element, index) => {
+    if (element.appointmentstatus_id.name === "Delete") {
+        const row = tableAppointment.children[1].children[index];
+        const deleteButton = row.querySelector('.btn-danger');
+        const editButton = row.querySelector('.btn-success');
+
+        if (deleteButton) deleteButton.disabled = true;
+        if (editButton) editButton.disabled = true;
+    }
+    });
+
    $('#tableAppointment').dataTable();
 
 
@@ -71,6 +83,13 @@ const refreshAppointmentTable = () => {
 //create function to get owners
 const getOwnerName=(ob)=>{
     return ob.owner_id.name;
+
+}
+
+
+//create function to get owners
+const getChannelingNo=(ob)=>{
+    return ob.dateofappointment+"/"+ob.channelingno;
 
 }
 
@@ -86,26 +105,31 @@ const getDoctor=(ob)=>{
 
 }
 
-//create function to get appointment time
-const getTime=(ob)=>{
-    return ob.appointmenttime_id.name;
+//create functon to get servicers
+const getService=(ob)=>{
+    return ob.service_id.name;
 
 }
 
 //create function get record status 
 const getAppointmentStatus=(ob)=>{
     
-    if(ob.appointmentstatus_id.name == 'Complete'){
-
-        return '<p class="status-Complete">'+ ob.appointmentstatus_id.name +'</p>'
-
-    }
     if(ob.appointmentstatus_id.name == 'Pending'){
 
         return '<p class="status-Pending">'+ ob.appointmentstatus_id.name +'</p>'
 
     }
-    if(ob.appointmentstatus_id.name == 'Deleted'){
+    if(ob.appointmentstatus_id.name == 'Confirm'){
+
+        return '<p class="status-Confirm">'+ ob.appointmentstatus_id.name +'</p>'
+
+    }
+    if(ob.appointmentstatus_id.name == 'Complete'){
+
+        return '<p class="status-Complete">'+ ob.appointmentstatus_id.name +'</p>'
+
+    }
+    if(ob.appointmentstatus_id.name == 'Delete'){
 
         return '<p class="status-Deleted">'+ ob.appointmentstatus_id.name +'</p>'
 
@@ -135,11 +159,17 @@ const appointmentFormRefill =(ob,rowIndex)=>{
     pets = ajaxRequestHere("/pet/showall");
     fillDataIntoSelect(selectPet,'Select Pet',pets,'name',appointment.pet_id.name);
 
-    doctors = ajaxRequestHere("/doctor/workingHouseDoctors");
+    doctors = ajaxRequestHere("/doctor/workingDoctors");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname',appointment.doctor_id.fullname);
 
-    appointmentTimes = ajaxRequestHere("/appointmenttime/showTime");
-    fillDataIntoSelect(selectTime,'Select a Time',appointmentTimes,'name',appointment.appointmenttime_id.name);
+    services = ajaxRequestHere("/service/showService");
+    fillDataIntoSelect(selectService,'Select Service',services,'name',appointment.service_id.name);
+
+    appointmentSatatueses = ajaxRequestHere("/appointmentstatus/showAppStatus");
+    fillDataIntoSelect(selectAppointmentStatus,'Select Status',appointmentSatatueses,'name',appointment.appointmentstatus_id.name);
+
+    timeSlots = [];
+    fillDataIntoSelectNew(selectStartTime,'Select Time Slot',timeSlots,'strat_time','end_time');
 
 
 
@@ -147,8 +177,7 @@ const appointmentFormRefill =(ob,rowIndex)=>{
     //elementId.value = object.property
     dateOfAppointment.value= appointment.dateofappointment;
     textMobile.value=appointment.mobile;
-    textAddress.value=appointment.address;
-    textEmail.value=appointment.email;
+    textServiceFee.value=appointment.servicefee;
     
 
     if (userPrivilege.update) {
@@ -177,8 +206,12 @@ const checkFormUpdate=()=>{
         updates = updates + "Owner has been updated," + oldappointment.owner_id.name + "into" + appointment.owner_id.name +"\n";
     }
 
-    if(appointment.doctor_id.name != oldappointment.doctor_id.name){
-        updates = updates + "Doctor has been updated," + oldappointment.doctor_id.name + "into" + appointment.doctor_id.name +"\n";
+    if(appointment.doctor_id.fullname != oldappointment.doctor_id.fullname){
+        updates = updates + "Doctor has been updated," + oldappointment.doctor_id.fullname + "into" + appointment.doctor_id.fullname +"\n";
+    }
+
+    if(appointment.pet_id.name != oldappointment.pet_id.name){
+        updates = updates + "Pet has been updated," + oldappointment.pet_id.name + "into" + appointment.pet_id.name +"\n";
     }
 
     if(appointment.owner_id.mobile != oldappointment.owner_id.mobile){
@@ -189,21 +222,18 @@ const checkFormUpdate=()=>{
         updates = updates + "Date of appointment has been updated," + oldappointment.dateofappointment + "into" + appointment.dateofappointment +"\n";
     }
 
-    if(appointment.appointmenttime_id.name != oldappointment.appointmenttime_id.name){
-        updates = updates + "Appointment time has been updated," + oldappointment.appointmenttime_id.name + "into" + appointment.appointmenttime_id.name +"\n";
+    if(appointment.service_id.name != oldappointment.service_id.name){
+        updates = updates + "Service has been updated,"+ oldappointment.service_id.name + "into" + appointment.service_id.name + "\n";
     }
 
-    if(appointment.owner_id.address != oldappointment.owner_id.address){
-        updates = updates + "Owners Address has been updated," + oldappointment.owner_id.address + "into" + appointment.owner_id.address +"\n";
+    if(appointment.service_id.price != oldappointment.service_id.price){
+        updates = updates + "Service charge has been updated,"+ oldappointment.service_id.price + "into" + appointment.service_id.price + "\n";
     }
 
-    if(appointment.owner_id.email != oldappointment.owner_id.email){
-        updates = updates + "Owners email has been updated," + oldappointment.owner_id.email + "into" + appointment.owner_id.email +"\n";
+    if(appointment.appointmentstatus_id.name != oldappointment.appointmentstatus_id.name){
+        updates = updates + "Appointment Status has been updated,"+ oldappointment.appointmentstatus_id.name + "into" + appointment.appointmentstatus_id.name + "\n";
     }
 
-    if(appointment.taxi_id.name != oldappointment.taxi_id.name){
-        updates = updates + "Taxi has been updated," + oldappointment.taxi_id.name + "into" + appointment.taxi_id.name +"\n";
-    }
     return updates;
 }
 
@@ -332,7 +362,45 @@ const deleteFunc =(ob,rowIndex)=>{
 const printFunc =(ob, rowIndex)=>{
     console.log('print');
 
+    //open view modal
+    $('#appointmentViewModal').modal('show');
+
+    viewChannelingNo.innerHTML = ob.channelingno;
+    viewOwner.innerHTML = ob.owner_id.name;
+    viewPet.innerHTML = ob.pet_id.name;
+    viewDate.innerHTML = ob.dateofappointment;
+    viewDoctor.innerHTML = ob.doctor_id.fullname;
+    viewService.innerHTML = ob.service_id.name;
+    viewTime.innerHTML = ob.starttime;
+    
 }
+
+//function for print
+function printpage() { 
+    let modalContent = document.getElementById('appointmentViewModal').innerHTML;
+    
+    let newWindow = window.open('', '', 'width=800,height=600');
+
+    newWindow.document.write(`
+        <html>
+            <head>
+                <title>Print Modal</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                </style>
+            </head>
+            <body>
+                ${modalContent}
+            </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+    newWindow.focus();
+    newWindow.print();
+    newWindow.close();
+}
+
 
 //add function
 function add(param){
@@ -439,11 +507,22 @@ const refreshAppointmentForm = () =>{
     pets = ajaxRequestHere("/pet/showall");
     fillDataIntoSelect(selectPet,'Select Pet',pets,'name');
 
-    doctors = ajaxRequestHere("/doctor/workingHouseDoctors");
+    doctors = ajaxRequestHere("/doctor/showall");
     fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname');
 
-    appointmentTimes = ajaxRequestHere("/appointmenttime/showTime");
-    fillDataIntoSelect(selectTime,'Select a time',appointmentTimes,'name');
+    services = ajaxRequestHere("/service/showService");
+    fillDataIntoSelect(selectService,'Select Service',services,'name');
+
+    appointmentSatatueses = ajaxRequestHere("/appointmentstatus/showAppStatus");
+    fillDataIntoSelect(selectAppointmentStatus,'Select Status',appointmentSatatueses,'name');
+    selectAppointmentStatus.value = JSON.stringify(appointmentSatatueses[0]);
+    appointment.appointmentstatus_id = appointmentSatatueses[0];
+    selectAppointmentStatus.style.border = "4px solid green";
+
+
+     timeSlots = [];
+    fillDataIntoSelectNew(selectStartTime,'Select Time Slot',timeSlots,'strat_time','end_time');
+
 
 
     //set text field value as a empty
@@ -452,15 +531,13 @@ const refreshAppointmentForm = () =>{
     textMobile.style.border ='1px solid #ced4da';
     selectDoctor.style.border='1px solid #ced4da';
     dateOfAppointment.style.border='1px solid #ced4da';
-    selectTime.style.border='1px solid #ced4da';
-    textAddress.style.border='1px solid #ced4da';
-    textEmail.style.border='1px solid #ced4da';
-    
+    selectStartTime.style.border='1px solid #ced4da';
 
 
     //set default color
     //textFullName.removeAttribute('style');
 
+    //MIN MAX DANNA DATE EKATA
 
 
     //update button
@@ -478,10 +555,6 @@ const refreshAppointmentForm = () =>{
         $("#btnAppointmentAdd").css("cursor","not-allowed");
     }
 
-    
-   
-
-
 }
 
 //define function to generate owner mobile automatically
@@ -493,34 +566,75 @@ const generateOwnerMobile =()=>{
     textMobile.style.border = "4px solid green";
 }
 //define function to generate owner address automatically
-const generateOwnerAddress =()=>{
+/* const generateOwnerAddress =()=>{
     console.log(JSON.parse(selectOwner.value));
 
     textAddress.value = JSON.parse(selectOwner.value).address;
     appointment.address = textAddress.value;
     textAddress.style.border = "4px solid green";
-}
+} */
 //define function to generate owner email automatically
-const generateOwnerEmail =()=>{
+/* const generateOwnerEmail =()=>{
     console.log(JSON.parse(selectOwner.value));
 
     textEmail.value = JSON.parse(selectOwner.value).email;
     appointment.email = textEmail.value;
     textEmail.style.border = "4px solid green";
 }
+ */
 
+
+//define function to generate service fee automatically
+const generateServiceFee =()=>{
+    console.log(JSON.parse(selectService.value));
+
+    textServiceFee.value = JSON.parse(selectService.value).price;
+    appointment.servicefee = parseFloat(textServiceFee.value);
+    console.log("Doctor Fee",appointment.servicefee );
+    textServiceFee.style.border = "4px solid green";
+}
 
 //define function to filter pets according to owner
 const filterPets=()=>{
 
-    petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid="+JSON.parse(selectOwner.value).id);
+    const selectOwner = document.getElementById("selectOwner");
+    const selectPet = document.getElementById("selectPet");
+
+    //check if the owner is selected
+    if (selectOwner.value) {
+    selectPet.disabled = false;
+
+    const ownerId = JSON.parse(selectOwner.value).id;
+    const petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid="+ ownerId);
     fillDataIntoSelect(selectPet,'Select Pet',petByOwner,'name');
+
+    }else {
+        //Disable the pet dropdown
+        selectPet.disabled = true; 
+        selectPet.innerHTML = '<option value="" selected disabled>Select Pet</option>';
+  }
+
+}
+
+//define function to filter pets according to owner
+const filterTimeSlot=()=>{
+
+    timeSlots = ajaxRequestHere("/availability/bydatedoctor?date="+dateOfAppointment.value+"&doctorid="+JSON.parse(selectDoctor.value).id);
+    fillDataIntoSelectNew(selectStartTime,'Select Time Slot',timeSlots,'strat_time','end_time');
 
 }
 
 
+const selectStartTimeValidator=()=>{
+     selectStartTime.style.border = "4px solid green";
+     timeSlot = JSON.parse(selectStartTime.value);
+     appointment.starttime   = timeSlot.strat_time;  
+     appointment.endtime = timeSlot.end_time;  
+
+}
+
 //define function to get a date within a week
-function validateAppointmentDate(input) {
+/* function validateAppointmentDate(input) {
     const selectedDate = new Date(input.value);
     const today = new Date();
 
@@ -539,11 +653,103 @@ function validateAppointmentDate(input) {
         // The selected date is invalid
         input.setCustomValidity("Please select a date that is today or within the first week from today.");
     }
-}
+} */
+
+    //function to choose a date up to 7 days from today
+const setAppointmentDateRange = () => {
+  const dateInput = document.getElementById("dateOfAppointment");
+  const today = new Date();
+
+  const toDateString = (date) => date.toISOString().split('T')[0];
+
+  const minDate = toDateString(today);
+
+  const maxDateObj = new Date(today);
+  maxDateObj.setDate(today.getDate() + 6);
+  const maxDate = toDateString(maxDateObj);
+
+  dateInput.min = minDate;
+  dateInput.max = maxDate;
+};
+
 
 // Attach the validation function to the input field
 document.getElementById("dateOfAppointment").addEventListener("change", function() {
     validateAppointmentDate(this);
 });
+
+//service form refresh
+const refreshServiceForm =()=>{
+    serviceob = new Object();
+    serviceoldob = null; 
+}
+
+//create function for submit service form
+const btnServiceSubmit=()=>{
+    console.log("submit service form");
+
+    if (serviceob.name != null) {
+        let userConfirm = confirm("Are you sure to add "+ serviceob.name + " service Value..?");
+        if (userConfirm) {
+            let postResponse = ajaxRequestBody("/service" , "POST" , serviceob);
+            if (postResponse == "OK") {
+                alert("Save successfully..!");
+ 
+                services = ajaxRequestHere("/service/showService");
+                fillDataIntoSelect(selectService, 'Select Service..', services, 'name', selectService.value);
+                selectService.style.border = "2px solid green";
+                //bind value 
+                appointment.service_id =JSON.parse(selectService.value);
+                refreshServiceForm();
+                $("#collapseService").collapse('hide');
+            } else {
+                alert("Save NOT completed...! has following error \n" +postResponse);
+            }
+        }
+    }else{
+        alert("please enter service name...!");
+    }
+}
+
+
+//function to get the doctors on selected appointment date and the service
+/* const filterAvailableDoctors = () => {
+  const serviceSelect = document.getElementById("selectService");
+  const dateInput = document.getElementById("dateOfAppointment");
+  const doctorSelect = document.getElementById("selectDoctor");
+
+  const selectedService = serviceSelect.value;
+  const selectedDate = dateInput.value;
+
+  doctorSelect.innerHTML = '<option value="" selected disabled>Select A Doctor</option>';
+
+  if (!selectedService || !selectedDate) {
+    return;
+  }
+
+  const doctors = ajaxRequestHere(`/doctor/available?date=${selectedDate}&serviceid=${selectedService}`);
+
+  // Fill the doctor select element
+  fillDataIntoSelect(doctorSelect, 'Select A Doctor', doctors, 'name');
+}; */
+
+const filterDoctors = () => {
+    const selectService = document.getElementById("selectService");
+    const selectDoctor = document.getElementById("selectDoctor");
+
+    // Check if a service is selected
+    if (selectService.value) {
+        selectDoctor.disabled = false;
+
+        const serviceId = JSON.parse(selectService.value).id; // if service value is a JSON string
+        const doctors = ajaxRequestHere("/doctor/workingDoctorByService?serviceId=" + serviceId);
+        
+        fillDataIntoSelect(selectDoctor, 'Select Doctor', doctors, 'name');
+    } else {
+        selectDoctor.disabled = true;
+        selectDoctor.innerHTML = '<option value="" selected disabled>Select Doctor</option>';
+    }
+};
+
 
 

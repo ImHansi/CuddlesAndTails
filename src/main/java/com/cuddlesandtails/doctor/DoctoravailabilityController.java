@@ -72,7 +72,9 @@ public class DoctoravailabilityController {
            //doctoravailability.setAddeddatetime(LocalDateTime.now());
            //doctoravailability.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
-          
+          for (Availability availability : doctoravailability.getDoctorhasavailabilityList()) {
+            availability.setDoctoravailability_id(doctoravailability);
+          }
 
             DoctoravailabilityDao.save(doctoravailability);
             return "OK";

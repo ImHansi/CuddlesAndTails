@@ -297,6 +297,72 @@
       </div>
     </div>
   </div>
+
+  <!--view print modal for Vaccination-->
+    <div class="modal" id="vaccinationViewModal" data-bs-backdrop="static" data-bs-keyboard="false" >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">View of Vaccination Record</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- table area start -->
+             <div class="row">
+              <div class="col-4"></div>
+              <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+              <div class="col-4"></div>
+             </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                
+                <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
+                <br>
+                <table id="printAppointmentTable" class="table table-hover table-bordered table-striped border-primary">
+                  
+                  <tr>
+                    <th>Vaccination Record No</th>
+                    <th id="viewVaccinationRecordNo"></th>
+                  </tr>
+                  <tr>
+                    <th>Owner</th>
+                    <th id="viewOwner"></th>
+                  </tr>
+                  <tr>
+                    <th>Pet</th>
+                    <th id="viewPet"></th>
+                  </tr>
+                  <tr>
+                    <th>Vaccination Name</th>
+                    <th id="viewVaccinationName"></th>
+                  </tr>
+                  <tr>
+                    <th>Vaccination Date</th>
+                    <th id="viewVaccinationDate"></th>
+                  </tr>
+                  <tr>
+                    <th>Next Vaccination Date</th>
+                    <th id="viewNextVaccinationDate"></th>
+                  </tr>
+                  <tr>
+                    <th>Doctor</th>
+                    <th id="viewDoctor"></th>
+                  </tr>
+                  
+                  
+                  
+              </table>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+              </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 
 </html>

@@ -1,12 +1,22 @@
 package com.cuddlesandtails.pet;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cuddlesandtails.privilege.PrivilegeController;
+//import com.cuddlesandtails.user.User;
+//import com.cuddlesandtails.user.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,8 +34,8 @@ public class OwnerController {
     //@Autowired
     //private UserRepository userDao;
 
-    //@Autowired
-    //private PrivilegeController privilegeController;
+    @Autowired
+    private PrivilegeController privilegeController;
 
     
     @GetMapping(value = "/showOwner", produces = "application/json")
@@ -66,6 +76,39 @@ public class OwnerController {
             return "Save Not Completed :"+ e.getMessage();
         }
     }
+
+    //create mapping for owner update --> URL (/owner)--> method -> PUT
+    @Transactional
+    @PutMapping
+    public String updateOwner(@RequestBody Owner owner){
+        //authentication
+        // get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // get privilege object using log user and relavent module
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Pet");
+        // check privilege
+        if (!logUserPrivi.get("update")) {
+            return "Update not Completed... :you haven't permission..!";
+        }
+
+        //check existing
+        Owner extOwner = dao.getReferenceById(owner.getId());
+        if (extOwner == null) {
+            return "Update not completed : Owner does not exist..!";
+        }
+
+
+        try {
+
+            //add auto set values
+            //doctor.setLastmodifydatetime(LocalDateTime.now());
+            dao.save(owner);
+            return "OK";
+        } catch (Exception e) {
+            return "Update not completed : "+ e.getMessage();
+        }
+    }
+    
 
    
 

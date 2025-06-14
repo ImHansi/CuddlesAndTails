@@ -1,7 +1,7 @@
 package com.cuddlesandtails.doctor;
 
-import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,20 +30,16 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //AI
     @Column(name = "id", unique = true) //to map with column
     private Integer id;
-
-    @Column(name = "availableornot")
-    @NotNull
-    private Boolean availableornot;
  
     @Column(name = "date")
     @NotNull
     private LocalDate date;
 
     @Column(name = "strat_time")
-    private Time strat_time;
+    private LocalTime strat_time;
 
     @Column(name = "end_time")
-    private Time end_time;
+    private LocalTime end_time;
  
     @ManyToOne(optional=false)//bcz even the null values may have in there
     @JsonIgnore //ignore property to stop recursion --> to block FK of many side

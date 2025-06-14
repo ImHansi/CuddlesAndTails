@@ -544,6 +544,28 @@
                         <!-- employee status ends here -->
                       </div>
 
+                      <!--employee image starts here-->
+                      <div class="row mt-2">
+                        <div class="col-2"></div>
+                        <div class="col-8">
+                          <div>
+                            <label for="fileEmpImage" class="form-label fw-bold">
+                                Image : <span class="text-danger">(optional)</span>
+                              </label>
+                              <button type="button" class="btn btn-primary" onclick="fileEmpImage.click()" id="btnSelectImage"> Select Image</button>
+                              <button type="button" class="btn btn-info" id="btnClearImage" onclick="buttonClearImage()"> Clear Image</button>
+                              <img src="resources/images/user.png" style="height: 75px; width: 75px;" alt="aa" id="imageEmpPhoto">
+                          </div>
+                          <div style="margin-top: 5px;">
+
+                            <input type="file" class="form-control" id="fileEmpImage" onchange="validateFileField(this,'employee','image','oldemployee',imageEmpPhoto)">
+                        
+                          </div>
+                        </div>
+                        <div class="col-2"></div>
+                      </div>
+                      <!--employee image ends here-->
+
                       <div class="row mt-2">
                         <!-- clear button starts here-->
                         <div class="col-4">

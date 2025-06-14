@@ -64,6 +64,17 @@ const refreshVaccinationTable = () => {
         }
     });*/
 
+    vaccinationrecords.forEach((element, index) => {
+    if (element.recordstatus_id.name === "Delete") {
+        const row = tableVaccinationRecord.children[1].children[index];
+        const deleteButton = row.querySelector('.btn-danger');
+        const editButton = row.querySelector('.btn-success');
+
+        if (deleteButton) deleteButton.disabled = true;
+        if (editButton) editButton.disabled = true;
+    }
+    });
+
    $('#tableVaccinationRecord').dataTable();
 
 
@@ -183,8 +194,8 @@ const checkFormUpdate=()=>{
         updates = updates + "Date of next vaccination has been updated," + oldvaccinationrecord.dateofnextvaccination + "into" + vaccinationrecord.dateofnextvaccination + "\n";
     }
 
-    if(vaccinationrecord.doctor_id.name != oldvaccinationrecord.doctor_id.name){
-        updates = updates + "Doctor has been updated," + oldvaccinationrecord.doctor_id.name + "into" + vaccinationrecord.doctor_id.name + "\n";
+    if(vaccinationrecord.doctor_id.fullname != oldvaccinationrecord.doctor_id.fullname){
+        updates = updates + "Doctor has been updated," + oldvaccinationrecord.doctor_id.fullname + "into" + vaccinationrecord.doctor_id.fullname + "\n";
     }
 
     if(vaccinationrecord.totalamount != oldvaccinationrecord.totalamount){
@@ -300,10 +311,10 @@ const deleteFunc =(ob,rowIndex)=>{
             });
 
             if (deleteServerResponse == 'OK') {
-                alert('Delete Successfully...!!');
+                alert('Delete not completed. You have following error \n' + deleteServerResponse);
                 refreshVaccinationTable();
             } else {
-                alert('Delete not completed. You have following error \n' + deleteServerResponse);
+                alert('Delete Successfully...!!');
             }
         }else{
             row.classList.remove('table-danger')
@@ -322,6 +333,43 @@ const deleteFunc =(ob,rowIndex)=>{
 const printFunc =(ob, rowIndex)=>{
     console.log('print');
 
+    //open view modal
+    $('#vaccinationViewModal').modal('show');
+
+    viewVaccinationRecordNo.innerHTML = ob.vaccino;
+    viewOwner.innerHTML = ob.owner_id.name;
+    viewPet.innerHTML = ob.pet_id.name;
+    viewVaccinationName.innerHTML = ob.vaccination_id.name;
+    viewVaccinationDate.innerHTML = ob.dateofvaccination;
+    viewNextVaccinationDate.innerHTML = ob.dateofnextvaccination;
+    viewDoctor.innerHTML = ob.doctor_id.fullname;
+
+}
+
+//function for print
+function printpage() { 
+    let modalContent = document.getElementById('vaccinationViewModal').innerHTML;
+    
+    let newWindow = window.open('', '', 'width=800,height=600');
+
+    newWindow.document.write(`
+        <html>
+            <head>
+                <title>Print Modal</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                </style>
+            </head>
+            <body>
+                ${modalContent}
+            </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+    newWindow.focus();
+    newWindow.print();
+    newWindow.close();
 }
 
 //add function
@@ -493,9 +541,22 @@ const generateVaccinePrice =()=>{
 //define function to filter pets according to owner
 const filterPets=()=>{
 
-    petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid="+JSON.parse(selectOwner.value).id);
+   const selectOwner = document.getElementById("selectOwner");
+    const selectPet = document.getElementById("selectPet");
+
+    //check if the owner is selected
+    if (selectOwner.value) {
+    selectPet.disabled = false;
+
+    const ownerId = JSON.parse(selectOwner.value).id;
+    const petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid="+ ownerId);
     fillDataIntoSelect(selectPet,'Select Pet',petByOwner,'name');
 
+    }else {
+        //Disable the pet dropdown
+        selectPet.disabled = true; 
+        selectPet.innerHTML = '<option value="" selected disabled>Select Pet</option>';
+  }
 }
 
 // Define function to get the day after 6 months from the date of vaccination
@@ -514,8 +575,10 @@ const getDayAfterSixMonths = () => {
     document.getElementById('dateOfNextVaccination').value = formattedDate;
     document.getElementById('dateOfNextVaccination').style.border = "4px solid green";
 
+    vaccinationrecord.dateofnextvaccination = formattedDate;
+
     console.log(formattedDate);
 };
 
-
+//vaccinationrecord.dateofnextvaccination = formattedDate;
 

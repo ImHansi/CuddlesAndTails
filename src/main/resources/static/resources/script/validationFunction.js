@@ -117,7 +117,6 @@ const checkBoxValidator =(fieldId, pattern, object, property, trueValue, falseVa
     }
 }
 
-
 //have to check again
 //define fn for password retype
 const retypePasswordVali = ()=> {
@@ -175,6 +174,24 @@ const callingNameVali = (feildId) => {
         feildId.style.border = '4px solid green';
     } else {
         feildId.style.border = '4px solid red';
+    }
+
+}
+
+const validateFileField = (fieldId, object, imgProperty) => {
+
+    if (fieldId.files != null) {
+        console.log(fieldId.files);
+
+        let file = fieldId.files[0];
+
+        let fileReader = new FileReader();
+
+        fileReader.onload = function (e) {
+            window[object][imgProperty] = btoa(e.target.result);
+
+        }
+        fileReader.readAsDataURL(file);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.cuddlesandtails.appointment;
 
+import java.time.LocalDate;
 //import java.time.LocalDate;
 import java.util.List;
 
@@ -16,4 +17,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
 
     @Query(value = "select * from Appointment a where a.dateofappointment =?3 and (a.doctor_id =?1 and a.appointmentstatus_id=?2)", nativeQuery = true)
     List<Appointment> getAppointmentReport(String selectDate, int doctor, int appointmentstatus);
+
+
+    @Query(value = "select a from Appointment a where a.dateofappointment =?1 and a.doctor_id.id=?3 and a.service_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2 )")
+    public List<Appointment> getAppinmentByDateServiceDoctor(LocalDate dateofappointment, Integer serviceid, Integer doctorid);
+
+    @Query(value = "select a from Appointment a where a.dateofappointment =?1 and a.service_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2)")
+    public List<Appointment> getAppinmentByDateService(LocalDate dateofappointment, Integer serviceid);
+
+    
 }

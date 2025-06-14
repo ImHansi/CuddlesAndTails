@@ -7,16 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/designation")
 public class DesignationController {
 
 
     @Autowired
     private DesignationRepository dao;
 
-    @GetMapping(value = "/designation/showDesignation", produces = "application/json")
+    @GetMapping(value = "/showDesignation", produces = "application/json")
     public List<Designation> showAllData(){
         return dao.findAll();
     }

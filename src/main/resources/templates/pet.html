@@ -152,14 +152,14 @@
                       <div class="col-4">
                         <div>
                           <label
-                            for="selectOwner"
+                            for="textOwnerName"
                             class="col-form-label fw-bold"
                           >
                             Owner : <span class="text-danger">*</span>
                           </label>
                         </div>
                         <div>
-                          <select
+                          <!-- <select
                             name="owner"
                             required
                             id="selectOwner"
@@ -170,7 +170,11 @@
                               Select Owner
                             </option>
                             
-                          </select>
+                          </select> -->
+                          <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'','pet','owner_id');">
+                          <datalist id="ownerList">
+                            <option value="">
+                          </datalist>
                         </div>
 
                       </div>
@@ -248,13 +252,13 @@
                                       class="form-control"
                                       placeholder="Enter name"
                                       id="textPettypeName"
-                                      onkeyup="textValidator(this)"
+                                      onkeyup="textValidator(this,'','pettypeob','name')"
                                     />
                                   </div>
                                 </div>
                                 <div class="row">
                                   <div class="col-12">
-                                    <button class="btn btn-success">
+                                    <button class="btn btn-success" onclick="btnPettypeSubmit()">
                                       Add
                                     </button>
                                   </div>
@@ -283,7 +287,7 @@
                         </div>
 
                         <!-- breed starts here -->
-                        <div class="col-4">
+                        <div class="col-3">
                           <div>
                             <label
                               for="selectPetBreed"
@@ -306,8 +310,70 @@
                               
                             </select>
                           </div>
+                          <!-- collapse breed form  -->
+                          <div class="collapse mt-2" id="collapsePetbreed">
+                            <div class="card card-body">
+                              <form
+                                onsubmit="return false"
+                                id="petbreedForm"
+                              >
+                              <div class="row">
+                                <label for="selectPetTypeForBreed" class="col-4 fw-bold">
+                                  type:
+                                </label>
+                                <div class="col-6">
+                                  <select name="pettype" required id="selectPetTypeForBreed" class="form-select form-input"
+                                    onchange="selectDValidator(this,'','petbreedob','pettype_id');">
+                              <option value="" selected disabled>
+                                Select Pet Type
+                              </option>
+                              
+                            </select>
+                                </div>
+                              </div>
+                                <div class="row">
+                                  <label for="" class="col-4 fw-bold"
+                                    >Name:
+                                  </label>
+                                  <div class="col-6">
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      placeholder="Enter name"
+                                      id="textPetbreedName"
+                                      onkeyup="textValidator(this,'','petbreedob','name')"
+                                    />
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-12">
+                                    <button class="btn btn-success" onclick="btnPetbreedSubmit()">
+                                      Add
+                                    </button>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                          <!-- collapse breed form ends -->
+                        </div>
+                        <div class="col-1">
+                            <span>
+                                <a
+                                  class="btn btn-primary"
+                                  data-bs-toggle="collapse"
+                                  href="#collapsePetbreed"
+                                  role="button"
+                                  aria-expanded="false"
+                                  aria-controls="collapsePetbreed"
+                                  style="margin-top: 36px;"
+                                >
+                                  new
+                                </a>
+                              </span>
                         </div>
                         <!-- breed ends here -->
+
                       </div>
 
                       <div class="row mt-2">
@@ -412,6 +478,7 @@
                             <label for="filePetImage" class="form-label fw-bold">
                                 Image : <span class="text-danger">(optional)</span>
                               </label>
+                              <button type="button" class="btn btn-info" id="btnClearImage" onclick="buttonClearImage()"> Clear Image</button>
                           </div>
                           <div style="margin-top: 5px;">
 

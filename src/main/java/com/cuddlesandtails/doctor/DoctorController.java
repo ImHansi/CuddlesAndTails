@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -103,6 +104,7 @@ public class DoctorController {
             
             //set auto generate values
             //set added date time
+            //doctor.setEmployeestatus_id(employeeStatusDao.getReferenceById(1));
             doctor.setAddeddatetime(LocalDateTime.now());
             doctor.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
@@ -235,11 +237,15 @@ public class DoctorController {
 }
 
 
-@GetMapping(value = "/workingHouseDoctors", produces = "application/json")
+@GetMapping(value = "/workingDoctors", produces = "application/json")
 public List<Doctor> getDoctorsByStatusAndAvailability() {
-    return DoctorDao.findDoctorsByStatusAndAvailability();
+    return DoctorDao.findDoctorsByStatus();
 }
 
 
+@GetMapping("/workingDoctorByService")
+public List<Doctor> getWorkingDoctorsByService(@RequestParam Integer serviceId) {
+    return DoctorDao.findWorkingDoctorsByService(serviceId);
+}
 
 }
