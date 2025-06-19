@@ -8,39 +8,42 @@ window.addEventListener('load',()=>{
 
     refreshOrderForm();//call form refresh function
 
+    //inner form and table
+    refreshInnerFormAndTable();
     
 });
 
 //create function refresh order table
 const refreshOrderTable = () => {
 
+    order = [];
     //create array to store order data list
     orders =ajaxRequestHere("/order/showorder");
 
     //text-> string , number, date
     //function ->object, array, boolean, create function 
     //column count == object count
-    const displayproperty = [ {dataType:'text',propertyName:'invoiceno'},
-                              {dataType:'function',propertyName:getOwner},
-                              {dataType:'text',propertyName:'added_date'},
-                              {dataType:'function',propertyName:getUser},
-                              {dataType:'function',propertyName:getTotalAmount},
-                              {dataType:'function',propertyName:getStaus},
+    const displayproperty = [ {dataType:'function',propertyName:getSupplier},
+                              {dataType:'text',propertyName:'ordercode'},
+                              {dataType:'text',propertyName:'requiredate'},
+                              {dataType:'text',propertyName:'totalamount'},
+                              {dataType:'function',propertyName:getStatus},
     ];
+
 
     //call filldataintotable function
     //(tableID , dataArrayName, displaypropertyarea,refill function name, delete function name, print function name , button visibility, privilegeOb)
     fillDataIntoTable(tableOrder,orders,displayproperty,orderFormRefill,deleteFunc,printFunc,true, userPrivilege);
 
     //disable delete button
-     orders.forEach((element , index) => {
+     /* orders.forEach((element , index) => {
         if (element.recordstatus_id.name == "Delete") {
             if (userPrivilege.delete) {
                 tableOrder.children[1].children[index].children[7].children[2].disabled ="disabled";
             }
             
         }
-    });
+    }); */
 
    $('#tableOrder').dataTable();
 
@@ -48,24 +51,32 @@ const refreshOrderTable = () => {
 }
 
 //function to get owner name
-const getOwner=(ob)=>{
-    return ob.owner_id.name;
-}
+const getSupplier=(ob)=>{
+    return ob.supplier_id.name;
+} 
 
-const getUser = (ob) => {
-    return ob.addeduser_id;
-}
 
-const getTotalAmount = (ob) => {
-    return ob.totalamount;
-}
+const getStatus = (ob) => {
+    if(ob.orderstatus_id.name == 'Pending'){
 
-const getStaus = (ob) => {
-    if (ob.recordstatus_id.name == 'Active') {
-        return '<span class="text-success fw-bold">Active</span>'
-    } else {
-        return '<span class="text-danger fw-bold">Delete</span>';
-    } 
+        return '<p class="status-Pending">'+ ob.orderstatus_id.name +'</p>'
+
+    }
+    if(ob.orderstatus_id.name == 'Approved'){
+
+        return '<p class="status-Approved">'+ ob.orderstatus_id.name +'</p>'
+
+    }
+    if(ob.orderstatus_id.name == 'Delivered'){
+
+        return '<p class="status-Delivered">'+ ob.orderstatus_id.name +'</p>'
+
+    }
+    if(ob.orderstatus_id.name == 'Cancelled'){
+
+        return '<p class="status-Cancelled">'+ ob.orderstatus_id.name +'</p>'
+
+    }
 }
 
 //function for order form refill
@@ -83,12 +94,12 @@ const orderFormRefill =(ob,rowIndex)=>{
 
     //set value into UI element
     //elementId.value = object.property
-    textMobile.value= order.mobileno;
     textNote.value= order.note;
     textTotalFee.value = order.totalamount;
+    requiredDate.value= order.requiredate;
     
-    owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',order.owner_id.name);
+    suppliers = ajaxRequestHere("/supplier/showsupplier");
+    fillDataIntoSelect(selectSupplier,'Select Supplier',suppliers,'name',order.supplier_id.name);
 
     
 
@@ -115,19 +126,20 @@ const orderFormRefill =(ob,rowIndex)=>{
 //create function for check form update
 const checkFormUpdate=()=>{
     let updates = "";
-    if(order.owner_id.name != oldorder.owner_id.name){
-        updates = updates + "Owner has been updated," + oldorder.owner_id.name + "into" + order.owner_id.name +"\n";
-    }
-    if(order.mobileno != oldorder.mobileno){
-        updates = updates + "mobileno has updated," + oldorder.mobileno + "into" + order.mobileno + "\n";
+    if(order.supplier_id.name != oldorder.supplier_id.name){
+        updates = updates + "Supplier has been updated," + oldorder.supplier_id.name + " into " + order.supplier_id.name +"\n";
     }
 
     if(order.note != oldorder.note){
-        updates = updates + "note has updated," + oldorder.note + "into" + order.note + "\n";
+        updates = updates + "Note has updated," + oldorder.note + " into " + order.note + "\n";
+    }
+
+    if(order.requiredate != oldorder.requiredate){
+        updates = updates + "Require date has updated," + oldorder.requiredate + " into " + order.requiredate + "\n";
     }
 
     if(order.totalamount != oldorder.totalamount){
-        updates = updates + "total amount has updated," + oldorder.totalamount + "into" + order.totalamount + "\n";
+        updates = updates + "Total amount has updated," + oldorder.totalamount + " into " + order.totalamount + "\n";
     }
 
     return updates;
@@ -220,7 +232,7 @@ const deleteFunc =(ob,rowIndex)=>{
     Swal.fire({
         title: 'Confirm Delete Details',
         html: 'Are you sure to REMOVE following Order? <br>'
-            + 'Name is : ' + ob.owner_id.name
+            + 'Name is : ' + ob.supplier_id.name
             + '<br> Total Amount is : ' + ob.totalamount,
         icon: 'warning',
         showCancelButton: true,
@@ -270,14 +282,14 @@ const checkOrderFormError =() =>{
 //need to check all required fields(property)
     let errors ='';
 
-    if (order.owner_id==null) {
-        errors = errors +"Please select an owner..\n";
-        selectOwner.style.background = 'rgba(255,0,0,0,1)';
+    if (order.supplier_id==null) {
+        errors = errors +"Please select a supplier..\n";
+        selectSupplier.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (order.mobileno == null) {
-        errors = errors +"Please Enter a  mobile no..\n";
-        textMobile.style.background = 'rgba(255,0,0,0,1)';
+    if (order.requiredate == null) {
+        errors = errors +"Please Enter a required date..\n";
+        requiredDate.style.background = 'rgba(255,0,0,0,1)';
         
     }
     if (order.totalamount == null) {
@@ -304,7 +316,7 @@ const buttonFormSubmit = ()=>{
         Swal.fire({
             title: 'Confirm Addition',
             html: 'Are you sure to add following Order? <br>'
-                + '<br> Owner is : ' + order.owner_id.name
+                + '<br> Supplier is : ' + order.supplier_id.name
                 + '<br> Total is : ' + order.totalamount,
             icon: 'question',
             showCancelButton: true,
@@ -354,15 +366,15 @@ const refreshOrderForm = () =>{
 
     order.orderhasproductsList = new Array();
 
-    owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
+    suppliers = ajaxRequestHere("/supplier/showsupplier");
+    fillDataIntoSelect(selectSupplier,'Select supplier',suppliers,'name');
 
     //set text field value as a empty
     
-    selectOwner.style.border='1px solid #ced4da';
-    textMobile.style.border='1px solid #ced4da';
+    selectSupplier.style.border='1px solid #ced4da';
     textNote.style.border='1px solid #ced4da';
     textTotalFee.style.border='1px solid #ced4da';
+    requiredDate.style.border='1px solid #ced4da';
 
     //update button
     btnUpdateOrder.disabled = "disabled";
@@ -379,17 +391,17 @@ const refreshOrderForm = () =>{
         $("#btnAddOrder").css("cursor","not-allowed");
     }
 
-    refreshInnerFormAndTable();
+    //refreshInnerFormAndTable();
 }
 
 //define function to generate owner mobile automatically
-const generateOwnerMobile =()=>{
+/* const generateOwnerMobile =()=>{
     console.log(JSON.parse(selectOwner.value));
 
     textMobile.value = JSON.parse(selectOwner.value).mobile;
     order.mobileno = textMobile.value;
     textMobile.style.border = "4px solid green";
-}
+} */
 
 //inner form area starts here
 
@@ -403,8 +415,8 @@ const refreshInnerFormAndTable = ()=>{
     //refresh innertable
     let displayPropertyList = [
         { dataType: "function", propertyName: getProductName },
-        { dataType: "function", propertyName: getProductPrice },
         { dataType: "function", propertyName: getProductQty },
+        { dataType: "function", propertyName: getProductPrice },
         { dataType: "function", propertyName: getLineprice },
     ];
 
@@ -478,7 +490,7 @@ const getLineprice = (innerOb) => {
 const generateUnitPrice = () => {
     let slctProduct = JSON.parse(selectProduct.value);
     productPrice.value = parseFloat(slctProduct.salesprice).toFixed(2);
-    productPrice.style.border = "1px solid green";
+    productPrice.style.border = "4px solid green";
     productPrice.disabled = "disabled";
     orderhasproducts.price = productPrice.value;
 }
@@ -486,16 +498,16 @@ const generateUnitPrice = () => {
 const textQtyValidator = () => {
     if (new RegExp("^([1-9][0-9]{0,3})|([1-9][0-9]{0,3}[.][0-9]{1,3})$").test(txtQuantity.value)) {
         productLinePrice.value = (parseFloat(txtQuantity.value) * parseFloat(productPrice.value)).toFixed(2);
-        productLinePrice.style.border = "2px solid green";
-        txtQuantity.style.border = "2px solid green";
+        productLinePrice.style.border = "4px solid green";
+        txtQuantity.style.border = "4px solid green";
         productLinePrice.disabled = "disabled";
         orderhasproducts.lineprice = productLinePrice.value;
         orderhasproducts.quantity = txtQuantity.value;
         buttonInnerAdd.disabled = "";
     } else {
         productLinePrice.value = "";
-        productLinePrice.style.border = "2px solid #ced4da";
-        txtQuantity.style.border = "2px solid red";
+        productLinePrice.style.border = "4px solid #ced4da";
+        txtQuantity.style.border = "4px solid red";
         productLinePrice.disabled = "disabled";
         orderhasproducts.lineprice = null;
         orderhasproducts.quantity = null;
@@ -527,7 +539,7 @@ const btnInnerAdd = () => {
     }
     if (extPro) {
         Swal.fire({
-            title: "Selected Product Already Ext",
+            title: "Selected Product Already Exists!",
             html: "(select another Product)",
             icon: "warning"
         });

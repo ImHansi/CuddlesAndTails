@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.cuddlesandtails.appointment.Recordstatus;
-import com.cuddlesandtails.appointment.RecordstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import com.cuddlesandtails.user.UserRepository;
 
@@ -34,7 +32,7 @@ public class OrderController {
     private UserRepository userDao;
 
     @Autowired
-    private RecordstatusRepository recordstatusDao;
+    private OrderstatusRepository orderStatusDao;
 
     @Autowired
     private PrivilegeController privilegeController;
@@ -81,8 +79,8 @@ public class OrderController {
         try {
             // set auto generate values
             // set added date time
-            //order.setorderstatus_id(recordstatusDao.getReferenceById(1));
-            //order.setaddeddatetime(LocalDateTime.now());
+            order.setOrderstatus_id(orderStatusDao.getReferenceById(1));
+            order.setAddeddatetime(LocalDateTime.now());
             order.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
             // set employee number
@@ -131,13 +129,10 @@ public class OrderController {
             // EmployeeDao.delete(EmployeeDao.getReferenceById(employee.getId()));
 
             // soft delete
-
-            // EmployeeStatus deleteStatus = employeeStatusDao.getReferenceById(3);
-
             extOrder.setDeletedatetime(LocalDateTime.now());
             extOrder.setDeleteuser_id(userDao.getUserByUsername(auth.getName()).getId());
-            Recordstatus deleteStatus = recordstatusDao.getReferenceById(2);
-            extOrder.setOrderstatus_id(deleteStatus);
+            extOrder.setOrderstatus_id(orderStatusDao.getReferenceById(4));
+            
 
             dao.save(extOrder);
 

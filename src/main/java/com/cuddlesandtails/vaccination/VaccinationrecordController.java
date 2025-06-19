@@ -89,7 +89,7 @@ public class VaccinationrecordController {
         try{
             //set auto generate values
             //set added date time
-           vaccinationrecord.setRecordstatus_id(recordStatusDao.getReferenceById(1));
+           vaccinationrecord.setRecordstatus_id(recordStatusDao.getReferenceById(3));
            vaccinationrecord.setAddeddatetime(LocalDateTime.now());
            vaccinationrecord.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
@@ -186,6 +186,13 @@ public class VaccinationrecordController {
     }
     
 
+
+    
+    //toget pending vaccinations
+    @GetMapping(value = "/pendingVaccinationRecordes", produces = "application/json")
+    public List<Vaccinationrecord> getpendingvVaccinationrecords() {
+        return VaccinationrecordDao.getPendingVaccinationRecord();
+    }
 
 
 

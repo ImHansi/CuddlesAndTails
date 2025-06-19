@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.cuddlesandtails.pet.Owner;
-import com.cuddlesandtails.appointment.Recordstatus;
+import com.cuddlesandtails.supplier.Supplier;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -73,11 +72,11 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "supplier_id",referencedColumnName = "id")
-    private Owner supplier_id;
+    private Supplier supplier_id;
 
     @ManyToOne
     @JoinColumn(name = "orderstatus_id",referencedColumnName = "id")
-    private Recordstatus orderstatus_id;
+    private Orderstatus orderstatus_id;
     
     @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderHadProduct> orderhasproductsList;

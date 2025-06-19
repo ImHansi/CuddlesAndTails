@@ -10,35 +10,47 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import jakarta.transaction.Transactional;
 import com.cuddlesandtails.user.UserRepository;
+import com.cuddlesandtails.vaccination.Vaccinationrecord;
+import com.cuddlesandtails.vaccination.VaccinationrecordRepository;
+import com.cuddlesandtails.appointment.Appointment;
+import com.cuddlesandtails.appointment.AppointmentRepository;
+import com.cuddlesandtails.appointment.AppointmentstatusRepository;
 import com.cuddlesandtails.appointment.RecordstatusRepository;
+//import com.cuddlesandtails.appointment.RecordstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping(value="/payment")
+@RequestMapping(value= "/payment")
 public class PaymentController {
 
     @Autowired
     private PaymentRepository PaymentDao;
 
     @Autowired
-    private RecordstatusRepository recordStatusDao;
-
-    @Autowired
     private UserRepository userDao;
 
     @Autowired
     private PrivilegeController privilegeController;
+
+    @Autowired
+    private AppointmentRepository appointmentDao;
+
+    @Autowired
+    private AppointmentstatusRepository appointmentstatusDao;
+
+    @Autowired
+    private VaccinationrecordRepository vaccinationrecordDao;
+
+    @Autowired
+    private RecordstatusRepository recordstatusDao;
     
 
     //create mapping UI service [/payment -- return payment UI]
@@ -96,18 +108,25 @@ public class PaymentController {
             
         }
 
-        Payment extPaymentConsulNo = PaymentDao.getConsulNoByConsultationId(payment.getConsultation_id().getId());
-        if (extPaymentConsulNo != null) {
-
-            return "Save not completed : This Consultation No is already existing..!";
-            
-        }
-
         try{
             //set auto generate values
             //set added date time
            payment.setAddeddatetime(LocalDateTime.now());
            payment.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
+
+           //set appointmentstatus as confirmed id=2
+           if (payment.getAppointment_id() != null) {
+            Appointment appointment = appointmentDao.getReferenceById(payment.getAppointment_id().getId());
+            appointment.setAppointmentstatus_id(appointmentstatusDao.getReferenceById(2));
+            appointmentDao.save(appointment);
+           }
+
+           //set vaccination recordstatus as complete id=4
+           if (payment.getVaccinationrecord_id() != null) {
+            Vaccinationrecord vr = vaccinationrecordDao.getReferenceById(payment.getVaccinationrecord_id().getId());
+            vr.setRecordstatus_id(recordstatusDao.getReferenceById(4)); 
+            vaccinationrecordDao.save(vr);
+            }
 
            //set nextPaymentNo 
            String nextPaymentNo = PaymentDao.getNextPaymentNo();
@@ -123,100 +142,6 @@ public class PaymentController {
             return "Save Not Completed :"+ e.getMessage();
         }
     }
-
-
-    @Transactional
-    @DeleteMapping
-    public String deleteFunc(@RequestBody Payment payment){
-        //user authentication and authurization 
-        //get logged user authentication object
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "payment");
-
-        if (!logUserPrivi.get("delete")) {
-            return "Delete not completed : You don't have privileges";
-        }
-
-        try{
-            //delete
-            Payment extPayment =PaymentDao.getReferenceById(payment.getId());
-        if(extPayment== null){
-            return"Delete not completed!";
-        }
-        
-
-            extPayment.setRecordstatus_id(recordStatusDao.getReferenceById(2));
-            extPayment.setDeletedatetime(LocalDateTime.now());
-            payment.setDeleteuser_id(userDao.getUserByUsername(auth.getName()).getId());
-            PaymentDao.save(extPayment);
-
-
-
-            return"Ok";
-
-        }catch(Exception e){
-            return"Delete not completed!" + e.getMessage();
-        }
-
-    }
-
-    //create put mapping for update payment
-    @Transactional
-    @PutMapping
-    public String updatePayment(@RequestBody Payment payment){
-        //authontication and authrization
-        // get logged user authentication object
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // get privilege object using log user and relavent module
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "payment");
-        // check privilege
-        if (!logUserPrivi.get("update")) {
-            return "Update not Completed... :you haven't permission..!";
-        }
-
-        //check existing
-        Payment extPayment = PaymentDao.getReferenceById(payment.getId());
-        if (extPayment == null) {
-            return "Update not completed : Payment does not exist..!";
-        }
-
-        //check duplicate
-        /* Payment extPaymentInvoive = PaymentDao.getInvoiceNoByOrderId(payment.getOrder_id().getId());
-        if (extPaymentInvoive != null && extPaymentInvoive.getOrder_id().getInvoiceno().equals(extPaymentInvoive)) {
-
-            return "Update not completed : Invoice is already existing..!";
-            
-        } */
-
-        /* Payment extPaymentVaccineNo = PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
-        if (extPaymentVaccineNo != null && extPaymentVaccineNo.getVaccinationrecord_id().getVaccino().equals(extPaymentVaccineNo)) {
-
-            return "Update not completed : Vaccination No is already existing..!";
-            
-        }
-
-        Payment extPaymentConsulNo = PaymentDao.getConsulNoByConsultationId(payment.getConsultation_id().getId());
-        if (extPaymentConsulNo != null && extPaymentConsulNo.getConsultation_id().getConsulno().equals(extPaymentConsulNo)) {
-
-            return "Update not completed : Consultation No is already existing..!";
-            
-        } */
-
-        try {
-            payment.setLastmodifydatetime(LocalDateTime.now());
-            payment.setLastmodifyuser_id(userDao.getUserByUsername(auth.getName()).getId());
-            PaymentDao.save(payment);
-
-
-            return "OK";
-        } catch (Exception e) {
-            return "Update not completed :" + e.getMessage();
-        }
-    }
-    
-
 
 
 

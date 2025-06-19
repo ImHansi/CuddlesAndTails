@@ -43,12 +43,15 @@ public class Consultation {
     @Length(max = 4)
     private String consulno;
 
+    @Column(name = "channelingno")
+    @NotNull
+    private Integer channelingno;
+
     @Column(name = "dateofconsultation")
     @NotNull
     private LocalDate dateofconsultation;
 
     @Column(name = "totalfee")
-    @NotNull
     private String totalfee;
 
     @Column(name = "note")
@@ -75,12 +78,6 @@ public class Consultation {
 
     @Column(name = "mobile")
     private String mobile;
-
-    @Column(name = "servicefee")
-    private String servicefee;
-
-    @Column(name = "doctorfee")
-    private String doctorfee;
 
     @ManyToOne
     @JoinColumn(name = "owner_id",referencedColumnName = "id")

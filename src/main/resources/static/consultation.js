@@ -44,7 +44,7 @@ const refreshConsultationTable = () => {
                               {dataType:'function',propertyName:getService},
                               {dataType:'text',propertyName:'dateofconsultation'},
                               {dataType:'function',propertyName:getDoctor},
-                              {dataType:'text',propertyName:'totalfee'},
+                              {dataType:'function',propertyName:getRecordstatus},
     ];
 
     //call filldataintotable function
@@ -61,10 +61,28 @@ const refreshConsultationTable = () => {
         }
     });*/
 
+    consultations.forEach((element, index) => {
+    if (element.recordstatus_id.name === "Delete") {
+        const row = tableConsultation.children[1].children[index];
+        const deleteButton = row.querySelector('.btn-danger');
+        const editButton = row.querySelector('.btn-success');
+
+        if (deleteButton) deleteButton.disabled = true;
+        if (editButton) editButton.disabled = true;
+    }
+    });
+
    $('#tableConsultation').dataTable();
 
 
 }
+
+//create function to get channeling no
+/* const getChannelingNo=(ob)=>{
+    return ob.appointment_id.channelingno;
+
+} */
+
 
 //create function to get owners
 const getOwnerName=(ob)=>{
@@ -82,7 +100,7 @@ const getPetName=(ob)=>{
 const getService=(ob)=>{
     return ob.service_id.name;
 
-}
+} 
 
 //create functon to get doctors
 const getDoctor=(ob)=>{
@@ -91,7 +109,7 @@ const getDoctor=(ob)=>{
 }
 
 //create function get record status 
-const getRecordstatus_id=(ob)=>{
+const getRecordstatus=(ob)=>{
     
     if(ob.recordstatus_id.name == 'Active'){
 
@@ -122,26 +140,13 @@ const consultationFormRefill =(ob,rowIndex)=>{
     appointments = ajaxRequestHere("/appointment/showall");
     fillDataIntoSelect(selectAppNo,'Select Channeling No',appointments,'channelingno',consultation.appointment_id.channelingno);
 
-    owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',consultation.owner_id.name);
-    
-    pets = ajaxRequestHere("/pet/showall");
-    fillDataIntoSelect(selectPet,'Select Pet',pets,'name',consultation.pet_id.name);
-
     services = ajaxRequestHere("/service/showService");
     fillDataIntoSelect(selectService,'Select Service',services,'name',consultation.service_id.name);
 
-    doctors = ajaxRequestHere("/doctor/showall");
-    fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname',consultation.doctor_id.fullname);
-
+    textDoctor.value = consultation.doctor_id.fullname;
     textMobile.value = consultation.mobile;
     dateOfConsultation.value=consultation.dateofconsultation;
-    textServiceFee.value=consultation.servicefee;
-    textDoctorFee.value=consultation.doctorfee;
-    textTotalFee.value=consultation.totalfee;
-
-
-    
+    textNote.value = consultation.note;
 
     if (userPrivilege.update) {
         btnConsulUpdate.disabled = "";
@@ -165,43 +170,11 @@ const consultationFormRefill =(ob,rowIndex)=>{
 //create function for check form update
 const checkFormUpdate=()=>{
     let updates = "";
-    if(consultation.owner_id.name != oldconsultation.owner_id.name){
-        updates = updates + "Owner has been updated," + oldconsultation.owner_id.name + "into" + consultation.owner_id.name + "\n";
-    }
-
-    if(consultation.mobile != oldconsultation.mobile){
-        updates = updates + "Mobile no has been updated," + oldconsultation.mobile + "into" + consultation.mobile + "\n";
-    }
-
-    if(consultation.pet_id.name != oldconsultation.pet_id.name){
-        updates = updates + "Pet has been updated," + oldconsultation.pet_id.name + "into" + consultation.pet_id.name + "\n";
-    }
-
-    if(consultation.dateofconsultation != oldconsultation.dateofconsultation){
-        updates = updates + "Date of consultation has been updated," + oldconsultation.dateofconsultation + "into" + consultation.dateofconsultation + "\n";
-    }
-
-    if(consultation.service_id.name != oldconsultation.service_id.name){
-        updates = updates + "Service has been updated," + oldconsultation.service_id.name + "into" + consultation.service_id.name + "\n";
-    }
-
-    if(consultation.doctor_id.fullname != oldconsultation.doctor_id.fullname){
-        updates = updates + "Doctor has been updated," + oldconsultation.doctor_id.fullname + "into" + consultation.doctor_id.fullname + "\n";
-    }
-
-    if(consultation.servicefee != oldconsultation.servicefee){
-        updates = updates + "Service fee has been updated," + oldconsultation.servicefee + "into" + consultation.servicefee + "\n";
-    }
-
-    if(consultation.doctorfee != oldconsultation.doctorfee){
-        updates = updates + "Doctor fee has been updated," + oldconsultation.doctorfee + "into" + consultation.doctorfee + "\n";
-    }
-
-    if(consultation.totalfee != oldconsultation.totalfee){
-        updates = updates + "Total fee has been updated," + oldconsultation.totalfee + "into" + consultation.totalfee + "\n";
-    }
-
     
+    if(consultation.note != oldconsultation.note){
+        updates = updates + "Medical History has been updated," + oldconsultation.note + "into" + consultation.note + "\n";
+    }
+
     return updates;
 }
 
@@ -287,8 +260,7 @@ const deleteFunc =(ob,rowIndex)=>{
         const userConfirm = confirm('Are you sure to REMOVE following consultation record? \n'
             + '\n Owner is ' + ob.owner_id.name
             + '\n Pet is ' + ob.pet_id.name
-            + '\n Date is ' + ob.dateofconsultation
-            + '\n Total amount is ' + ob.totalfee
+            + '\n Date is ' + ob.dateofconsultation,
         );
 
         if (userConfirm) {
@@ -311,10 +283,10 @@ const deleteFunc =(ob,rowIndex)=>{
             });
 
             if (deleteServerResponse == 'OK') {
-                alert('Delete Successfully...!!');
+                alert('Delete not completed. You have following error \n' + deleteServerResponse);
                 refreshConsultationTable();
             } else {
-                alert('Delete not completed. You have following error \n' + deleteServerResponse);
+                alert('Delete Successfully...!!');
             }
         }else {
             row.classList.remove('table-danger')
@@ -333,6 +305,43 @@ const deleteFunc =(ob,rowIndex)=>{
 const printFunc =(ob, rowIndex)=>{
     console.log('print');
 
+    //open view modal
+    $('#consultationViewModal').modal('show');
+
+    viewChannelingNo.innerHTML = ob.appointment_id.channelingno;
+    viewOwner.innerHTML = ob.owner_id.name;
+    viewPet.innerHTML = ob.pet_id.name;
+    viewDate.innerHTML = ob.dateofconsultation;
+    viewDoctor.innerHTML = ob.doctor_id.fullname;
+    viewService.innerHTML = ob.service_id.name;
+    viewMedicalSummary.innerHTML = ob.note;
+
+}
+
+//function for print
+function printpage() { 
+    let modalContent = document.getElementById('consultationViewModal').innerHTML;
+    
+    let newWindow = window.open('', '', 'width=800,height=600');
+
+    newWindow.document.write(`
+        <html>
+            <head>
+                <title>Print Modal</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                </style>
+            </head>
+            <body>
+                ${modalContent}
+            </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+    newWindow.focus();
+    newWindow.print();
+    newWindow.close();
 }
 
 //add function
@@ -348,21 +357,13 @@ const checkConsulFormError =() =>{
 //need to check all required fields(property)
     let errors ='';
 
-    if (consultation.owner_id==null) {
-        errors = errors +"Please select an owner..\n";
-        selectOwner.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
+
     if (consultation.mobile==null) {
         errors = errors +"Please enter a mobile no..\n";
         textMobile.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (consultation.pet_id==null) {
-        errors = errors +"Please select a pet..\n";
-        selectPet.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
+    
     if (consultation.dateofconsultation==null) {
         errors = errors +"Please choose a date..\n";
         dateOfConsultation.style.background = 'rgba(255,0,0,0,1)';
@@ -373,26 +374,7 @@ const checkConsulFormError =() =>{
         selectService.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (consultation.doctor_id==null) {
-        errors = errors +"Please select a doctor..\n";
-        selectDoctor.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
-    if (consultation.servicefee==null) {
-        errors = errors +"Please enter a service fee..\n";
-        textServiceFee.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
-    if (consultation.doctorfee==null) {
-        errors = errors +"Please enter a doctor fee..\n";
-        textDoctorFee.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
-    //if (consultation.totalfee==null) {
-        //errors = errors +"Please enter the total amount..\n";
-        //textTotalFee.style.background = 'rgba(255,0,0,0,1)';
-        
-    //}
+    
     return errors;
 
 }
@@ -407,18 +389,16 @@ const buttonFormSubmit = ()=>{
     if (formErrors == '') {
         //need to get user confirmation
         const userConfirm = confirm('Are you sure to add following consultation record? \n'
+                                    + '\n Channeling No is : ' + consultation.channelingno
                                     + '\n Owner is : ' + consultation.owner_id.name
                                     + '\n Pet is : ' + consultation.pet_id.name
-                                    + '\n Date is : ' + consultation.dateofconsultation
-                                    + '\n Total fee is : ' + consultation.totalfee);
+                                    + '\n Date is : ' + consultation.dateofconsultation);
 
 
             if (userConfirm) {
                 //pass data into backend
                 //check server response
                 let postServiceResponse = ajaxRequestBody("/consultation", "POST", consultation);
-
-
 
                 if (postServiceResponse === 'OK') {
                     alert("Save successfully.. !");
@@ -451,32 +431,15 @@ const refreshConsultationForm = () =>{
     appointments = ajaxRequestHere("/appointment/showall");
     fillDataIntoSelect(selectAppNo,'Select Channeling No',appointments,'channelingno');
 
-    owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
-
-    pets = ajaxRequestHere("/pet/showall");
-    fillDataIntoSelect(selectPet,'Select Pet',pets,'name');
-
     services = ajaxRequestHere("/service/showService");
     fillDataIntoSelect(selectService,'Select a Service',services,'name');
 
-    doctors = ajaxRequestHere("/doctor/showall");
-    fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname');
-
-
-   
     //set text field value as a empty
-    selectOwner.style.border ='1px solid #ced4da';
+   
     textMobile.style.border ='1px solid #ced4da';
-    selectPet.style.border ='1px solid #ced4da';
     dateOfConsultation.style.border='1px solid #ced4da';
     selectService.style.border='1px solid #ced4da';
-    selectDoctor.style.border='1px solid #ced4da';
-    textServiceFee.style.border='1px solid #ced4da';
-    textDoctorFee.style.border='1px solid #ced4da';
-    textTotalFee.style.border='1px solid #ced4da';
     
-
     //set default color
     //textFullName.removeAttribute('style');
 
@@ -509,43 +472,79 @@ const generateOwnerMobile =()=>{
     textMobile.style.border = "4px solid green";
 }*/
 
-//define function to generate service fee automatically
-const generateServiceFee =()=>{
-    console.log(JSON.parse(selectService.value));
 
-    textServiceFee.value = JSON.parse(selectService.value).price;
-    consultation.servicefee = parseFloat(textServiceFee.value);
-    console.log("Doctor Fee",consultation.servicefee );
-    textServiceFee.style.border = "4px solid green";
-}
-
-//define function to generate doctor fee automatically
-const generateDoctorFee =()=>{
-    console.log(JSON.parse(selectDoctor.value));
-    textDoctorFee.value = JSON.parse(selectDoctor.value).doctorfee;
-    consultation.doctorfee = parseFloat(textDoctorFee.value);
-    console.log("Doctor Fee",consultation.doctorfee );
-    textDoctorFee.style.border = "4px solid green";
-}
-
-//define function to generate total fee--> service fee + doctor fee
-const generateTotalFee =()=>{
-    console.log("Req sent");
-    const totalfee = (consultation.servicefee  || 0) + (consultation.doctorfee || 0 );
-    textTotalFee.value = totalfee;
-    textTotalFee.style.border = "4px solid green";
-    console.log(`Total Fee: ${totalfee}`);
-}
-
-//define function to generate owner name automatically
-const generateOwnerName =()=>{
+//define function to generate owner name automatically 
+/* const generateOwnerName =()=>{
     console.log(JSON.parse(selectAppNo.value));
 
     selectOwner.value = JSON.parse(selectAppNo.value).owner_id.name;
     consultation.owner_id = selectOwner.value;
     selectOwner.style.border = "4px solid green";
-}
+} */
 
+const generateAppointmentOtherDetails =()=>{
+    console.log(JSON.parse(selectAppNo.value));
+
+    const selectedAppointment = JSON.parse(selectAppNo.value);
+
+    const appointmentDate = selectedAppointment.dateofappointment;
+    const mobile = selectedAppointment.mobile;
+    document.getElementById('textDoctor').value = selectedAppointment.doctor_id.fullname;
+    const channelingNo = selectedAppointment.channelingno;
+
+
+    dateOfConsultation.value = appointmentDate;
+    textMobile.value = mobile;
+
+    consultation.doctor_id = { id: selectedAppointment.doctor_id.id };
+    consultation.pet_id = { id: selectedAppointment.pet_id.id };
+    consultation.owner_id = { id: selectedAppointment.owner_id.id };
+    consultation.mobile = mobile;
+    consultation.channelingno = channelingNo;
+    consultation.dateofconsultation = appointmentDate;
+    
+    
+
+    dateOfConsultation.style.border = "4px solid green";
+    textMobile.style.border = "4px solid green";
+    textDoctor.style.border = "4px solid green";
+
+    // const appointmentDoctor = JSON.parse(selectAppNo.value).doctor_id.fullname;
+    // selectDoctor.value = appointmentDoctor;
+    // consultation.doctor_id = appointmentDoctor;
+
+
+    // selectDoctor.value = JSON.parse(selectAppNo.value).doctor_id.id;
+    // console.log("JSON.parse(selectAppNo.value).doctor_id.id",JSON.parse(selectAppNo.value).doctor_id.id)
+    // console.log("selectDoctor", selectDoctor)
+    // consultation.doctor_id = selectDoctor.value;
+   
+
+} 
+
+
+
+//define function to filter Appointments according to the service
+const filterAppointments=()=>{
+
+    const selectService = document.getElementById("selectService");
+    const selectAppNo = document.getElementById("selectAppNo");
+
+    //check if the service is selected
+    if (selectService.value) {
+    selectAppNo.disabled = false;
+
+    const serviceId = JSON.parse(selectService.value).id;
+    const appointmentByService = ajaxRequestHere("/appointment/showallbyservice?serviceid="+ serviceId);
+    fillDataIntoSelectNewTwo(selectAppNo,'Select Channeling No & Owner',appointmentByService,'channelingno','owner_id.name');
+
+    }else {
+        //Disable the appointment dropdown
+        selectAppNo.disabled = true; 
+        selectAppNo.innerHTML = '<option value="" selected disabled>Select Appointment</option>';
+  }
+
+}
 /*//define function to generate doctor automatically
 const generateDoctor =()=>{
     console.log(JSON.parse(selectOwner.value));

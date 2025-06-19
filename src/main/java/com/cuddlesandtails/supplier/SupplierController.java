@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cuddlesandtails.privilege.PrivilegeController;
-import com.cuddlesandtails.user.UserRepository;
+//import com.cuddlesandtails.user.UserRepository;
 
 @RestController
 @RequestMapping(value = "/supplier")
@@ -23,11 +23,11 @@ public class SupplierController {
     @Autowired //inject module repository object onto doa variable
     private SupplierRepository dao; //create module dao object
 
-    @Autowired
-    private UserRepository userDao;
+    //@Autowired
+    //private UserRepository userDao;
     
-    @Autowired
-    private SupplierstatusRepository supplierstatusDao;
+    //@Autowired
+    //private SupplierstatusRepository supplierstatusDao;
 
     @Autowired
     private PrivilegeController privilegeController;

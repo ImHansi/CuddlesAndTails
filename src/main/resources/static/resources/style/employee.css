@@ -100,4 +100,25 @@ textarea{
     padding: 10px;
 
 }
+.status-Approved{
+    padding: 10px;
+    background-color: rgba(154, 174, 57, 0.647);
+    padding: 10px;
+
+}
+
+.status-Delivered{
+    padding: 10px;
+    background-color: rgba(49, 105, 66, 0.647);
+    padding: 10px;
+
+}
+
+.status-Cancelled{
+    padding: 10px;
+    background-color: rgba(156, 50, 65, 0.647);
+    padding: 10px;
+
+}
+
 

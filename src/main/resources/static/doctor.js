@@ -13,10 +13,10 @@ window.addEventListener('load',()=>{
     refreshSpecializationForm();
 });
 
-//create function refresh employee table
+//create function refresh doctor table
 const refreshDoctorTable = () => {
 
-    //create array to store employee data list
+    //create array to store doctor data list
     doctor = [];
     doctors =ajaxRequestHere("/doctor/showall");
 

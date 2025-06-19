@@ -5,9 +5,7 @@ import java.time.*;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.cuddlesandtails.appointment.Recordstatus;
-import com.cuddlesandtails.consultation.Consultation;
-import com.cuddlesandtails.order.Order;
+import com.cuddlesandtails.appointment.Appointment;
 import com.cuddlesandtails.pet.Owner;
 import com.cuddlesandtails.vaccination.Vaccinationrecord;
 
@@ -58,28 +56,15 @@ public class Payment {
 
     @Column(name = "addeduser_id")
     private Integer addeduser_id;
-    
-    @Column(name = "lastmodifyuser_id")
-    private Integer lastmodifyuser_id;
-    
-    @Column(name = "deleteuser_id")
-    private Integer deleteuser_id;
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
 
-    @Column(name = "lastmodifydatetime")
-    private LocalDateTime lastmodifydatetime;
-
-
-    @Column(name = "deletedatetime")
-    private LocalDateTime deletedatetime;
-
     @Column(name = "vaccinationfee")
     private BigDecimal vaccinationfee;
 
-    @Column(name = "consultationfee")
-    private BigDecimal consultationfee;
+    @Column(name = "appointmentfee")
+    private BigDecimal appointmentfee;
 
     @ManyToOne
     @JoinColumn(name = "paymentmethod_id",referencedColumnName = "id")
@@ -90,20 +75,12 @@ public class Payment {
     private Vaccinationrecord vaccinationrecord_id;
 
     @ManyToOne
-    @JoinColumn(name = "consultation_id",referencedColumnName = "id")
-    private Consultation consultation_id;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id",referencedColumnName = "id")
-    private Order order_id;
-
-    @ManyToOne
     @JoinColumn(name = "owner_id",referencedColumnName = "id")
     private Owner owner_id;
 
     @ManyToOne
-    @JoinColumn(name = "recordstatus_id",referencedColumnName = "id")
-    private Recordstatus recordstatus_id;
+    @JoinColumn(name = "appointment_id",referencedColumnName = "id")
+    private Appointment appointment_id;
 
 
     

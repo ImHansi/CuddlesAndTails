@@ -627,3 +627,53 @@ const fillDataIntoTableWithDelete = (tableId, dataList, columnList, deleteFuctio
 
 
 }
+
+const fillDataIntoTableWithPrint = (tableId, dataList, columnList, printFunc, buttonVisibility = true) => {
+
+    //const table = document.querySelector('#tableEmployee');
+    const tableBody = tableId.children[1];
+    tableBody.innerHTML = '';
+
+    dataList.forEach((element, index) => {
+
+        const tr = document.createElement('tr');
+
+        const tdIndex = document.createElement('td');
+        tdIndex.innerText = index + 1;
+        tr.appendChild(tdIndex);
+
+        columnList.forEach(column => {
+            const td = document.createElement('td');
+
+            if (column.dataType == 'text') {
+                td.innerText = element[column.propertyName];
+            }
+            if (column.dataType == 'function') {
+                td.innerHTML = column.propertyName(element);
+            }
+
+            tr.appendChild(td);
+        });
+        
+        const tdButton = document.createElement('td');
+
+        const buttonPrint = document.createElement('button');
+        buttonPrint.className ='btn btn-info fw-bold me-2';
+        buttonPrint.innerHTML = '<i class="fa-solid fa-floppy-disk"></i>';
+        tdButton.appendChild(buttonPrint);
+        buttonPrint.onclick = function (){
+            printFunc(element , index);
+        }
+
+        tdButton.appendChild(buttonPrint);
+
+        if (buttonVisibility){
+            tr.appendChild(tdButton);
+        }
+
+        tableBody.appendChild(tr);
+
+    });
+
+
+}

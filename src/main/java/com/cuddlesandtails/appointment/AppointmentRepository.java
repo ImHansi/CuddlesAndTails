@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Integer>{
 
@@ -25,5 +27,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
     @Query(value = "select a from Appointment a where a.dateofappointment =?1 and a.service_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2)")
     public List<Appointment> getAppinmentByDateService(LocalDate dateofappointment, Integer serviceid);
 
+    //create query to get confirmed Appointments by given service id
+    @Query("select a from Appointment a where a.service_id.id = :serviceId and a.appointmentstatus_id.id = 2")
+    List<Appointment> getByService(@Param("serviceId") Integer serviceId);
     
+
+    //create query to get pending appointments
+    @Query(value = "select a from Appointment a where a.appointmentstatus_id.id=1")
+    List<Appointment> getPendingAppointments();
 }

@@ -32,7 +32,7 @@ public class Supplier {
 
     @Column(name = "supplier_no", unique = true)
     @NotNull
-    @Length(max = 10)
+    @Length(max = 5)
     private String supplier_no;
 
     @Column(name = "name")

@@ -26,6 +26,7 @@ public class WebConfiguration {
             .requestMatchers("/index").hasAnyAuthority("Admin","manager","receptionist","staff-member","doctor")
             .requestMatchers("/employee/**").hasAnyAuthority("Admin","manager","receptionist")
             .requestMatchers("/user").hasAnyAuthority("Admin","manager")
+            .requestMatchers("/payment").hasAnyAuthority("Admin","manager")
             
             .anyRequest().authenticated();
         })

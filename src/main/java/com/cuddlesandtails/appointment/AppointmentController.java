@@ -186,7 +186,18 @@ public class AppointmentController {
         }
     }
 
+
+    //to get appointment by the service
+    @GetMapping(value = "/showallbyservice",params = {"serviceid"}, produces = "application/json")
+    public List<Appointment> showAllDataByServive(@RequestParam("serviceid")Integer serviceid){
+        return AppointmentDao.getByService(serviceid);
+    }
     
+    //toget pending appointments
+    @GetMapping(value = "/pendingAppointments", produces = "application/json")
+    public List<Appointment> getpendingAppointments() {
+        return AppointmentDao.getPendingAppointments();
+    }
 
     // for report
     @GetMapping(value = "/getappointmentreport", params = { "selectDate", "doctor",

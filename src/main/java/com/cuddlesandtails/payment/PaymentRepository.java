@@ -23,9 +23,5 @@ public interface PaymentRepository extends JpaRepository<Payment , Integer>{
     @Query(value = "select v.vaccino from Vaccinationrecord v where v.id=:vaccinationrecord_id")
     public Payment getVaccineNoByVaccinationrecordId(@Param("vaccinationrecord_id") Integer vaccinationrecord_id);
 
-
-    @Query(value = "select c.consulno from Consultation c where c.id=:consultation_id")
-    public Payment getConsulNoByConsultationId(@Param("consultation_id") Integer consultation_id);
-
     
 }

@@ -144,7 +144,7 @@ const fillDataIntoSelectTwo = (feildId, message, dataList, property, propertyTwo
     });
 }
 
-
+//filldataintoselect with two properties
 const fillDataIntoSelectNew = (feildId, message, dataList, property, propertyTwo, selectedValue) => {
 
     //feildId eke athule tiyen ek null krno
@@ -175,6 +175,39 @@ const fillDataIntoSelectNew = (feildId, message, dataList, property, propertyTwo
         feildId.appendChild(option);
     });
 }
+
+//filldataintoselect with nested value properties like owner_id.name 
+const fillDataIntoSelectNewTwo = (feildId, message, dataList, property, propertyTwo, selectedValue) => {
+    feildId.innerHTML = '';
+
+    const optionMsg = document.createElement("option");
+    optionMsg.innerText = message;
+    optionMsg.selected = true;
+    optionMsg.disabled = true;
+    feildId.appendChild(optionMsg);
+
+    dataList.forEach(element => {
+        const option = document.createElement('option');
+
+        const value1 = getNestedValue(element, property);
+        const value2 = getNestedValue(element, propertyTwo);
+
+        option.innerText = value1 + " - " + value2;
+        option.value = JSON.stringify(element);
+
+        if (selectedValue == value1) {
+            option.selected = true;
+        }
+
+        feildId.appendChild(option);
+    });
+}
+
+//with filldataintoselectnewtwo Helper function to safely access nested values like 'owner_id.name'
+function getNestedValue(obj, path) {
+    return path.split('.').reduce((o, key) => (o ? o[key] : 'N/A'), obj) || 'N/A';
+}
+
 
 
 //function for the search on datalists

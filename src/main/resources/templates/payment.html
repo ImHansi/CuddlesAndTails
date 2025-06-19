@@ -71,28 +71,11 @@
                     <th>Total Amount</th>
                     <th>Paid Amount</th>
                     <th>Balance</th>
-                    <th>Status</th>
                     <th>Modify</th>
                   </tr>
                 </thead>
                 <tbody class="table-light">
-                  <tr>
-                    <td>1</td>
-                    <td>0001</td>
-                    <td>static owner</td>
-                    <td>4000</td>
-                    <td>5000</td>
-                    <td>5000</td>
-                    <td>status</td>
-                    <td>
-                      <button type="button" class="btn btnall btn-info">
-                        <i class="fa-solid fa-pen-to-square"></i> Update</button>
-                      <button type="button" class="btn btnall btn-danger">
-                        <i class="fa-solid fa-trash"></i> Delete</button>
-                      <button type="button" class="btn btnall btn-success">
-                        <i class="fa-solid fa-eye"></i> Print</button>
-                    </td>
-                  </tr>
+                  
                 </tbody>
               </table>
             </div>
@@ -127,55 +110,29 @@
                       </div>
                     </div>
                     <!-- required mark -->
-
-                    <div class="row mt-2">
-                      <div class="col-4"></div>
-                      <div class="col-4">
-                        <div>
-                          <label for="textOwnerName" class="col-form-label fw-bold">
-                            Owners Name : <span class="text-danger">*</span>
-                          </label>
-                        </div>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="fa-solid fa-user"></i>
-                          </span>
-
-                          <select name="owner" required id="selectOwner"
-                              class="form-select form-input" onchange="selectDValidator(this,'','consultation','owner_id');">
-                              
-                              <option value="" selected disabled>
-                                Select Owner
-                              </option>
-                            </select>
-                        </div>
-                      </div>
-                      <div class="col-4"></div>
-                     </div>
-                     <!--Invoice , vaccine, consultation starts here-->
+                     <!-- vaccine, appointment starts here-->
                      <div class="row mt-2">
-                      <div class="col-4">
+                      <div class="col-6">
                         <div>
-                          <label for="selectInvoice" class="col-form-label fw-bold">
-                            Invoice No : <span class="text-danger"></span>
+                          <label for="selectAppNo" class="col-form-label fw-bold">
+                            Channeling No + Owner : <span class="text-danger"></span>
                           </label>
                         </div>
                         <div class="input-group">
                           <span class="input-group-text">
-                            <i class="fa-solid fa-file-invoice"></i>
+                            <i class="fa-solid fa-stethoscope"></i>
                           </span>
 
-                          <select name="invoice" id="selectInvoice"
-                              class="form-select form-input" onchange="selectDValidator(this,'','payment','order_id'); generateOrderFee();">
+                          <select name="consulno" id="selectAppNo"
+                              class="form-select form-input" onchange="selectDValidator(this,'','payment','appointment_id');generateAppointmentFee(); generateTotalFee();">
                               
                               <option value="" selected disabled>
-                                Select Invoice No
+                                Select Channeling no
                               </option>
                             </select>
                         </div>
-
                       </div>
-                      <div class="col-4">
+                      <div class="col-6">
                         <div>
                           <label for="selectVaccineNo" class="col-form-label fw-bold">
                             Vaccination No : <span class="text-danger"></span>
@@ -187,7 +144,7 @@
                           </span>
 
                           <select name="vaccinationno" id="selectVaccineNo"
-                              class="form-select form-input" onchange="selectDValidator(this,'','payment','vaccinationrecord_id'); generateVaccinationFee();">
+                              class="form-select form-input" onchange="selectDValidator(this,'','payment','vaccinationrecord_id'); generateVaccinationFee(); generateTotalFee();">
                               
                               <option value="" selected disabled>
                                 Select vaccination No
@@ -195,46 +152,27 @@
                             </select>
                         </div>
                       </div>
-                      <div class="col-4">
-                        <div>
-                          <label for="selectConsulNo" class="col-form-label fw-bold">
-                            Consultation No : <span class="text-danger"></span>
-                          </label>
-                        </div>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="fa-solid fa-stethoscope"></i>
-                          </span>
-
-                          <select name="consulno" id="selectConsulNo"
-                              class="form-select form-input" onchange="selectDValidator(this,'','payment','consultation_id'); generateConsultationFee();">
-                              
-                              <option value="" selected disabled>
-                                Select consultation no
-                              </option>
-                            </select>
-                        </div>
-                      </div>
+                      
                      </div>
-                     <!--Invoice , vaccine, consultation ends here-->
+                     <!-- vaccine, appointment ends here-->
 
                      <div class="row mt-2">
-                      <!-- invoice fee starts here -->
-                      <div class="col-4">
-                        <div>
-                            <label for="textInvoiceFee" class="col-form-label fw-bold">
-                                Invoice Fee : <span class="text-danger"></span>
-                            </label>
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-text fw-bold">Rs :</span>
-                            <input type="text" class="form-control" id="textInvoiceFee" placeholder="Enter Invoice Fee" readonly >
-                            <span class="input-group-text">.00</span>
-                        </div>
+                      <!-- appointment fee starts here -->
+                    <div class="col-6">
+                    <div>
+                        <label for="textAppointmentFee" class="col-form-label fw-bold">
+                            Appointment Fee : <span class="text-danger"></span>
+                        </label>
                     </div>
-                    <!-- invoice fee ends here -->
+                    <div class="input-group">
+                        <span class="input-group-text fw-bold">Rs :</span>
+                        <input type="text" class="form-control" id="textAppointmentFee" placeholder="Enter Appointment Fee" readonly>
+                        <span class="input-group-text">.00</span>
+                    </div>
+                    </div>
+                    <!-- appointment fee ends here -->
                      <!-- vaccination fee starts here -->
-                     <div class="col-4">
+                     <div class="col-6">
                       <div>
                           <label for="textVaccinationFee" class="col-form-label fw-bold">
                               Vaccination Fee : <span class="text-danger"></span>
@@ -245,22 +183,9 @@
                           <input type="text" class="form-control" id="textVaccinationFee" placeholder="Enter Vaccination Fee" readonly >
                           <span class="input-group-text">.00</span>
                       </div>
-                  </div>
-                  <!-- vaccination fee ends here -->
-                   <!-- consultation fee starts here -->
-                   <div class="col-4">
-                    <div>
-                        <label for="textConsultationFee" class="col-form-label fw-bold">
-                            Consultation Fee : <span class="text-danger"></span>
-                        </label>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text fw-bold">Rs :</span>
-                        <input type="text" class="form-control" id="textConsultationFee" placeholder="Enter consultation Fee" readonly >
-                        <span class="input-group-text">.00</span>
-                    </div>
-                </div>
-                <!-- consultation fee ends here -->
+                     </div>
+                     <!-- vaccination fee ends here -->
+                   
                      </div>
 
                      <div class="row mt-2">
@@ -291,13 +216,15 @@
                      <div class="row mt-2">
                       <!--total amount-->
                       <div class="col-4">
-                        <div class="d-flex justify-content-center">
+                        <div>
+                          <label for="textTotalFee" class="col-form-label fw-bold">
+                              Total Amount : <span class="text-danger">*</span>
+                          </label>
                           
-                          <button type="submit" class="btn btn-primary rounded-1" onclick="generateTotalFee()">Calculate Total Amount</button>
                       </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textTotalFee" placeholder="Click on the button" readonly required>
+                          <input type="text" class="form-control" id="textTotalFee" placeholder="Total Amount" readonly required >
                           <span class="input-group-text">.00</span>
                       </div>
                       </div>
@@ -311,19 +238,21 @@
                       </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required>
+                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required onkeyup="generateBalance();">
                           <span class="input-group-text">.00</span>
                       </div>
                       </div>
                       <!--balance-->
                       <div class="col-4">
-                        <div class="d-flex justify-content-center">
+                        <div>
+                          <label for="textBalanceFee" class="col-form-label fw-bold">
+                              Balance : <span class="text-danger">*</span>
+                          </label>
                           
-                          <button type="submit" class="btn btn-primary rounded-1" onclick="generateBalance()">Calculate Balance</button>
                       </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textBalanceFee" placeholder="Click on the button" readonly required>
+                          <input type="text" class="form-control" id="textBalanceFee" placeholder="Balance Amount" readonly required >
                           <span class="input-group-text">.00</span>
                       </div>
                       </div>
@@ -341,16 +270,13 @@
 
                       <div class="col-4"></div>
 
-                      <!-- update & add button starts here -->
+                      <!-- add button starts here -->
                       <div class="col-4 d-flex justify-content-center">
-                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnPaymentUpdate">
-                          <i class="fa-solid fa-arrows-rotate"></i> Update
-                        </button>
-                        <button type="submit" class="btn btn-success rounded-1" id="btnPaymentAdd">
+                        <button type="submit" class="btn btn-success rounded-1" id="btnPaymentAdd" onclick="buttonFormSubmit()">
                           <i class="fa-solid fa-plus"></i> Submit
                         </button>
                       </div>
-                      <!-- update & add button ends here -->
+                      <!--  add button ends here -->
                     </div>
                   </div>
                 </div>
@@ -362,6 +288,65 @@
       </div>
     </div>
   </div>
+
+  <!--view print modal for payment-->
+    <div class="modal" id="paymentViewModal" data-bs-backdrop="static" data-bs-keyboard="false" >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">View of Payment Record</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- table area start -->
+             <div class="row">
+              <div class="col-4"></div>
+              <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+              <div class="col-4"></div>
+             </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                
+                <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
+                <br>
+                <table id="printPaymentTable" class="table table-hover table-bordered table-striped border-primary">
+                  
+                  <tr>
+                    <th>Payment No</th>
+                    <th id="viewPaymentNo"></th>
+                  </tr>
+                  <tr>
+                    <th>Owner</th>
+                    <th id="viewOwner"></th>
+                  </tr>
+                  <tr>
+                    <th>Total</th>
+                    <th id="viewTotal"></th>
+                  </tr>
+                  <tr>
+                    <th>Paid</th>
+                    <th id="viewPaid"></th>
+                  </tr>
+                  <tr>
+                    <th>Balance</th>
+                    <th id="viewBalance"></th>
+                  </tr>
+                  <tr>
+                    <th>Date</th>
+                    <th id="viewAddedDate"></th>
+                  </tr>
+              </table>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+              </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 
 </html>
