@@ -3,7 +3,6 @@ package com.cuddlesandtails.payment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 
 
@@ -20,8 +19,8 @@ public interface PaymentRepository extends JpaRepository<Payment , Integer>{
     //@Query(value = "select p from Payment p where p.vaccinationrecord_id=:vaccinationrecord_id")
     //public Payment getPaymentByVaccineNo(@Param("vaccinationrecord_id") Integer vaccinationrecord_id);
 
-    @Query(value = "select v.vaccino from Vaccinationrecord v where v.id=:vaccinationrecord_id")
-    public Payment getVaccineNoByVaccinationrecordId(@Param("vaccinationrecord_id") Integer vaccinationrecord_id);
+    // @Query(value = "select v.vaccino from Vaccinationrecord v where v.id=:vaccinationrecord_id")
+    // public String getVaccineNoByVaccinationrecordId(@Param("vaccinationrecord_id") Integer vaccinationrecord_id);
 
     
 }

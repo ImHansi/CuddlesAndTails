@@ -101,12 +101,12 @@ public class PaymentController {
             
         } */
 
-        Payment extPaymentVaccineNo = PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
-        if (extPaymentVaccineNo != null) {
+        // String extPaymentVaccineNo = PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
+        // if (extPaymentVaccineNo != null) {
 
-            return "Save not completed : This Vaccination No is already existing..!";
+        //     return "Save not completed : This Vaccination No is already existing..!";
             
-        }
+        // }
 
         try{
             //set auto generate values

@@ -142,17 +142,6 @@ const buttonFormSubmit = ()=>{
                 //pass data into backend
                 //check server response
 
-                if (payment.appointment_id && payment.appointment_id.id)
-                payment.appointment_id = { id: payment.appointment_id.id };
-
-                if (payment.vaccinationrecord_id && payment.vaccinationrecord_id.id)
-                    payment.vaccinationrecord_id = { id: payment.vaccinationrecord_id.id };
-    
-                if (payment.paymentmethod_id && payment.paymentmethod_id.id)
-                    payment.paymentmethod_id = { id: payment.paymentmethod_id.id };
-    
-                if (payment.owner_id && payment.owner_id.id)
-                    payment.owner_id = { id: payment.owner_id.id };
 
                 let postServiceResponse = ajaxRequestBody("/payment", "POST", payment);
 
@@ -232,7 +221,7 @@ const generateAppointmentFee =()=>{
     const totalFee = parseFloat(appointmentDetails.servicefee ?? 0 ) + parseFloat(appointmentDetails.doctor_id.specialization_id.doctorfee ?? 0) 
     textAppointmentFee.value = totalFee;
     payment.appointmentfee = totalFee;
-    //payment.owner_id = {id: appointmentDetails.owner_id.id};
+    payment.owner_id = {id: appointmentDetails.owner_id.id};
     //payment.appointmentfee = parseFloat(textAppointmentFee.value);
     textAppointmentFee.style.border = "4px solid green";
 }

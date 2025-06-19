@@ -50,14 +50,6 @@ public class Product {
     @NotNull
     private String salesprice;
 
-    @Column(name = "quantity")
-    @NotNull
-    private Integer quantity;
-
-    @Column(name = "stockeddate")
-    @NotNull
-    private String stockeddate;
-
     @Column(name = "note")
     private String note;
 
@@ -75,8 +67,7 @@ public class Product {
 
     @Column(name = "lastmodifydatetime")
     private LocalDateTime lastmodifydatetime;
-
-
+    
     @Column(name = "deletedatetime")
     private LocalDateTime deletedatetime;
 
