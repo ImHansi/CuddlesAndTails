@@ -1,8 +1,8 @@
-package com.cuddlesandtails.order;
+package com.cuddlesandtails.suppayment;
 
 import java.math.BigDecimal;
 
-import com.cuddlesandtails.product.Product;
+import com.cuddlesandtails.receive.Receive;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -19,37 +19,37 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity //apply as an entity class
-@Table(name = "order_has_product") //for map with given table
+@Table(name = "supplierpayment_has_receive") //for map with given table
 @Data //generate setters and getters... etc
 @NoArgsConstructor //generate default constructor
 @AllArgsConstructor //all argument constructor
 
-public class OrderHadProduct {
+public class SupplierpaymentHadReceive {
 
     @Id //for pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //AI
     @Column(name = "id", unique = true) //to map with column
     private Integer id;
 
-    @Column(name = "quantity")
+    @Column(name = "totalamount")
     @NotNull
-    private Integer quantity;
+    private BigDecimal totalamount;
 
-    @Column(name = "price")
+    @Column(name = "paidamount")
     @NotNull
-    private BigDecimal price;
+    private BigDecimal paidamount;
 
-    @Column(name = "lineprice")
+    @Column(name = "balanceamount")
     @NotNull
-    private BigDecimal lineprice;
+    private BigDecimal balanceamount;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "order_id",referencedColumnName = "id")
+    @JoinColumn(name = "supplierpayment_id",referencedColumnName = "id")
     @JsonIgnore
-    private Order order_id;
+    private Suppayment supplierpayment_id;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
-    private Product product_id;
- 
+    @JoinColumn(name = "receive_id",referencedColumnName = "id")
+    private Receive receive_id;
+
 }

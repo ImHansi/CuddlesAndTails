@@ -1,5 +1,6 @@
-package com.cuddlesandtails.product;
+package com.cuddlesandtails.vaccine;
 
+import java.math.BigDecimal;
 import java.time.*;
 
 import com.cuddlesandtails.appointment.Recordstatus;
@@ -18,12 +19,12 @@ import lombok.NoArgsConstructor;
 
 
 @Entity //apply as an entity class
-@Table(name = "product") //for map with given table
+@Table(name = "vaccine") //for map with given table
 @Data //generate setters and getters... etc
 @NoArgsConstructor //generate default constructor
 @AllArgsConstructor //all argument constructor
 
-public class Product {
+public class Vaccine {
 
     @Id //for pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //AI
@@ -44,11 +45,14 @@ public class Product {
 
     @Column(name = "purchaseprice")
     @NotNull
-    private String purchaseprice;
+    private BigDecimal purchaseprice;
 
     @Column(name = "salesprice")
     @NotNull
-    private String salesprice;
+    private BigDecimal salesprice;
+
+    @Column(name = "duration")
+    private String duration;
 
     @Column(name = "note")
     private String note;

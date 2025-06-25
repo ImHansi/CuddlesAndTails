@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class SupplierHadProductController {
+public class SupplierHadVaccineController {
     
     @Autowired
-    private SupplierHadProductRepository dao; 
+    private SupplierHadVaccineRepository dao; 
 
-    @GetMapping(value = "/order_has_product/showOrderHadProduct", produces = "application/json")
-    public List<showOrderHadProduct> showAllData(){
+    @GetMapping(value = "/order_has_vaccine/showOrderHadVaccine", produces = "application/json")
+    public List<showOrderHadVaccine> showAllData(){
         return dao.findAll();
     } 
 }

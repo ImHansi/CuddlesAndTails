@@ -3,12 +3,14 @@ package com.cuddlesandtails.suppayment;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.cuddlesandtails.receive.Receive;
+import com.cuddlesandtails.payment.Paymentmethod;
 import com.cuddlesandtails.supplier.Supplier;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -77,6 +80,10 @@ public class Suppayment {
     private Supplier supplier_id;
 
     @ManyToOne
-    @JoinColumn(name = "receive_id",referencedColumnName = "id")
-    private Receive receive_id;
+    @JoinColumn(name = "paymentmethod_id", referencedColumnName = "id")
+    private Paymentmethod paymentmethod_id;
+
+    @OneToMany(mappedBy = "supplierpayment_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SupplierpaymentHadReceive> supplierpaymenthasreceivesList;
+
 }

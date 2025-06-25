@@ -191,16 +191,16 @@
                           <div class="row mt-2">
                             <div class="col-6">
                               <div>
-                                <label for="selectProduct" class="col-form-label fw-bold">
-                                  Product : <span class="text-danger">*</span>
+                                <label for="selectVaccine" class="col-form-label fw-bold">
+                                  Vaccine : <span class="text-danger">*</span>
                                 </label>
                               </div>
                               <div class="input-group">
-                                <select name="product" id="selectProduct"
-                                    class="form-select form-input" onchange="selectDValidator(this,'','orderhasproducts','product_id'); generateUnitPrice();">
+                                <select name="vaccine" id="selectVaccine"
+                                    class="form-select form-input" onchange="selectDValidator(this,'','orderhasvaccines','vaccine_id'); generateUnitPrice();">
                                     
                                     <option value="" selected disabled>
-                                      Select Product
+                                      Select Vaccine
                                     </option>
                                   </select>
                               </div>
@@ -208,13 +208,13 @@
                             <div class="col-6">
 
                               <div>
-                                <label for="productPrice" class="col-form-label fw-bold">
+                                <label for="vaccinePrice" class="col-form-label fw-bold">
                                     Unit Price : <span class="text-danger">*</span>
                                 </label>
                             </div>
                             <div class="input-group">
                                 
-                                <input type="number" class="form-control" id="productPrice" name="productPrice" step="0.01" onkeyup="textValidator(this,'','orderhasproducts','price')">
+                                <input type="number" class="form-control" id="vaccinePrice" name="vaccineprice" step="0.01" onkeyup="textValidator(this,'','orderhasvaccines','price')">
                                 
                             </div>
 
@@ -231,7 +231,7 @@
                                 </label>
                             </div>
                             <div>
-                              <input type="number" class="form-control" id="txtQuantity" name="quantity" placeholder="Enter quantity"  onkeyup="textValidator(this,'','orderhasproducts','quantity'); textQtyValidator();">
+                              <input type="number" class="form-control" id="txtQuantity" name="quantity" placeholder="Enter quantity"  onkeyup="textValidator(this,'','orderhasvaccines','quantity'); textQtyValidator();">
                             </div>
                               
                             </div>
@@ -241,13 +241,13 @@
                             <!-- Quantity starts here -->
                             <div class="col-6">
                               <div>
-                                <label for="productLinePrice" class="col-form-label fw-bold">
+                                <label for="vaccineLinePrice" class="col-form-label fw-bold">
                                     Line Price : <span class="text-danger">*</span>
                                 </label>
                             </div>
                             <div class="input-group">
                                 
-                                <input type="number" class="form-control" id="productLinePrice" name="productlinePrice" step="0.01" onkeyup="textValidator(this,'','orderhasproducts','lineprice')">
+                                <input type="number" class="form-control" id="vaccineLinePrice" name="vaccinelinePrice" step="0.01" onkeyup="textValidator(this,'','orderhasvaccines','lineprice')">
                                 
                             </div>
                               
@@ -266,7 +266,7 @@
                                 <tr>
                                   <th>#</th>
                                   <!-- #,No,Index -->
-                                  <th>Product</th>
+                                  <th>Vaccine</th>
                                   <th>Qunatity</th>
                                   <th>Unit Price</th>
                                   <th>Line Price</th>

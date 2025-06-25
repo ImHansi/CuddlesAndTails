@@ -1,13 +1,16 @@
 package com.cuddlesandtails.receive;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
 import com.cuddlesandtails.order.Order;
 import com.cuddlesandtails.supplier.Supplier;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -40,7 +44,7 @@ public class Receive {
     private String receivednotecode;
 
     @Column(name = "received_date")
-    private LocalDateTime received_date;
+    private LocalDate received_date;
     
     @Column(name = "totalamount")
     @NotNull
@@ -75,6 +79,9 @@ public class Receive {
     @Column(name = "netamount")
     @NotNull
     private BigDecimal netamount;
+
+    @Column(name = "paidamount")
+    private BigDecimal paidamount;
     
     @Column(name = "supplierbillno")
     @NotNull
@@ -91,6 +98,9 @@ public class Receive {
     @ManyToOne
     @JoinColumn(name = "order_id",referencedColumnName = "id")
     private Order order_id;
+
+    @OneToMany(mappedBy = "receive_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReceiveHadVaccine> receivehasvaccinesList;
 
 
 }

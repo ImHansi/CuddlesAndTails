@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+  
+    <!--link receive.js-->
+    <!-- <script src="receive.js"></script> -->
+    <script>
+      //to reset the form after clicking on the X mark
+     document.addEventListener("DOMContentLoaded", function(){
+      var receiveAddModal = document.getElementById('receiveAddModal');
+      var FormReceive = document.getElementById('FormReceive')
+  
+      receiveAddModal.addEventListener('hidden.bs.modal', function(){
+        FormReceive.reset();
+      });
+     });
+   </script>
+  
+  
+  </head>
+
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Receive Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#receiveAddModal">
+          Add New Receive Note
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableReceive">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Supplier Name</th>
+                    <th>Recived Date</th>
+                    <th>Total Amount</th>
+                    <th>Discount Amount</th>
+                    <th>Net Amount</th>
+                    <th>Supplier Bill No</th>
+                    <th>Status</th>
+                    <th>Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                  
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!-- Receive add model -->
+  <div class="modal" id="receiveAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Manage Receive Note</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="FormReceive">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    
+                    <div class="row mt-2">
+                      <!--total amount starts here-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textTotalFee" class="col-form-label fw-bold">
+                            Total Amount : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textTotalFee" placeholder="Click on the button" required onkeyup="textValidator(this,'','receive','totalamount')">
+                          
+                      </div>
+                      </div>
+                      <!--total amount ends here-->
+
+                      <!--discount amount starts here-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textDiscountFee" class="col-form-label fw-bold">
+                            Discount Amount : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textDiscountFee" placeholder="Click on the button" required onkeyup="textValidator(this,'','receive','')">
+                          
+                      </div>
+                      </div>
+                      <!--discount amount ends here-->
+
+                      <!--net amount starts here-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textNetFee" class="col-form-label fw-bold">
+                            Net Amount : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textNetFee" placeholder="Click on the button" required onkeyup="textValidator(this,'','receive','')">
+                          
+                      </div>
+                      </div>
+                      <!--net amount ends here-->
+                    </div>
+                    <div class="row mt-2">
+                    <!--receive date starts here-->
+                        <div class="col-4">
+                            <div>
+                                <label for="dateOfReceive" class="col-form-label fw-bold">
+                                  Receive Date : <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="date" class="form-control" required id="dateOfReceive" onchange="textValidator(this,'^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','receivehasproducts','')"/>
+                            </div>
+                        </div>
+                    <!--receive date ends here-->
+                    <!--receive status starts here-->
+                        <div class="col-3">
+                        <div>
+                          <label for="selectReceiveStatus" class="col-form-label fw-bold">
+                            Receive Status :
+                            <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <select name="receiveStatus" required id="selectReceiveStatus"
+                            class="form-select form-input" onchange="selectDValidator(this,'','receive','rnstatus_id')">
+                        </div>
+                      </div>
+                      <!--receive status ends here-->
+                      <div class="col-5">
+                        <div class="form-floating" style="padding-top: 19px;">
+                          <textarea name="textareaNote" id="textNote" cols="80" rows="2" class="form-control"
+                            placeholder="Note" onkeyup="textValidator(this,'','receive','note')"></textarea>
+                          <label for="" class="form-label fw-bold">
+                            Note : <span class="text-danger">(optional)</span>
+                          </label>
+                        </div>
+                      </div>
+                       
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnReceiveReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnUpdateReceive" onclick="buttonReceiveUpdate()">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnAddReceive" onclick="buttonFormSubmit()">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                    
+                    
+
+                  </form>
+                  <!-- form area ends -->
+                  </div>
+                </div>
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  
+</body>
+
+</html>

@@ -90,7 +90,7 @@ const getOwnerName=(ob)=>{
 }
 //create function to get vaccines
 const getVaccine=(ob)=>{
-    return ob.vaccination_id.name;
+    return ob.vaccine_id.name;
 }
 //create function to get doctors
 const getDoctor=(ob)=>{
@@ -136,8 +136,9 @@ const vaccinationFormRefill =(ob,rowIndex)=>{
     doctors = ajaxRequestHere("/doctor/showall");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname',vaccinationrecord.doctor_id.fullname);
 
-    vaccinations = ajaxRequestHere("/vaccination/showVaccination");
-    fillDataIntoSelect(selectVaccination, 'Select Vaccine',vaccinations,'name',vaccinationrecord.vaccination_id.name);
+    vaccinations = ajaxRequestHere("/vaccine/showall");
+    fillDataIntoSelectNew(selectVaccination, 'Select Vaccine',vaccinations,'name','duration',vaccinationrecord.vaccine_id.name);
+
 
     //set value into UI element
     //elementId.value = object.property
@@ -182,8 +183,8 @@ const checkFormUpdate=()=>{
         updates = updates + "pet has been updated," + oldvaccinationrecord.pet_id.name + "into" + vaccinationrecord.pet_id.name + "\n";
     }
 
-    if(vaccinationrecord.vaccination_id.name != oldvaccinationrecord.vaccination_id.name){
-        updates = updates + "vaccine has been updated," + oldvaccinationrecord.vaccination_id.name + "into" + vaccinationrecord.vaccination_id.name + "\n";
+    if(vaccinationrecord.vaccine_id.name != oldvaccinationrecord.vaccine_id.name){
+        updates = updates + "vaccine has been updated," + oldvaccinationrecord.vaccine_id.name + "into" + vaccinationrecord.vaccine_id.name + "\n";
     }
 
     if(vaccinationrecord.dateofvaccination != oldvaccinationrecord.dateofvaccination){
@@ -287,7 +288,7 @@ const deleteFunc =(ob,rowIndex)=>{
         const userConfirm = confirm('Are you sure to REMOVE following Vaccination Record? \n'
             + '\n Pet is ' + ob.pet_id.name
             + '\n Owner is ' + ob.owner_id.name
-            + '\n Vaccine is ' + ob.vaccination_id.name
+            + '\n Vaccine is ' + ob.vaccine_id.name
             + '\n Date of vaccination is ' + ob.dateofvaccination
         );
 
@@ -339,7 +340,7 @@ const printFunc =(ob, rowIndex)=>{
     viewVaccinationRecordNo.innerHTML = ob.vaccino;
     viewOwner.innerHTML = ob.owner_id.name;
     viewPet.innerHTML = ob.pet_id.name;
-    viewVaccinationName.innerHTML = ob.vaccination_id.name;
+    viewVaccinationName.innerHTML = ob.vaccine_id.name;
     viewVaccinationDate.innerHTML = ob.dateofvaccination;
     viewNextVaccinationDate.innerHTML = ob.dateofnextvaccination;
     viewDoctor.innerHTML = ob.doctor_id.fullname;
@@ -400,7 +401,7 @@ const checkVaccReFormError =() =>{
         selectPet.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (vaccinationrecord.vaccination_id== null) {
+    if (vaccinationrecord.vaccine_id== null) {
         errors = errors +"Please Select a vaccine..\n";
         selectVaccination.style.background = 'rgba(255,0,0,0,1)';
         
@@ -438,7 +439,7 @@ const buttonFormSubmit = ()=>{
         const userConfirm = confirm('Are you sure to add following vaccination record? \n'
                                     + '\n Owner is : ' + vaccinationrecord.owner_id.name
                                     + '\n Pet is : ' + vaccinationrecord.pet_id.name
-                                    + '\n Vaccine is : ' + vaccinationrecord.vaccination_id.name
+                                    + '\n Vaccine is : ' + vaccinationrecord.vaccine_id.name
                                     + '\n Date of vaccination is : ' + vaccinationrecord.dateofvaccination);
 
 
@@ -485,8 +486,8 @@ const refreshVaccinationForm = () =>{
     doctors = ajaxRequestHere("/doctor/showall");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname');
 
-    vaccinations = ajaxRequestHere("/vaccination/showVaccination");
-    fillDataIntoSelect(selectVaccination, 'Select Vaccine',vaccinations,'name');
+    vaccinations = ajaxRequestHere("/vaccine/showall");
+    fillDataIntoSelectNew(selectVaccination, 'Select Vaccine',vaccinations,'name','duration');
 
 
     //set text field value as a empty
@@ -494,15 +495,14 @@ const refreshVaccinationForm = () =>{
     textMobile.style.border ='1px solid #ced4da';
     selectPet.style.border ='1px solid #ced4da';
     selectVaccination.style.border='1px solid #ced4da';
-    dateOfVaccination.style.border='1px solid #ced4da';
     dateOfNextVaccination.style.border='1px solid #ced4da';
     selectDoctor.style.border='1px solid #ced4da';
     textTotalFee.style.border='1px solid #ced4da';
     
-    //set default color
-    //textFullName.removeAttribute('style');
-
-
+    //Set today's date for dateOfVaccination
+    dateOfVaccination.value = new Date().toISOString().split('T')[0];
+    vaccinationrecord.dateofvaccination = dateOfVaccination.value;
+    dateOfVaccination.style.border = "4px solid green";
 
     //update button
     btnVaccineUpdate.disabled = "disabled";
@@ -533,7 +533,7 @@ const generateOwnerMobile =()=>{
 const generateVaccinePrice =()=>{
     console.log(JSON.parse(selectVaccination.value));
 
-    textTotalFee.value = JSON.parse(selectVaccination.value).price;
+    textTotalFee.value = JSON.parse(selectVaccination.value).salesprice;
     vaccinationrecord.totalamount = textTotalFee.value;
     textTotalFee.style.border = "4px solid green";
 }
@@ -559,26 +559,28 @@ const filterPets=()=>{
   }
 }
 
-// Define function to get the day after 6 months from the date of vaccination
-const getDayAfterSixMonths = () => {
-    
-    const inputDate = document.getElementById('dateOfVaccination').value;
-    const date = new Date(inputDate);
+// Define function to get the day after the given weeks from the date of vaccination
+function calculateNextVaccinationDate() {
+    const vaccineSelect = document.getElementById("selectVaccination");
+    const nextDateInput = document.getElementById("dateOfNextVaccination");
 
-    //const MDuration = JSON.parseInt(selectVaccination.value).duration;
+    if (vaccineSelect.value) {
+        const selectedVaccine = JSON.parse(vaccineSelect.value);
+        const weeks = parseInt(selectedVaccine.duration); // duration in weeks
 
-    //Add 6 months to the date
-    date.setMonth(date.getMonth() + 6);
+        const today = new Date();
+        today.setDate(today.getDate() + weeks * 7); // add weeks in days
 
-    //Format the date 
-    const formattedDate = date.toISOString().split('T')[0];
-    document.getElementById('dateOfNextVaccination').value = formattedDate;
-    document.getElementById('dateOfNextVaccination').style.border = "4px solid green";
+        const formattedDate = today.toISOString().split('T')[0];
+        nextDateInput.value = formattedDate;
+        //nextDateInput.style.border = "4px solid green";
+        vaccinationrecord.dateofnextvaccination = nextDateInput.value;
+        dateOfNextVaccination.style.border = "4px solid green";
+    } else {
+        nextDateInput.value = "";
+        nextDateInput.style.border = "1px solid #ccc";
+    }
+}
 
-    vaccinationrecord.dateofnextvaccination = formattedDate;
 
-    console.log(formattedDate);
-};
-
-//vaccinationrecord.dateofnextvaccination = formattedDate;
 

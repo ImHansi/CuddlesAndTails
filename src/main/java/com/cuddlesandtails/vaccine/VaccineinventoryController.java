@@ -1,5 +1,6 @@
-package com.cuddlesandtails.product;
+package com.cuddlesandtails.vaccine;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,40 +19,45 @@ import org.springframework.web.servlet.ModelAndView;
 import com.cuddlesandtails.privilege.PrivilegeController;
 
 @RestController
-@RequestMapping(value = "/productinventory")
-public class ProductinventoryController {
+@RequestMapping(value = "/vaccineinventory")
+public class VaccineinventoryController {
 
     @Autowired
-    private ProductinventoryRepository ProductinventoryDao;
+    private VaccineinventoryRepository vaccineinventoryDao;
 
     @Autowired
     private PrivilegeController privilegeController;
 
-    //create mapping UI service [/productinventory -- return productinventory UI]
+    //create mapping UI service [/vaccineinventory -- return vaccineinventory UI]
     @GetMapping()
-    public ModelAndView productinventoryUI(){
+    public ModelAndView vaccineinventoryUI(){
 
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
-        ModelAndView productinventoryView = new ModelAndView();
-        productinventoryView.addObject("logusername", auth.getName());
-        productinventoryView.addObject("title","Product Inventory Management : BIT Project 2024");
-        productinventoryView.setViewName("productin.html");
-        return productinventoryView; 
+        ModelAndView vaccineinventoryView = new ModelAndView();
+        vaccineinventoryView.addObject("logusername", auth.getName());
+        vaccineinventoryView.addObject("title","Vaccine Inventory Management : BIT Project 2024");
+        vaccineinventoryView.setViewName("vaccinein.html");
+        return vaccineinventoryView; 
     }
 
     @GetMapping(value = "/showall" , produces = "application/json")
-    public List<Productinventory> showAll(){
+    public List<Vaccineinventory> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Product");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Vaccine");
         //check privilege
         if(!logUserPrivi.get("select")){
-            return new ArrayList<Productinventory>();
+            return new ArrayList<Vaccineinventory>();
         }
-        return ProductinventoryDao.findAll(Sort.by(Direction.DESC,"id"));
+        return vaccineinventoryDao.findAll(Sort.by(Direction.DESC,"id"));
+    }
+
+    @GetMapping(value = "/byvaccine/{vaccinesid}")
+    public BigDecimal getAvtQtyByVac(@PathVariable Integer vaccinesid){
+        return vaccineinventoryDao.getAvtQtyByVaccine(vaccinesid);
     }
     
 }

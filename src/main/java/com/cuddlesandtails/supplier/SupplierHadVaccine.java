@@ -2,7 +2,7 @@ package com.cuddlesandtails.supplier;
 
 import java.io.Serializable;
 
-import com.cuddlesandtails.product.Product;
+import com.cuddlesandtails.vaccine.Vaccine;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -15,12 +15,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity //apply as an entity class
-@Table(name = "supplier_has_product") //for map with given table
+@Table(name = "supplier_has_vaccine") //for map with given table
 @Data //generate setters and getters... etc
 @NoArgsConstructor //generate default constructor
 @AllArgsConstructor //all argument constructor
 
-public class SupplierHadProduct implements Serializable {
+public class SupplierHadVaccine implements Serializable {
 
 
     @Id
@@ -31,7 +31,7 @@ public class SupplierHadProduct implements Serializable {
 
     @Id
     @ManyToOne(optional = true)
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
-    private Product product_id;
+    @JoinColumn(name = "vaccine_id",referencedColumnName = "id")
+    private Vaccine vaccine_id;
     
 }

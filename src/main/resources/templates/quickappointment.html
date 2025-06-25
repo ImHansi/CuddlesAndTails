@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head th:replace="~{ head :: headFragment}"></head>
+    <!--link quickappointment.js-->
+  <script src="quickappointment.js"></script>
+
+</head>
+<body onload="setAppointmentDateRange()">
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+    
+    <div class="container-fluid" style="padding-top: 55px;">
+        
+            <div class="row p-4">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <!--nav tabs-->
+            <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-appointment-tab" data-bs-toggle="tab" data-bs-target="#nav-appointment" type="button" role="tab" aria-controls="nav-appointment" aria-selected="true">Appointment</button>
+              <button class="nav-link" id="nav-pet-tab" data-bs-toggle="tab" data-bs-target="#nav-pet" type="button" role="tab" aria-controls="nav-pet" aria-selected="false">Pet</button>
+              <button class="nav-link" id="nav-payment-tab" data-bs-toggle="tab" data-bs-target="#nav-payment" type="button" role="tab" aria-controls="nav-payment" aria-selected="false">Payment</button>
+              <button class="nav-link" id="nav-summery-tab" data-bs-toggle="tab" data-bs-target="#nav-summery" type="button" role="tab" aria-controls="nav-summery" aria-selected="false">Summery</button>
+            </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-appointment" role="tabpanel" aria-labelledby="nav-appointment-tab">
+                <!--appointment-->
+                <form onsubmit="return false;" id="formQuickappointment">
+                        <div class="card div-card">
+                        <div class="card-body">
+                            <!-- required mark -->
+                            <div class="row mt-2">
+                              <div class="col-12 text-end fw-bold">
+                                <span class="text-danger">*</span> Required
+                              </div>
+                            </div>
+                            <!-- required mark -->
+                             <div class="row mt-2">
+                                <div class="col-6">
+                                    <div>
+                                      <label for="selectService" class="col-form-label fw-bold">
+                                        Select a Service : <span class="text-danger">*</span>
+                                      </label>
+                                    </div>
+                                    <div>
+                                      <select name="service" required id="selectService" class="form-select form-input" onchange="selectDValidator(this,'','appointment','service_id'); generateTotalFee();filterDoctors();">
+                                        <option value="" selected disabled>
+                                          Select A Service
+                                        </option>
+                                        
+                                      </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                       <label for="dateOfAppointment" class="col-form-label fw-bold">
+                                         Date of Appointment : <span class="text-danger">*</span>
+                                       </label>
+                                    </div>
+                                    <div>
+                                      <input type="date" class="form-control" required id="dateOfAppointment" onchange="textValidator(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','appointment','dateofappointment');"/>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="row mt-2">
+                                <div class="col-6">
+                                    <div>
+                                       <label for="selectDoctor" class="col-form-label fw-bold">
+                                         Select a Doctor : <span class="text-danger">*</span>
+                                       </label>
+                                    </div>
+                                    <div>
+                                      <select name="doctor" required id="selectDoctor" class="form-select form-input" onchange="selectDValidator(this,'','appointment','doctor_id'); filterTimeSlot();">
+                                        <option value="" selected disabled>
+                                          Select A Doctor
+                                        </option>
+                                        
+                                      </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                       <label for="selectTime" class="col-form-label fw-bold">
+                                         Time slot :
+                                         <span class="text-danger">*</span>
+                                       </label>
+                                    </div>
+                                    <div>
+                                      <select name="starttime" required id="selectStartTime"
+                                        class="form-select form-input" onchange="selectStartTimeValidator()">
+                                        <option value="" selected disabled>
+                                          Select a time
+                                        </option>
+                                        
+                                      </select>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="row mt-2">
+                                <div class="col-4"></div>
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                    <a class="btn btn-primary" href="#" role="button" onclick="document.getElementById('nav-pet-tab').click(); return false; generateTotalFee();">Next Page</a>
+
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    
+                </form>
+                <!--appointment ends-->
+              </div>
+              <div class="tab-pane fade" id="nav-pet" role="tabpanel" aria-labelledby="nav-pet-tab">
+                <!--pet details-->
+                <form onsubmit="return false;" id="formQuickappointment">
+                    <div class="card div-card">
+                        <div class="card-body">
+                            <!-- required mark -->
+                            <div class="row mt-2">
+                              <div class="col-12 text-end fw-bold">
+                                <span class="text-danger">*</span> Required
+                              </div>
+                            </div>
+                            <!-- required mark -->
+                             <div class="row mt-2">
+                                <div class="col-6">
+                                    <div>
+                                      <label for="textOwnerName" class="col-form-label fw-bold">
+                                        Owners Name : <span class="text-danger">*</span>
+                                      </label>
+                                    </div>
+                                    <div class="input-group">
+                                      <span class="input-group-text">
+                                        <i class="fa-solid fa-user"></i>
+                                      </span>
+            
+                                      <select name="owner" required id="selectOwner"
+                                          class="form-select form-input" onchange="selectDValidator(this,'','appointment','owner_id');filterPets();">
+                                          
+                                          <option value="" selected disabled>
+                                            Select Owner
+                                          </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                       <label for="textPetName" class="col-form-label fw-bold">
+                                         Pet Name :
+                                         <span class="text-danger">*</span>
+                                       </label>
+                                    </div>
+                                    <div class="input-group">
+                                      <span class="input-group-text">
+                                        <i class="fa-solid fa-dog"></i>
+                                      </span>
+            
+                                      <select name="pet" required id="selectPet"
+                                          class="form-select form-input" disabled onchange="selectDValidator(this,'','appointment','pet_id')">
+                                          
+                                          <option value="" selected disabled>
+                                            Select Pet
+                                          </option>
+                                        </select>
+                                    </div>
+                                </div>
+                             </div>
+                             
+                             <div class="row mt-2">
+                                <div class="col-4"></div>
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                    <a class="btn btn-primary" href="#" role="button" onclick="document.getElementById('nav-payment-tab').click(); return false;">Next Page</a>
+
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!--pet details ends-->
+              </div>
+              <div class="tab-pane fade" id="nav-payment" role="tabpanel" aria-labelledby="nav-payment-tab">
+                <!--payment-->
+                <form onsubmit="return false;" id="formQuickappointment">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+                     
+                     <div class="row mt-2">
+                      <div class="col-4"></div>
+                      <div class="col-4">
+                        <div>
+                          <label for="selectMethod" class="col-form-label fw-bold">
+                            Payment Method : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-regular fa-credit-card"></i>
+                          </span>
+
+                          <select name="method" required id="selectMethod"
+                              class="form-select form-input" onchange="selectDValidator(this,'','payment','paymentmethod_id')">
+                              
+                              <option value="" selected disabled>
+                                Select payment method
+                              </option>
+                            </select>
+                        </div>
+                      </div>
+                      <div class="col-4"></div>
+                     </div>
+
+                     <div class="row mt-2">
+                      <!--total amount-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textTotalFee" class="col-form-label fw-bold">
+                              Total Amount : <span class="text-danger">*</span>
+                          </label>
+                          
+                      </div>
+                      <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textTotalFee" placeholder="Total Amount" readonly required >
+                          <span class="input-group-text">.00</span>
+                      </div>
+                      </div>
+                      <!--paid amount-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textPaidFee" class="col-form-label fw-bold">
+                              Paid Amount : <span class="text-danger">*</span>
+                          </label>
+                          
+                      </div>
+                      <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required onkeyup="generateBalance();">
+                          <span class="input-group-text">.00</span>
+                      </div>
+                      </div>
+                      <!--balance-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textBalanceFee" class="col-form-label fw-bold">
+                              Balance : <span class="text-danger">*</span>
+                          </label>
+                          
+                      </div>
+                      <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textBalanceFee" placeholder="Balance Amount" readonly required >
+                          <span class="input-group-text">.00</span>
+                      </div>
+                      </div>
+                     </div>
+
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnPaymentReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success rounded-1" id="btnPaymentAdd" onclick="buttonFormSubmit()">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!--  add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+                <!--payment ends-->
+              </div>
+              <div class="tab-pane fade" id="nav-summery" role="tabpanel" aria-labelledby="nav-summery-tab">
+                <!--summery-->
+                <div class="row mt-3">
+                <div class="col-1"></div>
+                <div class="col-10">
+                  <div class="card div-card">
+                    <div class="card-body">
+                      <!-- table area starts here -->
+          
+                         <div class="row">
+                          <div class="col-4"></div>
+                          <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+                          <div class="col-4"></div>
+                         </div>
+                        <div class="row mt-2">
+                          <div class="col-12">
+                            
+                            <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
+                            <br>
+                            <table id="printPaymentTable" class="table table-hover table-bordered table-striped border-primary">
+                              
+                              <tr>
+                                <th>Payment No</th>
+                                <th id="viewPaymentNo"></th>
+                              </tr>
+                              <tr>
+                                <th>Owner</th>
+                                <th id="viewOwner"></th>
+                              </tr>
+                              <tr>
+                                <th>Total</th>
+                                <th id="viewTotal"></th>
+                              </tr>
+                              <tr>
+                                <th>Paid</th>
+                                <th id="viewPaid"></th>
+                              </tr>
+                              <tr>
+                                <th>Balance</th>
+                                <th id="viewBalance"></th>
+                              </tr>
+                              <tr>
+                                <th>Date</th>
+                                <th id="viewAddedDate"></th>
+                              </tr>
+                          </table>
+            
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+                          </div>
+            
+                          </div>
+                        </div>
+          
+                      <!-- table area ends here -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-1"></div>
+               </div>
+                <!--summery ends-->
+              </div>
+            </div>
+            <!--nav tabs ends-->
+                </div>
+                <div class="col-2"></div>
+            
+        </div>
+        <!--here-->
+        
+        
+    </div>
+    
+</body>
+</html>

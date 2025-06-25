@@ -1,5 +1,6 @@
 package com.cuddlesandtails.vaccination;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -19,6 +20,8 @@ import com.cuddlesandtails.appointment.Recordstatus;
 import com.cuddlesandtails.doctor.Doctor;
 import com.cuddlesandtails.pet.Owner;
 import com.cuddlesandtails.pet.Pet;
+import com.cuddlesandtails.vaccine.Vaccine;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -79,8 +82,8 @@ public class Vaccinationrecord {
     private Owner owner_id;
 
     @ManyToOne
-    @JoinColumn(name = "vaccination_id", referencedColumnName = "id")
-    private Vaccination vaccination_id;
+    @JoinColumn(name = "vaccine_id", referencedColumnName = "id")
+    private Vaccine vaccine_id;
 
     @ManyToOne
     @JoinColumn(name = "pet_id", referencedColumnName = "id")
@@ -92,7 +95,7 @@ public class Vaccinationrecord {
 
     @Column(name = "totalamount")
     @NotNull
-    private Integer totalamount;
+    private BigDecimal totalamount;
 
     @ManyToOne
     @JoinColumn(name = "recordstatus_id",referencedColumnName = "id")

@@ -364,7 +364,7 @@ const refreshOrderForm = () =>{
     order= new Object();
     oldorder =null;
 
-    order.orderhasproductsList = new Array();
+    order.orderhasvaccinesList = new Array();
 
     suppliers = ajaxRequestHere("/supplier/showsupplier");
     fillDataIntoSelect(selectSupplier,'Select supplier',suppliers,'name');
@@ -407,23 +407,23 @@ const refreshOrderForm = () =>{
 
 const refreshInnerFormAndTable = ()=>{
     
-    orderhasproducts = {};
+    orderhasvaccines = {};
 
-    products = ajaxRequestHere("/product/showall");
-    fillDataIntoSelect(selectProduct,'Select Products',products,'name');
+    vaccines = ajaxRequestHere("/vaccine/showall");
+    fillDataIntoSelect(selectVaccine,'Select Vaccines',vaccines,'name');
 
     //refresh innertable
     let displayPropertyList = [
-        { dataType: "function", propertyName: getProductName },
-        { dataType: "function", propertyName: getProductQty },
-        { dataType: "function", propertyName: getProductPrice },
+        { dataType: "function", propertyName: getVaccineName },
+        { dataType: "function", propertyName: getVaccineQty },
+        { dataType: "function", propertyName: getVaccinePrice },
         { dataType: "function", propertyName: getLineprice },
     ];
 
-    fillDataIntoInnerTable(InnerTable,order.orderhasproductsList,displayPropertyList, deleteInnerForm);
+    fillDataIntoInnerTable(InnerTable,order.orderhasvaccinesList,displayPropertyList, deleteInnerForm);
 
     let totalAmount = 0.00;
-    for (const orhpro of order.orderhasproductsList) {
+    for (const orhpro of order.orderhasvaccinesList) {
         totalAmount = parseFloat(totalAmount) + parseFloat(orhpro.lineprice);
     }
 
@@ -432,14 +432,14 @@ const refreshInnerFormAndTable = ()=>{
     textTotalFee.disabled = "disabled";
     order.totalamount = textTotalFee.value;
    
-    productPrice.value ="";
+    vaccinePrice.value ="";
     txtQuantity.value = "";
-    productLinePrice.value ="";
+    vaccineLinePrice.value ="";
 
-    selectProduct.style.border = "1px solid #ced4da";
-    productPrice.style.border = "1px solid #ced4da";
+    selectVaccine.style.border = "1px solid #ced4da";
+    vaccinePrice.style.border = "1px solid #ced4da";
     txtQuantity.style.border = "1px solid #ced4da";
-    productLinePrice.style.border = "1px solid #ced4da";
+    vaccineLinePrice.style.border = "1px solid #ced4da";
 
 
 }
@@ -448,7 +448,7 @@ const deleteInnerForm = (innerOb) => {
     Swal.fire({
         title: 'Confirm Delete Details',
         html: 'Are You sure to remove order..? <br>'
-            + '<br> Product Name : ' + innerOb.product_id.name,
+            + '<br> Vaccine Name : ' + innerOb.vaccine_id.name,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -456,14 +456,14 @@ const deleteInnerForm = (innerOb) => {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            let extIndex = order.orderhasproductsList.map(orhpro => orhpro.product_id.id).indexOf(innerOb.product_id.id);
+            let extIndex = order.orderhasvaccinesList.map(orhpro => orhpro.vaccine_id.id).indexOf(innerOb.vaccine_id.id);
             if (extIndex != -1) {
-                order.orderhasproductsList.splice(extIndex, 1);
+                order.orderhasvaccinesList.splice(extIndex, 1);
                 refreshInnerFormAndTable();
 
                 Swal.fire({
                     title: 'Success',
-                    text: 'Product Removed Successfully...!',
+                    text: 'Vaccine Removed Successfully...!',
                     icon: 'success'
                 });
             }
@@ -471,15 +471,15 @@ const deleteInnerForm = (innerOb) => {
     });
 }
 
-const getProductName = (innerOb) => {
-    return innerOb.product_id.name;
+const getVaccineName = (innerOb) => {
+    return innerOb.vaccine_id.name;
 }
 
-const getProductPrice = (innerOb) => {
+const getVaccinePrice = (innerOb) => {
     return parseFloat(innerOb.price).toFixed(2);//why to fixed --> convert to string
 }
 
-const getProductQty = (innerOb) => {
+const getVaccineQty = (innerOb) => {
     return parseFloat(innerOb.quantity).toFixed(3);
 }
 
@@ -488,39 +488,39 @@ const getLineprice = (innerOb) => {
 }
 
 const generateUnitPrice = () => {
-    let slctProduct = JSON.parse(selectProduct.value);
-    productPrice.value = parseFloat(slctProduct.salesprice).toFixed(2);
-    productPrice.style.border = "4px solid green";
-    productPrice.disabled = "disabled";
-    orderhasproducts.price = productPrice.value;
+    let slctVaccine = JSON.parse(selectVaccine.value);
+    vaccinePrice.value = parseFloat(slctVaccine.salesprice).toFixed(2);
+    vaccinePrice.style.border = "4px solid green";
+    vaccinePrice.disabled = "disabled";
+    orderhasvaccines.price = vaccinePrice.value;
 }
 
 const textQtyValidator = () => {
     if (new RegExp("^([1-9][0-9]{0,3})|([1-9][0-9]{0,3}[.][0-9]{1,3})$").test(txtQuantity.value)) {
-        productLinePrice.value = (parseFloat(txtQuantity.value) * parseFloat(productPrice.value)).toFixed(2);
-        productLinePrice.style.border = "4px solid green";
+        vaccineLinePrice.value = (parseFloat(txtQuantity.value) * parseFloat(vaccinePrice.value)).toFixed(2);
+        vaccineLinePrice.style.border = "4px solid green";
         txtQuantity.style.border = "4px solid green";
-        productLinePrice.disabled = "disabled";
-        orderhasproducts.lineprice = productLinePrice.value;
-        orderhasproducts.quantity = txtQuantity.value;
+        vaccineLinePrice.disabled = "disabled";
+        orderhasvaccines.lineprice = vaccineLinePrice.value;
+        orderhasvaccines.quantity = txtQuantity.value;
         buttonInnerAdd.disabled = "";
     } else {
-        productLinePrice.value = "";
-        productLinePrice.style.border = "4px solid #ced4da";
+        vaccineLinePrice.value = "";
+        vaccineLinePrice.style.border = "4px solid #ced4da";
         txtQuantity.style.border = "4px solid red";
-        productLinePrice.disabled = "disabled";
-        orderhasproducts.lineprice = null;
-        orderhasproducts.quantity = null;
+        vaccineLinePrice.disabled = "disabled";
+        orderhasvaccines.lineprice = null;
+        orderhasvaccines.quantity = null;
     }
 }
 
 const checkInnerFormError = () => {
     let errors = "";
 
-    if (orderhasproducts.product_id.id == null) {
-        errors = errors + "Please select product \n";
+    if (orderhasvaccines.vaccine_id.id == null) {
+        errors = errors + "Please select vaccine \n";
     }
-    if (orderhasproducts.quantity == null) {
+    if (orderhasvaccines.quantity == null) {
         errors = errors + "Please enter Quantity \n";
     }
     return errors;
@@ -528,37 +528,37 @@ const checkInnerFormError = () => {
 
 const btnInnerAdd = () => {
     //check duplicate 
-    let selectInProduct = JSON.parse(selectProduct.value);
-    let extPro = false;
+    let selectInVaccine = JSON.parse(selectVaccine.value);
+    let extVac = false;
 
-    for (const orhpro of order.orderhasproductsList) {
-        if (selectInProduct.id == orhpro.product_id.id) {
-            extPro = true;
+    for (const orhpro of order.orderhasvaccinesList) {
+        if (selectInVaccine.id == orhpro.vaccine_id.id) {
+            extVac = true;
             break;
         }
     }
-    if (extPro) {
+    if (extVac) {
         Swal.fire({
-            title: "Selected Product Already Exists!",
-            html: "(select another Product)",
+            title: "Selected Vaccine Already Exists!",
+            html: "(select another Vaccine)",
             icon: "warning"
         });
-        orderhasproducts = {};
-        productPrice.value = "";
+        orderhasvaccines = {};
+        vaccinePrice.value = "";
         txtQuantity.value = "";
-        productLinePrice.value = "";
-        selectProduct.style.border = "1px solid #ced4da";
-        productPrice.style.border = "1px solid #ced4da";
+        vaccineLinePrice.value = "";
+        selectVaccine.style.border = "1px solid #ced4da";
+        vaccinePrice.style.border = "1px solid #ced4da";
         txtQuantity.style.border = "1px solid #ced4da";
-        productLinePrice.style.border = "1px solid #ced4da";
+        vaccineLinePrice.style.border = "1px solid #ced4da";
     
     } else {
         let errors = checkInnerFormError();
         if (errors == "") {
             swal.fire({
                 title: 'Confirm Addition',
-                html: 'Are you Sure to Submit selecteed Product? <br>'
-                    + '<br> Product Name :' + orderhasproducts.product_id.name,
+                html: 'Are you Sure to Submit selecteed Vaccine? <br>'
+                    + '<br> Vaccine Name :' + orderhasvaccines.vaccine_id.name,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, add it!',
@@ -566,12 +566,12 @@ const btnInnerAdd = () => {
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    order.orderhasproductsList.push(orderhasproducts);
+                    order.orderhasvaccinesList.push(orderhasvaccines);
                     refreshInnerFormAndTable();
                 }
                 Swal.fire({
                     title: 'Success',
-                    html: 'Product added successfully!',
+                    html: 'Vaccine added successfully!',
                     icon: 'success'
                 });
             });

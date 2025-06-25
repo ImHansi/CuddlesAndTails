@@ -41,12 +41,13 @@
 
     <!-- toggle button starts -->
     <div class="row mt-2">
-      <div class="col-6"></div>
-      <div class="col-6 text-end">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierAddModal">
           Add New Supplier
         </button>
       </div>
+      <div class="col-1"></div>
     </div>
     <!-- toggle button ends here -->
 
@@ -193,13 +194,13 @@
                           </span>
 
                           <input type="text" id="textLandNo" class="form-control" placeholder="Enter Land No"
-                            required onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','supplier','landno')"/>
+                            required onkeyup="textValidator(this,'^[0][1234568][12345678][0-9]{7}$','supplier','landno')"/>
                         </div>
                       </div>
                       <!-- land no ends here -->
 
                       <!-- Address starts here -->
-                      <div class="col-4">
+                      <div class="col-4" style="padding-top: 17px;">
                         <div class="form-floating">
                           <textarea name="textareaAddress" id="textAddress" cols="80" rows="2" class="form-control"
                             placeholder="Address" required onkeyup="textValidator(this,'^.*$','supplier','address')"></textarea>
@@ -232,7 +233,7 @@
 
                       <!-- note starts here -->
                       <div class="col-4">
-                        <div class="form-floating">
+                        <div class="form-floating" style="padding-top: 19px;">
                           <textarea name="textareaNote" id="textNote" cols="80" rows="2" class="form-control"
                             placeholder="Note" onkeyup="textValidator(this,'','supplier','note')"></textarea>
                           <label for="" class="form-label fw-bold">
@@ -244,10 +245,12 @@
 
                       <!-- supplier bank name starts here-->
                        <div class="col-4">
-                         <label for="textBankAccName" class="col-3 col-form-label fw-bold">
+                        <div>
+                         <label for="textBankAccName" class="col-form-label fw-bold">
                           Bank Account Name : <span class="text-danger"> * </span>
                         </label>
-                        <div class="col-9">
+                        </div>
+                        <div>
                         <input type="text" id="textBankAccName" class="form-control" placeholder="Enter Bank Account Name"
                           required onkeyup="textValidator(this,'^([A-Z][a-z]{2,15}[\\s]){1,10}([A-Z][a-z]{2,15}){1}$','supplier','supplierbankname')"/>
                         </div>
@@ -260,10 +263,12 @@
 
                       <!-- supplier bank account no starts here-->
                        <div class="col-4">
-                         <label for="textBankAccNo" class="col-3 col-form-label fw-bold">
+                        <div>
+                         <label for="textBankAccNo" class="col-form-label fw-bold">
                           Bank Account No : <span class="text-danger"> * </span>
                         </label>
-                        <div class="col-9">
+                        </div>
+                        <div>
                         <input type="text" id="textBankAccNo" class="form-control" placeholder="Enter Bank Account No"
                           required onkeyup="textValidator(this,'','supplier','bankaccountno')"/>
                         </div>
@@ -272,10 +277,12 @@
 
                       <!-- supplier bank name starts here-->
                        <div class="col-4">
-                         <label for="textBankName" class="col-3 col-form-label fw-bold">
+                        <div>
+                         <label for="textBankName" class="col-form-label fw-bold">
                           Bank Name : <span class="text-danger"> * </span>
                         </label>
-                        <div class="col-9">
+                        </div>
+                        <div>
                         <input type="text" id="textBankName" class="form-control" placeholder="Enter Bank Account Name"
                           required onkeyup="textValidator(this,'','supplier','bankname')"/>
                         </div>
@@ -284,10 +291,12 @@
 
                       <!-- branch town starts here-->
                        <div class="col-4">
-                         <label for="textBranchTown" class="col-3 col-form-label fw-bold">
+                        <div>
+                         <label for="textBranchTown" class="col-form-label fw-bold">
                           Branch Town : <span class="text-danger"> * </span>
                         </label>
-                        <div class="col-9">
+                        </div>
+                        <div>
                         <input type="text" id="textBranchTown" class="form-control" placeholder="Enter Branch Town"
                           required onkeyup="textValidator(this,'','supplier','branchtown')"/>
                         </div>
@@ -299,23 +308,23 @@
                     <div class="row mt-3">
 
                       <div class="card div-card">
-                        <div class="card-body"  id="formSupplierProduct">
+                        <div class="card-body"  id="formSupplierVaccine">
                             <div class="row mt-2">
-                             <!--select supplier product-->
+                             <!--select supplier vaccine-->
                               <div class="col-12">
                                 <div>
-                                  <label for="selectSupplierProduct" class="col-form-label fw-bold">
-                                    Product :
+                                  <label for="selectSupplierVaccine" class="col-form-label fw-bold">
+                                    Vaccine :
                                     <span class="text-danger">*</span>
                                   </label>
                                 </div>
                                 <div>
-                                  <select name="supplierProduct" required id="selectSupplierProduct"
-                                    class="form-select form-input" onchange="selectDValidator(this,'','supplier','')">
+                                  <select name="suppliervaccine" required id="selectSupplierVaccine"
+                                    class="form-select form-input" onchange="selectDValidator(this,'','supplierhasvaccines','vaccine_id')">
                                   </select>
                                 </div>
                               </div>
-                              <!--select supplier product ends here-->
+                              <!--select supplier vaccine ends here-->
                              
                             </div>
    
@@ -323,10 +332,10 @@
                              <div class="col-4"></div>
                              <!-- update & add button starts here -->
                                <div class="col-4 d-flex justify-content-center">
-                                 <button type="reset" class="btn btn-danger rounded-1" id="btnResetSupplierProduct">
+                                 <button type="reset" class="btn btn-danger rounded-1" id="btnResetSupplierVaccine">
                                    <i class="fa-solid fa-rotate-right"></i> Reset
                                  </button>
-                                 <button type="submit" class="btn btn-success rounded-1" id="btnAddSupplierProduct" onclick="innerSubmit()">
+                                 <button type="submit" class="btn btn-success rounded-1" id="btnAddSupplierVaccine" onclick="btnInnerAdd()">
                                    <i class="fa-solid fa-plus"></i> Add
                                  </button>
                                </div>
@@ -339,7 +348,8 @@
                                 <thead class="table-header">
                                   <tr>
                                     <th>#</th>
-                                    <th>Product</th>
+                                    <th>Vaccine</th>
+                                    <th>Modify</th>
                                   </tr>
                                 </thead>
                                 <tbody class="table-light">

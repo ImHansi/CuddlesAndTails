@@ -1,7 +1,9 @@
-package com.cuddlesandtails.product;
+package com.cuddlesandtails.order;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
+import com.cuddlesandtails.vaccine.Vaccine;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,44 +19,37 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity //apply as an entity class
-@Table(name = "productinventory") //for map with given table
-@Data //generate setters getters
+@Table(name = "order_has_vaccine") //for map with given table
+@Data //generate setters and getters... etc
 @NoArgsConstructor //generate default constructor
 @AllArgsConstructor //all argument constructor
 
-public class Productinventory {
+public class OrderHadVaccine {
 
     @Id //for pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //AI
     @Column(name = "id", unique = true) //to map with column
     private Integer id;
 
-    @Column(name = "manufactureddate")
+    @Column(name = "quantity")
     @NotNull
-    private LocalDate manufactureddate;
+    private Integer quantity;
 
-    @Column(name = "expiredate")
+    @Column(name = "price")
     @NotNull
-    private LocalDate expiredate;
-    
-    @Column(name = "totalqty")
-    @NotNull
-    private BigDecimal totalqty;
-    
-    @Column(name = "availableqty")
-    @NotNull
-    private BigDecimal availableqty;
-    
-    @Column(name = "removeqty")
-    @NotNull
-    private BigDecimal removeqty;
-    
-    @Column(name = "batch_no")
-    @NotNull
-    private String batch_no;
-    
-    @ManyToOne
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
-    private Product product_id;
+    private BigDecimal price;
 
+    @Column(name = "lineprice")
+    @NotNull
+    private BigDecimal lineprice;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "order_id",referencedColumnName = "id")
+    @JsonIgnore
+    private Order order_id;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "vaccine_id",referencedColumnName = "id")
+    private Vaccine vaccine_id;
+ 
 }

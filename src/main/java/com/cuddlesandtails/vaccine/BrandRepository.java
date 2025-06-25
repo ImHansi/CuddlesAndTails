@@ -1,4 +1,4 @@
-package com.cuddlesandtails.product;
+package com.cuddlesandtails.vaccine;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

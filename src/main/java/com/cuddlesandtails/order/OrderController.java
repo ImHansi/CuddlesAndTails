@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -94,7 +95,7 @@ public class OrderController {
             // mek dann isslla purchaceorder_id ek block krnonh infinity recursion ekk ena
             // nisa, ek block krlm tibila hariyann naa save krgnnd ek required nisa, itim me
             // widihata ek dala save krgnnd oni
-            for (OrderHadProduct orhpro : order.getOrderhasproductsList()) {
+            for (OrderHadVaccine orhpro : order.getOrderhasvaccinesList()) {
                 orhpro.setOrder_id(order);
             }
 
@@ -172,7 +173,7 @@ public class OrderController {
             // mek dann isslla purchaceorder_id ek block krnonh infinity recursion ekk ena
             // nisa, ek block krlm tibila hariyann naa save krgnnd ek required nisa, itim me
             // widihata ek dala save krgnnd oni
-            for (OrderHadProduct orhpro : order.getOrderhasproductsList()) {
+            for (OrderHadVaccine orhpro : order.getOrderhasvaccinesList()) {
                 orhpro.setOrder_id(order);
             }
             
@@ -183,5 +184,13 @@ public class OrderController {
             return "Update not completed :" + e.getMessage();
         }
     }
+
+
+    //get mapping to filter pending orders by the siven supplier
+    @GetMapping(value = "/showpendingbysupplier",params = {"supplierid"}, produces = "application/json")
+    public List<Order> showAllDataBySupplier(@RequestParam("supplierid")Integer supplierid){
+        return dao.getBySupplier(supplierid);
+    }
+
 
 }

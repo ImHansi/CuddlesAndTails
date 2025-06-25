@@ -58,7 +58,14 @@ textarea{
 
 .status-Active{
     padding: 10px;
-    background-color: rgba(26, 255, 0, 0.732);
+    background-color: rgba(107, 175, 100, 0.732);
+    padding: 10px;
+
+}
+
+.status-InActive{
+    padding: 10px;
+    background-color: rgba(131, 39, 122, 0.732);
     padding: 10px;
 
 }
@@ -94,6 +101,18 @@ textarea{
     padding: 10px;
 
 }
+.status-Requested{
+    padding: 10px;
+    background-color: rgba(56, 102, 152, 0.647);
+    padding: 10px;
+
+}
+.status-Received{
+    padding: 10px;
+    background-color: rgba(53, 173, 63, 0.674);
+    padding: 10px;
+
+}
 .status-Confirm{
     padding: 10px;
     background-color: rgba(43, 223, 100, 0.647);
@@ -117,6 +136,20 @@ textarea{
 .status-Cancelled{
     padding: 10px;
     background-color: rgba(156, 50, 65, 0.647);
+    padding: 10px;
+
+}
+
+.status-InStore{
+    padding: 10px;
+    background-color: rgba(61, 170, 137, 0.445);
+    padding: 10px;
+
+}
+
+.status-OutofStock{
+    padding: 10px;
+    background-color: rgba(158, 80, 133, 0.647);
     padding: 10px;
 
 }

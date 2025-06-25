@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+  
+    <!--link appointment.js-->
+    <script src="vaccinestorage.js"></script>
+    <!--<script>
+      //to reset the form after clicking on the X mark
+     document.addEventListener("DOMContentLoaded", function(){
+      var appointmentAddModal = document.getElementById('appointmentAddModal');
+      var formAppointment = document.getElementById('formAppointment')
+  
+      appointmentAddModal.addEventListener('hidden.bs.modal', function(){
+        formAppointment.reset();
+      });
+     });
+   </script>-->
+  
+  
+  </head>
+
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row p-4">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-user-tie fa-2x"></i>
+        <h2 class="h2 ms-3">Vaccine Storage Management</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+
+    <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stockAddModal">
+          Add New Stock
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#vaccineAddModal">
+          Add New Vaccine
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
+
+    <div class="row mt-3">
+      <div class="col-1"></div>
+      <div class="col-10">
+        <div class="card div-card">
+          <div class="card-body">
+            <!-- table area starts here -->
+
+            <div class="row mt-3">
+              <table class="table table-hover table-bordered table-striped border-primary" id="tableVaccine">
+                <thead class="table-header">
+                  <tr>
+                    <th>#</th>
+                    <!-- #,No,Index -->
+                    <th>Vaccine Name</th>
+                    <th>Brand</th>
+                    <th>Net Weight</th>
+                    <th>Sales Price</th>
+                    <th>Status</th>
+                    <th>Modify</th>
+                  </tr>
+                </thead>
+                <tbody class="table-light">
+                  
+                </tbody>
+              </table>
+            </div>
+            <!-- table area ends here -->
+          </div>
+        </div>
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </div>
+
+  <!-- Vaccine add model -->
+  <div class="modal" id="vaccineAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title"> Add Vaccine</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form area start -->
+          <div class="row mt-2">
+            <div class="col-12">
+
+              <form onsubmit="return false;" id="formVaccine">
+                <div class="card div-card">
+                  <div class="card-body">
+                    <!-- required mark -->
+                    <div class="row mt-2">
+                      <div class="col-12 text-end fw-bold">
+                        <span class="text-danger">*</span> Required
+                      </div>
+                    </div>
+                    <!-- required mark -->
+
+                    <div class="row mt-2">
+                      <!-- brand name starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="selectbrand" class="col-form-label fw-bold">
+                              Brand : <span class="text-danger">*</span>
+                          </label>
+                          </div>
+                          <div>
+                          <select name="brand" id="selectbrand" class="form-select" required onchange="selectDValidator(this,'','vaccine','brand_id');">
+                              <option value="" selected disabled>Select Brand</option>
+                          </select>
+                          </div>
+                      </div>
+                      <!-- brand name ends here -->
+
+                      <!-- vaccine name starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textVaccineName" class="col-form-label fw-bold">
+                              Vaccine Name : <span class="text-danger">*</span>
+                          </label>
+                      </div>
+                      <div>
+                          <input type="text" id="textVaccineName" class="form-control" placeholder="Enter Vaccine Name" required onkeyup="textValidator(this,'','vaccine','name')">
+                      </div>
+                      </div>
+                      <!-- vaccine name ends here -->
+
+                      <!-- weight starts here -->
+                      <div class="col-4">
+                        <div>
+                          <label for="textWeight" class="col-form-label fw-bold">
+                              Weight : <span class="text-danger">*</span>
+                          </label>
+                      </div>
+                        <div class="input-group">
+                          <input type="text" id="textWeight" class="form-control" placeholder="Enter weight" required onkeyup="textValidator(this,'','vaccine','netweight')">
+                          
+                        </div>
+                      </div>
+                      <!-- weight ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- purchase price starts here -->
+                      <div class="col-4">
+                        <div>
+                            <label for="textpurchaseprice" class="col-form-label fw-bold">
+                                Purchase Price : <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Rs :</span>
+                            <input type="text" class="form-control" id="textpurchaseprice" placeholder="Enter Purchase Price" required onkeyup="textValidator(this,'','vaccine','purchaseprice')">
+                            
+                        </div>
+                    </div>
+                    <!-- purchase price ends here -->
+
+                    <!-- sales price starts here -->
+                    <div class="col-4">
+                        <div>
+                            <label for="textsalesprice" class="col-form-label fw-bold">
+                                Sales Price : <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Rs :</span>
+                            <input type="text" class="form-control" id="textsalesprice" placeholder="Enter Sales Price" required onkeyup="textValidator(this,'','vaccine','salesprice')">
+                            
+                        </div>
+                    </div>
+                    <!-- sales price ends here -->
+                     <!-- duration starts here -->
+                    <div class="col-4">
+                        <div>
+                            <label for="textduration" class="col-form-label fw-bold">
+                                Duration : <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="textduration" placeholder="Enter duration" required onkeyup="textValidator(this,'','vaccine','duration')">
+                        </div>
+                    </div>
+                    <!-- duration ends here -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <div class="col-12">
+                        <div class="form-floating">
+                            <textarea name="textareaNote" id="textNote" cols="80" rows="2" class="form-control" placeholder="Note" onkeyup="textValidator(this,'','vaccine','note')" ></textarea>
+                            <label for="" class="form-label fw-bold">
+                              Note : <span class="text-danger">(optional)</span>
+                            </label>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- clear button starts here-->
+                      <div class="col-4">
+                        <button type="reset" class="btn btn-danger rounded-1" id="btnVaccineReset">
+                          <i class="fa-solid fa-rotate-right"></i> Reset
+                        </button>
+                      </div>
+                      <!-- clear button ends here -->
+
+                      <div class="col-4"></div>
+
+                      <!-- update & add button starts here -->
+                      <div class="col-4 d-flex justify-content-center">
+                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnVaccineUpdate" onclick="buttonVaccineUpdate();">
+                          <i class="fa-solid fa-arrows-rotate"></i> Update
+                        </button>
+                        <button type="submit" class="btn btn-success rounded-1" id="btnAddVaccine" onclick="buttonFormSubmit();">
+                          <i class="fa-solid fa-plus"></i> Submit
+                        </button>
+                      </div>
+                      <!-- update & add button ends here -->
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <!-- form area ends -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--view print modal for vaccine-->
+    <div class="modal" id="vaccineViewModal" data-bs-backdrop="static" data-bs-keyboard="false" >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">View of Vaccine Record</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- table area start -->
+             <div class="row">
+              <div class="col-4"></div>
+              <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+              <div class="col-4"></div>
+             </div>
+            <div class="row mt-2">
+              <div class="col-12">
+                
+                <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
+                <br>
+                <table id="printVaccineTable" class="table table-hover table-bordered table-striped border-primary">
+                  
+                  <tr>
+                    <th>Brand</th>
+                    <th id="viewBrand"></th>
+                  </tr>
+                  <tr>
+                    <th>Name</th>
+                    <th id="viewName"></th>
+                  </tr>
+                  <tr>
+                    <th>Net Weight</th>
+                    <th id="viewNetweight"></th>
+                  </tr>
+                  <tr>
+                    <th>Purchase Price</th>
+                    <th id="viewPurchasePrice"></th>
+                  </tr>
+                  <tr>
+                    <th>Sales Price</th>
+                    <th id="viewSalesPrice"></th>
+                  </tr>
+                  <tr>
+                    <th>Duration</th>
+                    <th id="viewDuration"></th>
+                  </tr>
+                  <tr>
+                    <th>Note</th>
+                    <th id="viewNote"></th>
+                  </tr>
+                  
+              </table>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+              </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</body>
+
+</html>

@@ -128,7 +128,7 @@ const buttonAVSubmit = ()=>{
  
 }
 
-//function for doctor form refill
+//function for availability doctor form refill
 const doctorAFormRefill =(ob,rowIndex)=>{
     console.log('Refill');
 
@@ -170,7 +170,7 @@ const doctorAFormRefill =(ob,rowIndex)=>{
     btnAddAVDoctor.disabled="disabled";
     $("#btnAddAVDoctor").css("cursor","not-allowed");
 
-    //refreshInnerFormandTable();
+    refreshInnerFormAndTable();
 
 }
 
@@ -231,10 +231,10 @@ const buttonADoctorUpdate = ()=>{
             });
             if (putServiceresponce == "OK"){
                 alert("Updated Successfully..!");
-                $('#availabilityAddModal').modal('hide');
-                //refreshAvailabilityTable();
+                refreshAvailabilityTable();
                 formAvailabilityDoctor.reset();
                 refreshAvailabilityForm();
+                $('#availabilityAddModal').modal('hide');
 
             }else{
                 alert("failed to update following error..\n"+ putServiceresponce);
@@ -332,9 +332,6 @@ const refreshAvailabilityForm = () =>{
     startDate.style.border='1px solid #ced4da';
     endDate.style.border='1px solid #ced4da';
     
-
-
-
     //update button
     btnUpdateAVDoctor.disabled = "disabled";
     //btnUpdateAVDoctor.style.cursor ="not-allowed";
@@ -424,14 +421,14 @@ const refreshInnerFormAndTable = ()=>{
 }
 
 const deleteInnerForm =(innerOb ,rowIndex)=>{
-    const row = tableInner.children[1].children[rowIndex];
-    row.classList.add('table-danger');
+    //const row = tableInner.children[1].children[rowIndex];
+    //row.classList.add('table-danger');
 
     console.log(innerOb);
 
     
     //need a time to change the color
-    setTimeout(function () {
+    //setTimeout(function () {
     // get user confirmation
     // Get user confirmation using SweetAlert2
     Swal.fire({
@@ -469,7 +466,7 @@ const deleteInnerForm =(innerOb ,rowIndex)=>{
         }
     });
 
-    }, 500);
+    //}, 500);
 
 }
 

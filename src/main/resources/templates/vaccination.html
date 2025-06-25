@@ -187,7 +187,7 @@
                           </span>
 
                           <select name="vaccination" required id="selectVaccination"
-                              class="form-select form-input" onchange="selectDValidator(this,'','vaccinationrecord','vaccination_id'); generateVaccinePrice();">
+                              class="form-select form-input" onchange="selectDValidator(this,'','vaccinationrecord','vaccine_id'); generateVaccinePrice(); calculateNextVaccinationDate();">
                               
                               <option value="" selected disabled>
                                 Select Vaccination
@@ -208,7 +208,7 @@
                           </label>
                         </div>
                         <div>
-                          <input type="date" class="form-control" required id="dateOfVaccination" onchange="textValidator(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','vaccinationrecord','dateofvaccination');getDayAfterSixMonths();"/>
+                          <input type="date" class="form-control" required id="dateOfVaccination" onchange="textValidator(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$','vaccinationrecord','dateofvaccination');"/>
                         </div>
                       </div>
                       <!-- date of vaccination ends here -->
@@ -258,7 +258,7 @@
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
                           <input type="text" class="form-control" id="textTotalFee" placeholder="Enter Total Fee" required onkeyup="textValidator(this, '','vaccinationrecord','totalamount')">
-                          <span class="input-group-text">.00</span>
+                          
                       </div>
                   </div>
                   <!-- total fee ends here -->

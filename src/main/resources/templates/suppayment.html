@@ -112,8 +112,8 @@
                     <!-- required mark -->
 
                     <div class="row mt-2">
-                      <div class="col-4"></div>
-                      <div class="col-4">
+                      <div class="col-3"></div>
+                      <div class="col-6">
                         <div>
                           <label for="selectSupplierName" class="col-form-label fw-bold">
                             Supplier Name : <span class="text-danger">*</span>
@@ -125,7 +125,7 @@
                           </span>
 
                           <select name="supplier" required id="selectSupplierName"
-                              class="form-select form-input" onchange="selectDValidator(this,'','supplier','supplier_id');">
+                              class="form-select form-input" onchange="selectDValidator(this,'','supplierpayment','supplier_id'); getReceiveBySupplier();">
                               
                               <option value="" selected disabled>
                                 Select Supplier
@@ -133,82 +133,130 @@
                             </select>
                         </div>
                       </div>
-                      <div class="col-4"></div>
+                      <div class="col-3"></div>
                      </div>
-                     <!--receive note select starts here-->
-                     <div class="row mt-2">
-                        <div class="col-4"></div>
-                        <div class="col-4">
+                     <!--inner form starts here-->
+                     <div class="row mt-3">
+                      <div class="card div-card">
+                        <div class="card-body">
+                          <!--receive note select starts here-->
+                          <div class="row mt-2">
+                             <div class="col-3"></div>
+                             <div class="col-6">
+                             <div>
+                               <label for="selectReceiveNote" class="col-form-label fw-bold">
+                                 Receive Note : <span class="text-danger">*</span>
+                               </label>
+                             </div>
+                             <div class="input-group">
+                               <span class="input-group-text"><i class="fa-solid fa-clipboard"></i></span>
+     
+                               <select name="receivenote" required id="selectReceiveNote"
+                                   class="form-select form-input" onchange="selectDValidator(this,'','supplierpaymenthasreceive','receive_id'); generateTotalFee();">
+                                   
+                                   <option value="" selected disabled>
+                                     Select Receive Note
+                                   </option>
+                                 </select>
+                             </div>
+                             </div>
+                             <div class="col-3"></div>
+                          </div>
+                          <!--receive note select ends here-->
+
+                          <div class="row mt-2">
+                            <!-- total fee starts here -->
                             <div class="col-4">
-                        <div>
-                          <label for="selectReceiveNote" class="col-form-label fw-bold">
-                            Receive Note : <span class="text-danger">*</span>
-                          </label>
-                        </div>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="fa-solid fa-user"></i>
-                          </span>
+                              <div>
+                                  <label for="textTotalFee" class="col-form-label fw-bold">
+                                      Total Amount : <span class="text-danger"></span>
+                                  </label>
+                              </div>
+                              <div class="input-group">
+                                  <span class="input-group-text fw-bold">Rs :</span>
+                                  <input type="text" class="form-control" id="textTotalFee" placeholder="Total Amount" readonly 
+                                  onkeyup="generateTotalFee();">
+                                  
+                              </div>
+                           </div>
+                          <!-- total fee ends here -->
+                           <!-- paid fee starts here -->
+                           <div class="col-4">
+                            <div>
+                                <label for="textPaidFee" class="col-form-label fw-bold">
+                                    Paid Amount : <span class="text-danger"></span>
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text fw-bold">Rs :</span>
+                                <input type="text" class="form-control" id="textPaidFee" placeholder="Paid Amount" onkeyup="generateBalance();">
+                               
+                            </div>
+                          </div>
+                          <!-- paid fee ends here -->
+                           <!-- balance fee starts here -->
+                           <div class="col-4">
+                            <div>
+                                <label for="textBalanceFee" class="col-form-label fw-bold">
+                                    Balance : <span class="text-danger"></span>
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text fw-bold">Rs :</span>
+                                <input type="text" class="form-control" id="textBalanceFee" placeholder="Balance Amount" readonly >
+                                
+                            </div>
+                          </div>
+                          <!-- balance fee ends here -->
+                          </div>
 
-                          <select name="receivenote" required id="selectReceiveNote"
-                              class="form-select form-input" onchange="selectDValidator(this,'','receive','receive_id');">
-                              
-                              <option value="" selected disabled>
-                                Select Receive Note
-                              </option>
-                            </select>
+                          <div class="row mt-2">
+                            <!-- clear button starts here-->
+                            <div class="col-4">
+                              <button type="reset" class="btn btn-danger rounded-1" id="btnInnerReset" >
+                                <i class="fa-solid fa-rotate-right"></i> Reset
+                              </button>
+                            </div>
+                            <!-- clear button ends here -->
+      
+                            <div class="col-4"></div>
+      
+                            <!-- update & add button starts here -->
+                            <div class="col-4 d-flex justify-content-center">
+                              <button type="submit" class="btn btn-success rounded-1" id="buttonInnerAdd" onclick="innerSubmit()">
+                                <i class="fa-solid fa-plus"></i> Add
+                              </button>
+                            </div>
+                            <!-- update & add button ends here -->
+                          </div>
+
+                          <!--inner table-->
+                          <div class="row mt-2">
+                            <table class="table table-hover table-bordered table-striped border-primary" id="InnerTable">
+                              <thead class="table-header">
+                                <tr>
+                                  <th>#</th>
+                                  <!-- #,No,Index -->
+                                  <th>Receive ID</th>
+                                  <th>Total Amount</th>
+                                  <th>Paid Amount</th>
+                                  <th>Balance</th>
+                                  <th>Modify</th>
+                                  
+                                </tr>
+                              </thead>
+                              <tbody class="table-light">
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                          <!--inner table ends here-->
+
                         </div>
                       </div>
-                        </div>
-                        <div class="col-4"></div>
                      </div>
-                     <!--receive note select ends here-->
-
-                     <div class="row mt-2">
-                      <!-- total fee starts here -->
-                      <div class="col-4">
-                        <div>
-                            <label for="textTotalAmount" class="col-form-label fw-bold">
-                                Total Amount : <span class="text-danger"></span>
-                            </label>
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-text fw-bold">Rs :</span>
-                            <input type="text" class="form-control" id="textTotalAmount" placeholder="Total Amount" readonly >
-                            <span class="input-group-text">.00</span>
-                        </div>
-                    </div>
-                    <!-- total fee ends here -->
-                     <!-- paid fee starts here -->
-                     <div class="col-4">
-                      <div>
-                          <label for="textPaidAmount" class="col-form-label fw-bold">
-                              Paid Amount : <span class="text-danger"></span>
-                          </label>
-                      </div>
-                      <div class="input-group">
-                          <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textPaidAmount" placeholder="Paid Amount" readonly >
-                          <span class="input-group-text">.00</span>
-                      </div>
-                  </div>
-                  <!-- paid fee ends here -->
-                   <!-- balance fee starts here -->
-                   <div class="col-4">
-                    <div>
-                        <label for="textBalanceAmount" class="col-form-label fw-bold">
-                            Balance Amount : <span class="text-danger"></span>
-                        </label>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text fw-bold">Rs :</span>
-                        <input type="text" class="form-control" id="textBalanceAmount" placeholder="Balance Amount" readonly >
-                        <span class="input-group-text">.00</span>
-                    </div>
-                </div>
-                <!-- balance fee ends here -->
-                     </div>
-
+                     <!--inner form ends here-->
+                     
                      <div class="row mt-2">
                       <div class="col-4"></div>
                       <div class="col-4">
@@ -237,40 +285,42 @@
                      <div class="row mt-2">
                       <!--total amount-->
                       <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                          
-                          <button type="submit" class="btn btn-primary rounded-1" onclick="generateTotalFee()">Calculate Total Amount</button>
-                      </div>
+                        <div>
+                          <label for="textTotalAmount" class="col-form-label fw-bold">
+                              Total Amount : <span class="text-danger"></span>
+                          </label>
+                        </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textTotalFee" placeholder="Click on the button" readonly required>
-                          <span class="input-group-text">.00</span>
+                          <input type="text" class="form-control" id="textTotalAmount" placeholder="Total amount" readonly required>
+                          
                       </div>
                       </div>
                       <!--paid amount-->
                       <div class="col-4">
                         <div>
-                          <label for="textPaidFee" class="col-form-label fw-bold">
+                          <label for="textPaidAmount" class="col-form-label fw-bold">
                               Paid Amount : <span class="text-danger">*</span>
                           </label>
                           
                       </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required>
-                          <span class="input-group-text">.00</span>
+                          <input type="text" class="form-control" id="textPaidAmount" placeholder="Enter paid amount" required>
+                          
                       </div>
                       </div>
                       <!--balance-->
                       <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                          
-                          <button type="submit" class="btn btn-primary rounded-1" onclick="generateBalance()">Calculate Balance</button>
-                      </div>
+                        <div>
+                          <label for="textBalanceAmount" class="col-form-label fw-bold">
+                              Balance Amount : <span class="text-danger"></span>
+                          </label>
+                        </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textBalanceFee" placeholder="Click on the button" readonly required>
-                          <span class="input-group-text">.00</span>
+                          <input type="text" class="form-control" id="textBalanceAmount" placeholder="Balance amount" readonly required>
+                          
                       </div>
                       </div>
                      </div>
@@ -289,10 +339,8 @@
 
                       <!-- update & add button starts here -->
                       <div class="col-4 d-flex justify-content-center">
-                        <button disabled type="submit" class="btn btn-warning text-white rounded-1" id="btnPaymentUpdate">
-                          <i class="fa-solid fa-arrows-rotate"></i> Update
-                        </button>
-                        <button type="submit" class="btn btn-success rounded-1" id="btnPaymentAdd">
+                        
+                        <button type="submit" class="btn btn-success rounded-1" id="btnPaymentAdd" onclick="buttonFormSubmit()">
                           <i class="fa-solid fa-plus"></i> Submit
                         </button>
                       </div>
@@ -308,6 +356,53 @@
       </div>
     </div>
   </div>
+
+  <!--view print modal for Supplier payment-->
+    <div class="modal" id="supPaymentViewModal" data-bs-backdrop="static" data-bs-keyboard="false" >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">View Supplier Payment Record</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <!-- table area start -->
+            <div class="row mt-2">
+              <div class="col-12">
+                <table id="printSupPaymentTable" class="table table-hover table-bordered table-striped border-primary">
+                  <tr>
+                    <th>Supplier Name</th>
+                    <th id="viewSupplier"></th>
+                  </tr>
+                  <tr>
+                    <td>Total Amount</td>
+                    <td id="viewTotal"></td>            
+                  </tr>
+                  <tr>
+                    <td>Paid Amount</td>
+                    <td id="viewPaid"></td>            
+                  </tr>
+                  <tr>
+                    <td>Balance</td>
+                    <td id="viewBalance"></td>            
+                  </tr>
+                  <tr>
+                    <td>Date Time</td>
+                    <td id="viewMobileno"></td>            
+                  </tr>
+                  
+              </table>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+              </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 
 </html>

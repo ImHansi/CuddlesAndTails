@@ -79,7 +79,7 @@ public class Order {
     private Orderstatus orderstatus_id;
     
     @OneToMany(mappedBy = "order_id", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderHadProduct> orderhasproductsList;
+    private List<OrderHadVaccine> orderhasvaccinesList;
  
 
 }

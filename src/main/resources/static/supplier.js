@@ -8,6 +8,9 @@ window.addEventListener('load',()=>{
 
     refreshSupplierForm();//call form refresh function
 
+    //inner form and table refresh
+    refreshInnerFormAndTable();
+
 });
 
 //create function refresh supplier table
@@ -15,25 +18,7 @@ const refreshSupplierTable = () => {
 
     //create array to store Supplier data list
     supplier = [];
-    suppliers =ajaxRequestHere("/supplier/showall");
-
-    $.ajax("/supplier/showall",{
-        type:"GET",
-        contentType:"json",
-        async: false,
-
-        success:function(data){
-            console.log("success"+ data);
-            suppliers = data;
-        },
-
-        error: function(resOb) {
-            console.log("fail"+resOb);
-            supplier =[];
-        }
-    });
-
-
+    suppliers =ajaxRequestHere("/supplier/showsupplier");
 
     //text-> string , number, date
     //function ->object, array, boolean, create function 
@@ -54,7 +39,7 @@ const refreshSupplierTable = () => {
     console.log("Suppliers List", suppliers)
     //disable delete button
     suppliers.forEach((element , index) => {
-        if (element.supplierstatus_id.name == "inactive") {
+        if (element.supplierstatus_id.name == "inActive") {
             if (userPrivilege.delete) {
                 tableSupplier.children[1].children[index].children[7].children[3].disabled ="disabled";
             }
@@ -73,12 +58,12 @@ const getSupplierStatus=(ob)=>{
     //return ob.supplierstatus_id.name;
     if(ob.supplierstatus_id.name == 'Active'){
 
-        return '<p class="status-working">'+ ob.supplierstatus_id.name +'</p>'
+        return '<p class="status-Active">'+ ob.supplierstatus_id.name +'</p>'
 
     }
-    if(ob.supplierstatus_id.name == 'Inactive'){
+    if(ob.supplierstatus_id.name == 'InActive'){
 
-        return '<p class="status-Onleave">'+ ob.supplierstatus_id.name +'</p>'
+        return '<p class="status-InActive">'+ ob.supplierstatus_id.name +'</p>'
 
     }
 }
@@ -111,14 +96,14 @@ const supplierFormRefill =(ob,rowIndex)=>{
     textBranchTown.value = supplier.branchtown;
     
 
-    supplierstatuses = ajaxRequestHere("/supplierstatus/showStatus");
+    supplierstatuses = ajaxRequestHere("supplierstatus/showSupplierstatus");
     fillDataIntoSelect(selectSupplierStatus,'Select Status',supplierstatuses,'name',supplier.supplierstatus_id.name);
 
 
-    selectSupplierStatus.addEventListener('change',(event)=>{
+    /* selectSupplierStatus.addEventListener('change',(event)=>{
         const newSupplierStatus = JSON.parse(event.target.value);
         updateSupplierStatus(newSupplierStatus)
-    })
+    }) */
    
     if (userPrivilege.update) {
         btnUpdateSupplier.disabled = "";
@@ -203,7 +188,7 @@ const buttonSupplierUpdate = ()=>{
    console.log(oldsupplier);
 
    //2) check form errors
-   let errors = checkSpplierFormError();
+   let errors = checkSupplierFormError();
    if (errors == "") {
        //3) check what we have to update
        let updates = checkFormUpdate();
@@ -235,14 +220,14 @@ const buttonSupplierUpdate = ()=>{
                            showConfirmButton: true,
                        }).then(() => {
                         refreshSupplierTable();
-                        FormSupplier.reset();
+                        formSupplier.reset();
                         refreshSupplierForm();
                         $('#supplierAddModal').modal('hide');
                        });
                    } else {
                        Swal.fire({
                            icon: 'error',
-                           html: 'Failed to Update order Details',
+                           html: 'Failed to Update supplier Details',
                            text: putServiceResponce,
                            showConfirmButton: true,
                        });
@@ -359,11 +344,6 @@ const checkSupplierFormError =() =>{
         textMobileNo.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (supplier.landno == null) {
-        errors = errors +"Please Enter a valid landno..\n";
-        textLandNo.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
     if (supplier.address == null) {
         errors = errors +"Please Enter a valid address..\n";
         textAddress.style.background = 'rgba(255,0,0,0,1)';
@@ -372,11 +352,6 @@ const checkSupplierFormError =() =>{
     if (supplier.supplierstatus_id == null) {
         errors = errors +"Please Enter a status..\n";
         selectSupplierStatus.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
-    if (supplier.note == null) {
-        errors = errors +"Please Enter a note..\n";
-        textNote.style.background = 'rgba(255,0,0,0,1)';
         
     }
     if (supplier.supplierbankname == null) {
@@ -431,7 +406,7 @@ const buttonFormSubmit = ()=>{
                 // Check post service response
                 if (postServerResponce == "OK") {
                     refreshSupplierTable();
-                    FormSupplier.reset();
+                    formSupplier.reset();
                     refreshSupplierForm();
                     $('#supplierAddModal').modal('hide');
 
@@ -461,13 +436,16 @@ const buttonFormSubmit = ()=>{
 
 //create function for form refresh 
 const refreshSupplierForm = () =>{
-
-
     supplier= new Object();
     oldsupplier =null;
 
-    supplierstatuses = ajaxRequestHere("/supplierstatus/showStatus");
+    supplier.supplierhasvaccinesList = new Array();
+
+    supplierstatuses = ajaxRequestHere("/supplierstatus/showSupplierstatus");
     fillDataIntoSelect(selectSupplierStatus,'Select Status',supplierstatuses,'name');
+    selectSupplierStatus.value = JSON.stringify(supplierstatuses[0]);
+    supplier.supplierstatus_id = supplierstatuses[0];
+    selectSupplierStatus.style.border = "4px solid green";
 
     //set text field value as a empty
     textFullName.style.border ='1px solid #ced4da';
@@ -476,7 +454,6 @@ const refreshSupplierForm = () =>{
     textMobileNo.style.border='1px solid #ced4da';
     textLandNo.style.border='1px solid #ced4da';
     textAddress.style.border='1px solid #ced4da';
-    selectSupplierStatus.style.border='1px solid #ced4da';
     textNote.style.border='1px solid #ced4da';
     textBankAccName.style.border='1px solid #ced4da';
     textBankAccNo.style.border='1px solid #ced4da';
@@ -501,7 +478,7 @@ const refreshSupplierForm = () =>{
         $("#btnAddSupplier").css("cursor","not-allowed");
     }
 
-    refreshInnerFormAndTable();
+    //refreshInnerFormAndTable();
 
 }
 
@@ -509,27 +486,27 @@ const refreshSupplierForm = () =>{
 
 const refreshInnerFormAndTable = ()=>{
     
-    supplierhasproducts = {};
+    supplierhasvaccines = {};
 
-    products = ajaxRequestHere("/product/showall");
-    fillDataIntoSelect(selectSupplierProduct,'Select Products',products,'name');
+    vaccines = ajaxRequestHere("/vaccine/showall");
+    fillDataIntoSelect(selectSupplierVaccine,'Select Vaccines',vaccines,'name');
 
     //refresh innertable
     let displayPropertyList = [
-        { dataType: "function", propertyName: getProductName },
+        { dataType: "function", propertyName: getVaccineName },
     ];
 
-    fillDataIntoInnerTable(InnerTable,supplier.supplierhasproductsList,displayPropertyList, deleteInnerForm);
+    fillDataIntoInnerTable(tableInner,supplier.supplierhasvaccinesList,displayPropertyList, deleteInnerForm);
 
-    selectSupplierProduct.style.border = "1px solid #ced4da";
+    selectSupplierVaccine.style.border = "1px solid #ced4da";
 
 }
 
 const deleteInnerForm = (innerOb) => {
     Swal.fire({
         title: 'Confirm Delete Details',
-        html: 'Are You sure to remove this product..? <br>'
-            + '<br> Product Name : ' + innerOb.product_id.name,
+        html: 'Are You sure to remove this vaccine..? <br>'
+            + '<br> vaccine Name : ' + innerOb.vaccine_id.name,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -537,14 +514,14 @@ const deleteInnerForm = (innerOb) => {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            let extIndex = supplier.supplierhasproductsList.map(suphpro => suphpro.product_id.id).indexOf(innerOb.product_id.id);
+            let extIndex = supplier.supplierhasvaccinesList.map(suphpro => suphpro.vaccine_id.id).indexOf(innerOb.vaccine_id.id);
             if (extIndex != -1) {
-                supplier.supplierhasproductsList.splice(extIndex, 1);
+                supplier.supplierhasvaccinesList.splice(extIndex, 1);
                 refreshInnerFormAndTable();
 
                 Swal.fire({
                     title: 'Success',
-                    text: 'Product Removed Successfully...!',
+                    text: 'vaccine Removed Successfully...!',
                     icon: 'success'
                 });
             }
@@ -552,39 +529,39 @@ const deleteInnerForm = (innerOb) => {
     });
 }
 
-const getProductName = (innerOb) => {
-    return innerOb.product_id.name;
+const getVaccineName = (innerOb) => {
+    return innerOb.vaccine_id.name;
 }
 
 
 const checkInnerFormError = () => {
     let errors = "";
 
-    if (supplierhasproducts.product_id.id == null) {
-        errors = errors + "Please select product \n";
+    if (supplierhasvaccines.vaccine_id.id == null) {
+        errors = errors + "Please select vaccine \n";
     }
     return errors;
 }
 
 const btnInnerAdd = () => {
     //check duplicate 
-    let selectInProduct = JSON.parse(selectSupplierProduct.value);
-    let extPro = false;
+    let selectInVaccine = JSON.parse(selectSupplierVaccine.value);
+    let extVac = false;
 
-    for (const suphpro of supplier.supplierhasproductsList) {
-        if (selectInProduct.id == suphpro.product_id.id) {
-            extPro = true;
+    for (const suphpro of supplier.supplierhasvaccinesList) {
+        if (selectInVaccine.id == suphpro.vaccine_id.id) {
+            extVac = true;
             break;
         }
     }
-    if (extPro) {
+    if (extVac) {
         Swal.fire({
-            title: "Selected Product Already Exist",
-            html: "(select another Product)",
+            title: "Selected vaccine Already Exist",
+            html: "(select another vaccine)",
             icon: "warning"
         });
-        supplierhasproducts = {};
-        selectSupplierProduct.style.border = "1px solid #ced4da";
+        supplierhasvaccines = {};
+        selectSupplierVaccine.style.border = "1px solid #ced4da";
         
     
     } else {
@@ -592,8 +569,8 @@ const btnInnerAdd = () => {
         if (errors == "") {
             swal.fire({
                 title: 'Confirm Addition',
-                html: 'Are you Sure to Submit selected Product? <br>'
-                    + '<br> Product Name :' + supplierhasproducts.product_id.name,
+                html: 'Are you Sure to Submit selected vaccine? <br>'
+                    + '<br> vaccine Name :' + supplierhasvaccines.vaccine_id.name,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, add it!',
@@ -601,12 +578,12 @@ const btnInnerAdd = () => {
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    supplier.supplierhasproductsList.push(supplierhasproducts);
+                    supplier.supplierhasvaccinesList.push(supplierhasvaccines);
                     refreshInnerFormAndTable();
                 }
                 Swal.fire({
                     title: 'Success',
-                    html: 'Product added successfully!',
+                    html: 'vaccine added successfully!',
                     icon: 'success'
                 });
             });

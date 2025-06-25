@@ -276,7 +276,7 @@ const buttonAppointmentUpdate = ()=>{
                            showConfirmButton: true,
                        }).then(() => {
                         refreshAppointmentTable();
-                        FormAppointment.reset();
+                        formAppointment.reset();
                         refreshAppointmentForm();
                         $('#appointmentAddModal').modal('hide');
                        });
@@ -425,9 +425,9 @@ const checkAppointmentFormError =() =>{
         selectPet.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (appointment.doctor_id== null) {
-        errors = errors +"Please Enter a doctor..\n";
-        selectDoctor.style.background = 'rgba(255,0,0,0,1)';
+    if (appointment.service_id== null) {
+        errors = errors +"Please Enter a service..\n";
+        selectService.style.background = 'rgba(255,0,0,0,1)';
         
     }
     if (appointment.dateofappointment == null) {
@@ -479,7 +479,7 @@ const buttonFormSubmit = ()=>{
                     });
                 }
                 refreshAppointmentTable();
-                FormAppointment.reset();
+                formAppointment.reset();
                 refreshAppointmentForm();
                 $('#appointmentAddModal').modal('hide');
             }
@@ -633,29 +633,8 @@ const selectStartTimeValidator=()=>{
 
 }
 
-//define function to get a date within a week
-/* function validateAppointmentDate(input) {
-    const selectedDate = new Date(input.value);
-    const today = new Date();
 
-    // Set the time to midnight for accurate date comparison
-    selectedDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    // Calculate the date one week from today
-    const oneWeekFromToday = new Date(today);
-    oneWeekFromToday.setDate(today.getDate() + 7);
-
-    if (selectedDate >= today && selectedDate <= oneWeekFromToday) {
-        // The selected date is valid
-        input.setCustomValidity(""); // Clear any previous error
-    } else {
-        // The selected date is invalid
-        input.setCustomValidity("Please select a date that is today or within the first week from today.");
-    }
-} */
-
-    //function to choose a date up to 7 days from today
+//function to choose a date up to 7 days from today
 const setAppointmentDateRange = () => {
   const dateInput = document.getElementById("dateOfAppointment");
   const today = new Date();
@@ -672,11 +651,6 @@ const setAppointmentDateRange = () => {
   dateInput.max = maxDate;
 };
 
-
-// Attach the validation function to the input field
-document.getElementById("dateOfAppointment").addEventListener("change", function() {
-    validateAppointmentDate(this);
-});
 
 //service form refresh
 const refreshServiceForm =()=>{
@@ -744,7 +718,7 @@ const filterDoctors = () => {
         const serviceId = JSON.parse(selectService.value).id; // if service value is a JSON string
         const doctors = ajaxRequestHere("/doctor/workingDoctorByService?serviceId=" + serviceId);
         
-        fillDataIntoSelect(selectDoctor, 'Select Doctor', doctors, 'name');
+        fillDataIntoSelect(selectDoctor, 'Select Doctor', doctors,'fullname');
     } else {
         selectDoctor.disabled = true;
         selectDoctor.innerHTML = '<option value="" selected disabled>Select Doctor</option>';
