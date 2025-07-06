@@ -51,21 +51,34 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             let container = document.getElementById('announcements-container');
 
+            let row = document.createElement('div');
+            row.className ='row';
+
             data.forEach(announcement => {
+                let col = document.createElement('div');
+                col.className = 'col-12 col-sm-6 col-md-3 mb-4';
                 // Create card element
                 let card = document.createElement('div');
-                card.className = 'card';
-                card.style.width = '25rem';
+                card.className = 'card h-100';
+                // card.style.width = '25rem';
 
                 // Create image element
-                let img = document.createElement('img');
-                img.className = 'card-img-top';
-                img.src = announcement.image; 
-                img.alt = 'Card image cap';
+                if (announcement.base64image) {
+                    let img = document.createElement('img');
+                    img.className = 'card-img-top';
+                    img.src = announcement.base64image;
+                    img.alt = 'Card image cap';
+                    card.appendChild(img);
+                }
+               
 
                 // Create card body
                 let cardBody = document.createElement('div');
                 cardBody.className = 'card-body';
+
+                let title = document.createElement('h3')
+                title.className = 'card-title';
+                title.textContent = announcement.title;
 
                 // Create description element
                 let paragraph = document.createElement('p');
@@ -73,11 +86,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 paragraph.textContent = announcement.description;
 
                 // Append elements
+                cardBody.appendChild(title);
                 cardBody.appendChild(paragraph);
-                card.appendChild(img);
+                
                 card.appendChild(cardBody);
-                container.appendChild(card);
+                col.appendChild(card);
+                row.appendChild(col);
             });
+
+            container.appendChild(row);
         })
         .catch(error => console.error('Error fetching announcements:', error));
 });

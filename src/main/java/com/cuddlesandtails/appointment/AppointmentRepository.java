@@ -45,4 +45,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
 
     @Query("SELECT a FROM Appointment a " +"WHERE a.dateofappointment = :date " +"AND a.doctor_id.id = :doctorId " +"AND (a.appointmentstatus_id.id = 1 OR a.appointmentstatus_id.id = 2)")
     List<Appointment> getAppointmentsByDoctorAndDate(@Param("doctorId") Integer doctorId,@Param("date") LocalDate date);
+
+    //for the dashboard card
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentstatus_id.name = 'Completed' AND MONTH(a.dateofappointment) = MONTH(CURRENT_DATE) AND YEAR(a.dateofappointment) = YEAR(CURRENT_DATE)")
+    long countCompletedAppointmentsThisMonth();
 }

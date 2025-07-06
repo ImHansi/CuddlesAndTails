@@ -1,26 +1,65 @@
-const cardData = [
+/* const cardData = [
     {
         title : 'Pets',
         value : '80',
         metrics : '+20% from last month',
-        description : 'Pets this month',
+        description : 'No of Pets Registered',
 
     },
     {
         title : 'Appointments',
         value : '75',
         metrics : '+8.5% from last month',
-        description : 'Appointments this month',
+        description : 'Completed Appointments this month',
 
     },
     {
-        title : 'Revenue',
-        value : 'LKR 30,000',
+        title : 'Vaccinations',
+        value : '20',
         metrics : '+5% from last quater',
-        description : 'Revenue this month',
+        description : 'Total vaccinations this month',
 
     },
-];
+]; */
+
+window.addEventListener('load', () => {
+    fetchDashboardData();
+});
+
+
+async function fetchDashboardData() {
+    try {
+        const response = await fetch('/summary');
+        const data = await response.json();
+
+        const cardData = [
+            {
+                title : 'Pets',
+                value : data.pets,
+                metrics : '+20% from last month', // optional dummy text
+                description : 'No of Pets Registered',
+            },
+            {
+                title : 'Appointments',
+                value : data.appointments,
+                metrics : '+8.5% from last month',
+                description : 'Completed Appointments this month',
+            },
+            {
+                title : 'Vaccinations',
+                value : data.vaccinations,
+                metrics : '+5% from last quarter',
+                description : 'Total vaccinations this month',
+            },
+        ];
+
+        renderCardsFromData(cardData, 'dynamic-cards');
+    } catch (error) {
+        console.error('Error loading dashboard data:', error);
+    }
+}
+
+
 
 const cardColorMap = [
     {
@@ -34,8 +73,8 @@ const cardColorMap = [
         bgColor: 'bg-success text-white',
     },
     {
-        title: 'Revenue',
-        icon: 'fa-solid fa-dollar-sign',
+        title: 'Vaccinations',
+        icon: 'fa-solid fa-syringe',
         bgColor: 'bg-warning text-white',
     },
 ];
@@ -75,7 +114,7 @@ function generateCard({ icon, title, value, metrics, description, bgColor}){
     return col;
 }
 
-function renderCards(containerId){
+/* function renderCards(containerId){
     const container = document.getElementById(containerId);
     if(!container) return;
 
@@ -85,4 +124,19 @@ function renderCards(containerId){
     });
 
     $('[data-bs-toggle="tooltip"]').tooltip();
+} */
+
+function renderCardsFromData(cardData, containerId){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+
+    container.innerHTML = ''; // clear existing cards
+
+    cardData.forEach((card) => {
+        const modifiedCard = handleMetaMapping(card);
+        container.appendChild(generateCard(modifiedCard));
+    });
+
+    $('[data-bs-toggle="tooltip"]').tooltip();
 }
+

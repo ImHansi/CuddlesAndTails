@@ -32,7 +32,7 @@ const fillDataIntoTable = (tableID, dataList,columnList,editFunc,deleteFunc,prin
                 img.style.width = "50px";
                 img.style.height = "70px";
                 if(element[column.propertyName] !=null){
-                    img.src="/resources/images/petadopevent.png";
+                    img.src="../images/petadopevent.png";
                 }
             }
 

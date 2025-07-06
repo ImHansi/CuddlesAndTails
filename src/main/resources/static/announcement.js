@@ -40,17 +40,16 @@ const refreshAnnouncementTable = () => {
     //text-> string , number, date
     //function ->object, array, boolean, create function 
     //column count == object count
-    const displayproperty = [ {dataType:'text',propertyName:'dateofpublication'},
-                              {dataType:'text',propertyName:'title'},
+    const displayproperty = [ {dataType:'text',propertyName:'title'},
                               {dataType:'text',propertyName:'description'},
-                              {dataType:'imagearray',propertyName:'image'},
                               {dataType:'text',propertyName:'dateofevent'},
-                              {dataType:'text',propertyName:'duration'},
+                              {dataType:'text',propertyName:'starttime'},
+                              {dataType:'function',propertyName:getStatus},
     ];
 
     //call filldataintotable function
     //(tableID , dataArrayName, displaypropertyarea,refill function name, delete function name, print function name , button visibility, privilegeOb)
-    fillDataIntoTable(tableAnnouncement, announcement,displayproperty,announcementFormRefill,deleteFunc,printFunc,true, userPrivilege);
+    fillDataIntoTable(tableAnnouncement, announcements,displayproperty,announcementFormRefill,deleteFunc,printFunc,true, userPrivilege);
 
     //disable delete button
    /* announcements.forEach((element , index) => {
@@ -64,6 +63,21 @@ const refreshAnnouncementTable = () => {
 
    $('#tableAnnouncement').dataTable();
 
+
+}
+
+//create function to get status
+const getStatus=(ob)=>{
+    if(ob.recordstatus_id.name == 'Active'){
+
+        return '<p class="status-Active">'+ ob.recordstatus_id.name +'</p>'
+
+    }
+    if(ob.recordstatus_id.name == 'Delete'){
+
+        return '<p class="status-Delete">'+ ob.recordstatus_id.name +'</p>'
+
+    }
 
 }
 
@@ -84,12 +98,12 @@ const announcementFormRefill =(ob,rowIndex)=>{
 
     //set value into UI element
     //elementId.value = object.property
-    dateOfPublication.value= announcement.dateofpublication;
     textTitle.value= announcement.title;
     textDescription.value = announcement.description;
-    fileAnnoImage.value = announcement.image;
+    //fileAnnoImage.value = announcement.image;
     dateOfEvent.value = announcement.dateofevent;
-    textDuration.value = announcement.duration;
+    startTime.value = announcement.starttime;
+    endTime.value = announcement.endtime;
 
 
     
@@ -116,9 +130,6 @@ const announcementFormRefill =(ob,rowIndex)=>{
 //create function for check form update
 const checkFormUpdate=()=>{
     let updates = "";
-    if(announcement.dateofpublication != oldannouncement.dateofpublication){
-        updates = updates + "date of publication has updated," + oldannouncement.dateofpublication + " into " + announcement.dateofpublication + "\n";
-    }
 
     if(announcement.title != oldannouncement.title){
         updates = updates + "title has updated," + oldannouncement.title + " into " + announcement.title + "\n";
@@ -136,8 +147,12 @@ const checkFormUpdate=()=>{
         updates = updates + "date of event has updated," + oldannouncement.dateofevent + " into " + announcement.dateofevent + "\n";
     }
 
-    if(announcement.duration != oldannouncement.duration){
-        updates = updates + "duration has updated," + oldannouncement.duration + " into " + announcement.duration + "\n";
+    if(announcement.starttime != oldannouncement.starttime){
+        updates = updates + "start time has updated," + oldannouncement.starttime + " into " + announcement.starttime + "\n";
+    }
+
+    if(announcement.endtime != oldannouncement.endtime){
+        updates = updates + "end time has updated," + oldannouncement.endtime + " into " + announcement.endtime + "\n";
     }
     return updates;
 }
@@ -181,7 +196,7 @@ const buttonAnnouncementUpdate = ()=>{
                            showConfirmButton: true,
                        }).then(() => {
                         refreshAnnouncementTable();
-                        FormAnnouncement.reset();
+                        formAnnouncement.reset();
                         refreshAnnouncementForm();
                         $('#announcementAddModal').modal('hide');
                        });
@@ -223,7 +238,7 @@ const deleteFunc =(ob,rowIndex)=>{
     Swal.fire({
         title: 'Confirm Delete Details',
         html: 'Are you sure to REMOVE following Announcement? <br>'
-            + 'Title is : ' + ob.title,
+            + 'Title is : ' + announcement.title,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -276,11 +291,6 @@ const checkAnnounceFormError =() =>{
 //need to check all required fields(property)
     let errors ='';
 
-    if (announcement.dateofpublication==null) {
-        errors = errors +"Please Enter a valid date..\n";
-        dateOfPublication.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
     if (announcement.title == null) {
         errors = errors +"Please Enter a title..\n";
         textTitle.style.background = 'rgba(255,0,0,0,1)';
@@ -291,19 +301,19 @@ const checkAnnounceFormError =() =>{
         textDescription.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (announcement.image== null) {
-        errors = errors +"Please put an image..\n";
-        textImage.style.background = 'rgba(255,0,0,0,1)';
-        
-    }
     if (announcement.dateofevent == null) {
         errors = errors +"Please Enter a valid date of event..\n";
         dateOfEvent.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (announcement.duration == null) {
-        errors = errors +"Please Enter a duration..\n";
-        textDuration.style.background = 'rgba(255,0,0,0,1)';
+    if (announcement.starttime == null) {
+        errors = errors +"Please Enter a start time..\n";
+        startTime.style.background = 'rgba(255,0,0,0,1)';
+        
+    }
+    if (announcement.endtime == null) {
+        errors = errors +"Please Enter a end time..\n";
+        endTime.style.background = 'rgba(255,0,0,0,1)';
         
     }
     return errors;
@@ -323,7 +333,7 @@ const buttonFormSubmit = ()=>{
         Swal.fire({
             title: 'Confirm Addition',
             html: 'Are you sure to add following Announcement? <br>'
-                + '<br> Title is : ' + ob.title,
+                + '<br> Title is : ' + announcement.title,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes, add it!',
@@ -336,7 +346,7 @@ const buttonFormSubmit = ()=>{
                 // Check post service response
                 if (postServerResponce == "OK") {
                     refreshAnnouncementTable();
-                    FormAnnouncement.reset();
+                    formAnnouncement.reset();
                     refreshAnnouncementForm();
                     $('#announcementAddModal').modal('hide');
 
@@ -373,20 +383,15 @@ const refreshAnnouncementForm = () =>{
 
 
     //set text field value as a empty
-    dateOfPublication.style.border ='1px solid #ced4da';
     textTitle.style.border ='1px solid #ced4da';
     textDescription.style.border ='1px solid #ced4da';
     fileAnnoImage.style.border='1px solid #ced4da';
     dateOfEvent.style.border='1px solid #ced4da';
-    textDuration.style.border='1px solid #ced4da';
-
-    
-
+    startTime.style.border='1px solid #ced4da';
+    endTime.style.border='1px solid #ced4da';
 
     //set default color
     textTitle.removeAttribute('style');
-
-
 
     //update button
     btnAnnounceUpdate.disabled = "disabled";
@@ -402,9 +407,4 @@ const refreshAnnouncementForm = () =>{
         btnAnnounceAdd.disabled ="disabled";
         $("#btnAnnounceAdd").css("cursor","not-allowed");
     }
-
-    
-   
-
-
 }

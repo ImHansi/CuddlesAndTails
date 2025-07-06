@@ -178,20 +178,32 @@ const callingNameVali = (feildId) => {
 
 }
 
+// const validateFileField = (fieldId, object, imgProperty) => {
+
+//     if (fieldId.files != null) {
+//         console.log(fieldId.files);
+
+//         let file = fieldId.files[0];
+
+//         let fileReader = new FileReader();
+
+//         fileReader.onload = function (e) {
+//             window[object][imgProperty] = btoa(e.target.result);
+
+//         }
+//         fileReader.readAsDataURL(file);
+//     }
+
+// }
 const validateFileField = (fieldId, object, imgProperty) => {
+  const file = fieldId.files?.[0];
+  if (!file) return;
 
-    if (fieldId.files != null) {
-        console.log(fieldId.files);
+  const reader = new FileReader();
 
-        let file = fieldId.files[0];
-
-        let fileReader = new FileReader();
-
-        fileReader.onload = function (e) {
-            window[object][imgProperty] = btoa(e.target.result);
-
-        }
-        fileReader.readAsDataURL(file);
-    }
-
-}
+  reader.onload = (e) => {
+    const data = e.target.result.split(',')[1];
+    window[object][imgProperty] = data;
+  };
+  reader.readAsDataURL(file);
+};

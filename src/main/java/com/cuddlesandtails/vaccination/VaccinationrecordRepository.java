@@ -14,4 +14,13 @@ public interface VaccinationrecordRepository extends JpaRepository<Vaccinationre
     //create query to get pending Vaccination Records
     @Query(value = "select v from Vaccinationrecord v where v.recordstatus_id.id=3")
     List<Vaccinationrecord> getPendingVaccinationRecord();
+
+    //for the dashboard card
+    @Query("SELECT COUNT(v) FROM Vaccinationrecord v WHERE MONTH(v.dateofvaccination) = MONTH(CURRENT_DATE) AND YEAR(v.dateofvaccination) = YEAR(CURRENT_DATE)")
+    long countVaccinationsThisMonth();
+
+    //for the bar chart
+    @Query("SELECT FUNCTION('MONTHNAME', v.dateofvaccination), COUNT(v) FROM Vaccinationrecord v GROUP BY FUNCTION('MONTHNAME', v.dateofvaccination)")
+    List<Object[]> getMonthlyVaccinationCount();
+
 }

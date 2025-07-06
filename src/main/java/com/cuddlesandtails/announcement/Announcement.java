@@ -2,6 +2,8 @@ package com.cuddlesandtails.announcement;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Base64;
 
 import com.cuddlesandtails.appointment.Recordstatus;
 
@@ -13,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,16 +45,10 @@ public class Announcement {
     @Column(name = "image")
     private byte[] image;
 
-    @Column(name = "duration")
-    @NotNull
-    private String duration;
-
     @Column(name = "dateofpublication")
-    @NotNull
-    private LocalDate dateofpublication;
+    private LocalDateTime dateofpublication;
 
     @Column(name = "dateofevent")
-    @NotNull
     private LocalDate dateofevent;
 
     @Column(name = "lastmodifydatetime")
@@ -72,9 +69,23 @@ public class Announcement {
     @Column(name = "imagename")
     private String imagename;
 
+    @Column(name = "starttime")
+    private LocalTime starttime;
+
+    @Column(name = "endtime")
+    private LocalTime endtime;
+
     @ManyToOne
     @JoinColumn(name = "recordstatus_id",referencedColumnName = "id")
     private Recordstatus recordstatus_id;
 
+    @Transient
+    private String base64image;
 
+     public void generateBase64Image() {
+        if (this.image != null) {
+            // Defaulting to JPEG; adjust MIME type detection if needed
+            this.base64image = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(this.image);
+        }
+    }
 }
