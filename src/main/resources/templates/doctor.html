@@ -17,6 +17,11 @@
         });
       });
     </script>
+    <style>
+      @media print {
+        .btn, .modal-footer { display: none !important; }
+      }
+    </style>
   </head>
 
   <body>
@@ -1073,5 +1078,78 @@
         </div>
       </div>
     </div>
+
+    <!-- view print modal for doctor availability -->
+
+    <div class="modal" id="availabilityViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">View Doctor Availability Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body div-form">
+                    <div class="row">
+                      <div class="col-4"></div>
+                      <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+                      <div class="col-4"></div>
+                    </div>
+
+                    <table id="printAVTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <td><b>Contact:</b> <br></td>
+                            <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
+                            <td><b>Address :</b></td>
+                            <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                        </tr>
+
+                        <tr>
+                            <th>Doctor : </th>
+                            <td id="viewDoctor" colspan="2"></td>
+
+                            <th>Month : </th>
+                            <td id="viewMonth" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Start Date : </th>
+                            <td id="viewStartdate" colspan="2"></td>
+
+                            <th>End Date: </th>
+                            <td id="viewEnddate" colspan="2"></td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="5">Availability Details</th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="5">
+                                <table class="table table-hover table-striped table-bordered"
+                                    id="tableAVInner">
+                                    <thead class="table-warning">
+
+                                        <!-- # no index -->
+                                        <th> # </th>
+                                        <th>Date</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- availability view modal ends here -->
   </body>
 </html>

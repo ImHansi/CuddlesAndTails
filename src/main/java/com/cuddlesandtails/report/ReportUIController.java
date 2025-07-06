@@ -65,6 +65,38 @@ public class ReportUIController {
         return employeeView; 
     }
 
+    //create mapping UI service [/report -- return report UI]
+    @RequestMapping(value="/reportdoctorsbygivenserviceanddate")
+    public ModelAndView reportdoctorsbygivenserviceanddateUI(){
+
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User loggedUser = userDao.getUserByUsername(auth.getName());
+
+
+        ModelAndView employeeView = new ModelAndView();
+        employeeView.addObject("logusername", auth.getName());
+        employeeView.addObject("title","Report Management : BIT Project 2024");
+        employeeView.setViewName("reportdocavailability.html");
+        return employeeView; 
+    }
+
+     //create mapping UI service [/report -- return report UI]
+    @RequestMapping(value="/reportmedicalhistory")
+    public ModelAndView reportmedicalhistoryUI(){
+
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User loggedUser = userDao.getUserByUsername(auth.getName());
+
+
+        ModelAndView employeeView = new ModelAndView();
+        employeeView.addObject("logusername", auth.getName());
+        employeeView.addObject("title","Report Management : BIT Project 2024");
+        employeeView.setViewName("reportconsultation.html");
+        return employeeView; 
+    }
+
     //create mapping UI service [/petbyownerreport -- return petbuownerreport UI]
     @RequestMapping(value="/reportpetbyowner")
     public ModelAndView reportpetbyownerUI(){

@@ -1,5 +1,6 @@
 package com.cuddlesandtails.doctor;
 
+//import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+//import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,7 +53,6 @@ public class DoctorController {
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-
         ModelAndView doctorView = new ModelAndView();
         doctorView.addObject("logusername", auth.getName());
         doctorView.addObject("title","Doctor Management : BIT Project 2023");
@@ -63,7 +64,7 @@ public class DoctorController {
     public List<Doctor> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"doctor");
         //check privilege
         if(!logUserPrivi.get("select")){
             return new ArrayList<Doctor>();
@@ -133,7 +134,7 @@ public class DoctorController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "doctor");
 
         if (!logUserPrivi.get("delete")) {
             return "Delete not completed : You don't have privileges";
@@ -184,7 +185,7 @@ public class DoctorController {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object using log user and relavent module
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "doctor");
         // check privilege
         if (!logUserPrivi.get("update")) {
             return "Update not Completed... :you haven't permission..!";
@@ -230,10 +231,13 @@ public class DoctorController {
     }
     
 
-    //create get mapping for get doctor by without having user account 
-    @GetMapping(value = "/doctorlistwithoutuseraccount", produces="application/json")
-    public List<Doctor> getListWithoutUserAccount1(){
-        return DoctorDao.getListBywithoutUserAccount1();
+    
+
+
+//create get mapping for get doctor by without having user account 
+@GetMapping(value = "/doctorlistwithoutuseraccount", produces="application/json")
+public List<Doctor> getListWithoutUserAccount1(){
+    return DoctorDao.getListBywithoutUserAccount1();
 }
 
 
@@ -242,10 +246,20 @@ public List<Doctor> getDoctorsByStatusAndAvailability() {
     return DoctorDao.findDoctorsByStatus();
 }
 
+@GetMapping(value = "/availableDoctorsToday", produces = "application/json")
+public List<Doctor> getDoctorsAvailableToday() {
+    return DoctorDao.findDoctorsAvailableToday();
+}
+
 
 @GetMapping("/workingDoctorByService")
 public List<Doctor> getWorkingDoctorsByService(@RequestParam Integer serviceId) {
     return DoctorDao.findWorkingDoctorsByService(serviceId);
 }
+
+/* @GetMapping("/workingDoctorByServiceAndDate")
+public List<Doctor> getWorkingDoctorsByServiceandDate(@RequestParam Integer serviceId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    return DoctorDao.findWorkingDoctorsAvailableByServiceAndDate(serviceId, date);
+} */
 
 }

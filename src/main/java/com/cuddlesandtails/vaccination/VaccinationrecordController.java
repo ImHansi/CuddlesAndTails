@@ -1,5 +1,6 @@
 package com.cuddlesandtails.vaccination;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.cuddlesandtails.appointment.RecordstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import com.cuddlesandtails.user.UserRepository;
+import com.cuddlesandtails.vaccine.Vaccineinventory;
+import com.cuddlesandtails.vaccine.VaccineinventoryRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -35,6 +38,8 @@ public class VaccinationrecordController {
     @Autowired
     private RecordstatusRepository recordStatusDao;
 
+    @Autowired
+    private VaccineinventoryRepository vaccineinventoryDao;
 
     @Autowired
     private UserRepository userDao;
@@ -62,7 +67,7 @@ public class VaccinationrecordController {
     public List<Vaccinationrecord> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Vaccination");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"vaccinationrecord");
         //check privilege
         if(!logUserPrivi.get("select")){
             return new ArrayList<Vaccinationrecord>();
@@ -80,7 +85,7 @@ public class VaccinationrecordController {
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Vaccination");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "vaccinationrecord");
         // check privilege
         if (!logUserPrivi.get("insert")) {
             return "Vaccination record save not completed : You don't have permission";
@@ -89,7 +94,7 @@ public class VaccinationrecordController {
         try{
             //set auto generate values
             //set added date time
-           vaccinationrecord.setRecordstatus_id(recordStatusDao.getReferenceById(3));
+           vaccinationrecord.setRecordstatus_id(recordStatusDao.getReferenceById(4));
            vaccinationrecord.setAddeddatetime(LocalDateTime.now());
            vaccinationrecord.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
@@ -101,7 +106,26 @@ public class VaccinationrecordController {
             vaccinationrecord.setVaccino(nextVacciNo);
            }
 
+           
+
+           //updating the inventory 
+           Vaccineinventory extVaccineinventory = vaccineinventoryDao.getByVaccine(vaccinationrecord.getVaccine_id().getId());
+
+           if(extVaccineinventory != null){
+            extVaccineinventory.setRemoveqty(extVaccineinventory.getRemoveqty().add(BigDecimal.ONE));
+            extVaccineinventory.setTotalqty(extVaccineinventory.getTotalqty().subtract(BigDecimal.ONE));
+            extVaccineinventory.setAvailableqty(extVaccineinventory.getAvailableqty().subtract(BigDecimal.ONE));
+           }
+
+           //if the quantity we want to remove or add is taking from the ui we have to use this completeVaccinationrecord.getQuntity() instead of this BigDecimal.ONE
+
+           vaccineinventoryDao.save(extVaccineinventory);
+
+           vaccinationrecord.setVaccineinventory_id(extVaccineinventory);
+
            VaccinationrecordDao.save(vaccinationrecord);
+
+          
             return "OK";
         }catch(Exception e){
             return "Save Not Completed :"+ e.getMessage();
@@ -117,7 +141,7 @@ public class VaccinationrecordController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Vaccination");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "vaccinationrecord");
 
         if (!logUserPrivi.get("delete")) {
             return "Delete not completed : You don't have privileges";
@@ -159,7 +183,7 @@ public class VaccinationrecordController {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object using log user and relavent module
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Vaccination");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "vaccinationrecord");
         // check privilege
         if (!logUserPrivi.get("update")) {
             return "Update not Completed... :you haven't permission..!";

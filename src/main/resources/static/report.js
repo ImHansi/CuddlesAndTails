@@ -1,7 +1,7 @@
 window.addEventListener('load',()=>{
 
 
-    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/employee");
+    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/index");
 
     designations = ajaxRequestHere("/designation/showDesignation");
     fillDataIntoSelect(selectDesignation,'Select Designation',designations,'name');

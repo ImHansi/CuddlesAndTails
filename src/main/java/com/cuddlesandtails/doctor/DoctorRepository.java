@@ -1,5 +1,6 @@
 package com.cuddlesandtails.doctor;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -43,4 +44,13 @@ public interface DoctorRepository extends JpaRepository<Doctor,Integer>{
     //create query to get 'working' doctors  to the given service
     @Query(value = "select d from Doctor d where d.specialization_id in " +"(select s from Service se join se.specializations s where se.id = :serviceId) " +"and d.employeestatus_id.id = 1")
     public List<Doctor> findWorkingDoctorsByService(@Param("serviceId") Integer serviceId);
+
+    //create query to get available doctors today
+    @Query("SELECT d FROM Doctor d " +"WHERE d.id IN (" +"   SELECT da.doctor_id.id FROM Doctoravailability da " +"   JOIN Availability a ON a.doctoravailability_id.id = da.id " +"   WHERE a.date = CURRENT_DATE" +") AND d.employeestatus_id.id = 1")
+    List<Doctor> findDoctorsAvailableToday();
+
+    //create a query to get working doctors to the given service and date
+    @Query(value = "SELECT d FROM Doctor d " +"WHERE d.specialization_id IN (" +"   SELECT s FROM Service se JOIN se.specializations s WHERE se.id = :serviceId" +") AND d.id IN (" +"   SELECT da.doctor_id.id FROM Doctoravailability da " +"   JOIN Availability a ON a.doctoravailability_id.id = da.id " +"   WHERE a.date = :date" +") AND d.employeestatus_id.id = 1")
+    public List<Doctor> findWorkingDoctorsAvailableByServiceAndDate(@Param("serviceId") Integer serviceId,@Param("date") LocalDate date);
+
 }

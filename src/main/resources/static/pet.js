@@ -12,7 +12,7 @@ window.addEventListener('load',()=>{
     refreshPettypeForm();
 
     //call breed form refresh function
-    refreshBreedForm();
+    refreshPetbreedForm();
 
     
 });
@@ -466,7 +466,7 @@ const buttonFormSubmit = ()=>{
                     }).then(() => {
                         $('#petAddModal').modal('hide');
                         refreshPetTable();
-                        FormPet.reset();
+                        formPet.reset();
                         refreshPetForm();    
                     });
                 } else {
@@ -503,6 +503,9 @@ const refreshPetForm = () =>{
     owners = ajaxRequestHere("/owner/showOwner");
     //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
     fillDataIntoDataList(ownerList,owners,'name');
+
+    console.log(ownerList);
+    console.log(owners);
     
 
     pettypes = ajaxRequestHere("/pettype/showPettype"); 
@@ -571,21 +574,22 @@ const btnPettypeSubmit=()=>{
         if (userConfirm) {
             let postResponse = ajaxRequestBody("/pettype" , "POST" , pettypeob);
             if (postResponse == "OK") {
-                alert("Save successfully..!");
+                alert("Saved successfully!");
  
                 pettypes = ajaxRequestHere("/pettype/showPettype");
-                fillDataIntoSelect(selectPetType, 'Select pet type..', pettypes, 'name', selectPetType.value);
-                selectPetType.style.border = "2px solid green";
+                fillDataIntoSelect(selectPetType, 'Select pet type', pettypes, 'name', selectPetType.value);
+                selectPetType.style.border = "4px solid green";
                 //bind value 
-                pet.pettype_id =JSON.parse(selectPetType.value);
+                pet.pettype_id = selectPetType.value;
                 refreshPettypeForm();
                 $("#collapsePettype").collapse('hide');
+                //refreshPetForm();
             } else {
-                alert("Save NOT completed...! has following error \n" +postResponse);
+                alert("Save NOT completed! has following error \n" +postResponse);
             }
         }
     }else{
-        alert("please enter pet type...!");
+        alert("please enter pet type!");
     }
 }
 
@@ -606,29 +610,43 @@ const btnPetbreedSubmit=()=>{
         if (userConfirm) {
             let postResponse = ajaxRequestBody("/breed" , "POST" , petbreedob);
             if (postResponse == "OK") {
-                alert("Save successfully..!");
+                alert("Saved successfully!");
  
                 breeds = ajaxRequestHere("/breed/showBreed"); 
                 fillDataIntoSelect(selectPetBreed,'Select Breed',breeds,'name',selectPetBreed.value);
-                selectPetBreed.style.border = "2px solid green";
+                selectPetBreed.style.border = "4px solid green";
                 //bind value 
-                pet.breed_id =JSON.parse(selectPetBreed.value);
+                pet.breed_id =selectPetBreed.value;
                 refreshPetbreedForm();
                 $("#collapsePetbreed").collapse('hide');
             } else {
-                alert("Save NOT completed...! has following error \n" +postResponse);
+                alert("Save NOT completed! has following error \n" +postResponse);
             }
         }
     }else{
-        alert("please enter breed...!");
+        alert("please enter breed!");
     }
 }
 
 //define function to filter breed according to pet type
 const filterBreed=()=>{
 
-    breedsByPettype = ajaxRequestHere("/breed/showBreedbypettype?pettypeid="+JSON.parse(selectPetType.value).id);
-    fillDataIntoSelect(selectPetBreed,'Select Breed',breedsByPettype,'name');
+    const selectPetType = document.getElementById("selectPetType");
+    const selectPetBreed = document.getElementById("selectPetBreed");
+
+    //check if the pettype is selected
+    if (selectPetType.value) {
+    selectPetBreed.disabled = false;
+
+    const pettypeId = JSON.parse(selectPetType.value).id;
+    const breedByPettype = ajaxRequestHere("/breed/showBreedbypettype?pettypeid="+ pettypeId);
+    fillDataIntoSelect(selectPetBreed,'Select Breed',breedByPettype,'name');
+
+    }else {
+        //Disable the breed dropdown
+        selectPetBreed.disabled = true; 
+        selectPetBreed.innerHTML = '<option value="" selected disabled>Select Pet</option>';
+  }
 
 }
 
@@ -641,13 +659,30 @@ const generateOwnerId =()=>{
     Ownerid.style.border = "4px solid green";
 }
 
-const dataListValidator = (elementId,object,property)=>{
+/* const dataListValidator = (elementId,object,property)=>{
 
     let elementValue = elementId.value;
     elementId.style.border = "4px solid green";
+    pet.owner_id = { id: elementId };
     
 }
-  
+   */
+
+const dataListValidator = (element, objectName, property) => {
+    const elementValue = element.value;
+
+    //find the matched object from the global array
+    const matchedObj = owners.find(obj => obj.name === elementValue);
+
+    if (matchedObj) {
+        element.style.border = "4px solid green";
+        window[objectName][property] = { id: matchedObj.id };
+    } else {
+        element.style.border = "4px solid red";
+        window[objectName][property] = null;
+        alert("Invalid selection. Please choose a valid option from the list.");
+    }
+};
 
 
 

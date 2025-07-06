@@ -1,6 +1,6 @@
 //browser load option
 window.addEventListener("load", () => {
-  userPrivilege = ajaxRequestHere("/privilege/bylogedusermodule/User");
+  userPrivilege = ajaxRequestHere("/privilege/bylogedusermodule/user");
   //call table rerfresh function
   refreshUserTable();
   //have to refresh multiple times

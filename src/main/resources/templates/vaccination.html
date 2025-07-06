@@ -201,7 +201,7 @@
 
                     <div class="row mt-2">
                       <!-- date of vaccination starts here -->
-                      <div class="col-6">
+                      <div class="col-4">
                         <div>
                           <label for="dateOfVaccination" class="col-form-label fw-bold">
                             Date Of Vaccination : <span class="text-danger">*</span>
@@ -216,7 +216,7 @@
                       
 
                       <!-- date of next vaccination starts here -->
-                      <div class="col-6">
+                      <div class="col-4">
                         <div>
                           <label for="dateOfNextVaccination" class="col-form-label fw-bold">
                             Date Of Next Vaccination : <span class="text-danger">*</span>
@@ -227,11 +227,8 @@
                         </div>
                       </div>
                       <!-- date of next vaccination ends here -->
-                    </div>
-
-                    <div class="row mt-2">
-                      <!-- doctor starts here -->
-                      <div class="col-6">
+                       <!-- doctor starts here -->
+                      <div class="col-4">
                         <div>
                           <label for="selectDoctor" class="col-form-label fw-bold">
                             Select a Doctor : <span class="text-danger">*</span>
@@ -247,9 +244,38 @@
                         </div>
                       </div>
                       <!-- doctor ends here -->
-                      
+                    </div>
+
+                    <!--payment method starts here-->
+                    <div class="row mt-2">
+                      <div class="col-4"></div>
+                      <div class="col-4">
+                        <div>
+                          <label for="selectMethod" class="col-form-label fw-bold">
+                            Payment Method : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <i class="fa-regular fa-credit-card"></i>
+                          </span>
+
+                          <select name="method" required id="selectMethod"
+                              class="form-select form-input" onchange="selectDValidator(this,'','vaccinationrecord','paymentmethod_id')">
+                              
+                              <option value="" selected disabled>
+                                Select payment method
+                              </option>
+                            </select>
+                        </div>
+                      </div>
+                      <div class="col-4"></div>
+                     </div>
+                    <!--payment method ends here-->
+
+                    <div class="row mt-2">
                       <!-- total fee starts here -->
-                    <div class="col-6">
+                    <div class="col-4">
                       <div>
                           <label for="textTotalFee" class="col-form-label fw-bold">
                               Total Fee : <span class="text-danger">*</span>
@@ -262,6 +288,32 @@
                       </div>
                   </div>
                   <!-- total fee ends here -->
+                   <!--paid amount-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textPaidFee" class="col-form-label fw-bold">
+                              Paid Amount : <span class="text-danger">*</span>
+                          </label>
+                          
+                      </div>
+                      <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required onkeyup="generateBalance(); generateValidAmount();">
+                      </div>
+                      </div>
+                      <!--balance-->
+                      <div class="col-4">
+                        <div>
+                          <label for="textBalanceFee" class="col-form-label fw-bold">
+                              Balance : <span class="text-danger">*</span>
+                          </label>
+                          
+                      </div>
+                      <div class="input-group">
+                          <span class="input-group-text fw-bold">Rs :</span>
+                          <input type="text" class="form-control" id="textBalanceFee" placeholder="Balance Amount" readonly required >
+                      </div>
+                      </div>
                     </div>
 
 

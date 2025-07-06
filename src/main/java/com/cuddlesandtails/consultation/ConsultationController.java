@@ -20,12 +20,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.transaction.Transactional;
 import com.cuddlesandtails.user.UserRepository;
-//import com.cuddlesandtails.appointment.Appointment;
-//import com.cuddlesandtails.appointment.AppointmentstatusRepository;
+import com.cuddlesandtails.appointment.Appointment;
+import com.cuddlesandtails.appointment.AppointmentRepository;
+import com.cuddlesandtails.appointment.AppointmentstatusRepository;
 import com.cuddlesandtails.appointment.RecordstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping(value = "/consultation")
@@ -37,11 +39,11 @@ public class ConsultationController {
     @Autowired
     private RecordstatusRepository recordStatusDao;
 
-    //@Autowired
-    //private Appointment appointment;
+    @Autowired
+    private AppointmentRepository appointmentDao;
 
-    //@Autowired
-    //private AppointmentstatusRepository appointmentstatusDao;
+    @Autowired
+    private AppointmentstatusRepository appointmentstatusDao;
 
     @Autowired
     private UserRepository userDao;
@@ -69,7 +71,7 @@ public class ConsultationController {
     public List<Consultation> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Consultation");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"consultation");
         //check privilege
         if(!logUserPrivi.get("select")){
             return new ArrayList<Consultation>();
@@ -85,7 +87,7 @@ public class ConsultationController {
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Consultation");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "consultation");
         // check privilege
         if (!logUserPrivi.get("insert")) {
             return "Consultation Record save not completed : You don't have permission";
@@ -100,7 +102,9 @@ public class ConsultationController {
            consultation.setAddeddatetime(LocalDateTime.now());
            consultation.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
-           //Appointment compeleteAppointment = appointmentDao.getReferenceById
+           Appointment appointment = appointmentDao.getReferenceById(consultation.getAppointment_id().getId());
+           appointment.setAppointmentstatus_id(appointmentstatusDao.getReferenceById(3));
+           appointmentDao.save(appointment);
 
            //set employee number
            String nextConsultationNo = ConsultationDao.getNextConsultationNumber();
@@ -126,7 +130,7 @@ public class ConsultationController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Consultation");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "consultation");
 
         if (!logUserPrivi.get("delete")) {
             return "Delete not completed : You don't have privileges";
@@ -170,7 +174,7 @@ public class ConsultationController {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object using log user and relavent module
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Consultation");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "consultation");
         // check privilege
         if (!logUserPrivi.get("update")) {
             return "Update not Completed... :you haven't permission..!";
@@ -192,6 +196,11 @@ public class ConsultationController {
     }
     
 
+    //end point of the medical report to get medical history when the owner and pet is given
+    @GetMapping("/consultationByOwnerAndPet")
+    public List<Consultation> getConsultationRecords(@RequestParam Integer ownerId,@RequestParam Integer petId) {
+        return ConsultationDao.findConsultationsByOwnerAndPet(ownerId, petId);
+    }
 
 
 

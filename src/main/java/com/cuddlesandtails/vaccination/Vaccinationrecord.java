@@ -18,9 +18,11 @@ import jakarta.validation.constraints.NotNull;
 
 import com.cuddlesandtails.appointment.Recordstatus;
 import com.cuddlesandtails.doctor.Doctor;
+import com.cuddlesandtails.payment.Paymentmethod;
 import com.cuddlesandtails.pet.Owner;
 import com.cuddlesandtails.pet.Pet;
 import com.cuddlesandtails.vaccine.Vaccine;
+import com.cuddlesandtails.vaccine.Vaccineinventory;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -97,8 +99,25 @@ public class Vaccinationrecord {
     @NotNull
     private BigDecimal totalamount;
 
+    @Column(name = "paidamount")
+    @NotNull
+    private BigDecimal paidamount;
+
+    @Column(name = "balanceamount")
+    @NotNull
+    private BigDecimal balanceamount;
+
+    @ManyToOne
+    @JoinColumn(name = "paymentmethod_id",referencedColumnName = "id")
+    private Paymentmethod paymentmethod_id;
+
     @ManyToOne
     @JoinColumn(name = "recordstatus_id",referencedColumnName = "id")
     private Recordstatus recordstatus_id;
 
+    @ManyToOne
+    @JoinColumn(name = "vaccineinventory_id",referencedColumnName = "id")
+    private Vaccineinventory vaccineinventory_id;
+
+    
 }

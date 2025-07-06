@@ -2,9 +2,9 @@ window.addEventListener('load',()=>{
 
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/Doctor");
+    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/doctor");
 
-    //refreshAvailabilityTable(); //call table refresh function
+    //refreshDoctorAvailabilityTable(); //call table refresh function
 
     $('#availabilityAddModal').on('shown.bs.modal', function () {
     restrictToCurrentMonth();
@@ -109,7 +109,7 @@ const buttonAVSubmit = ()=>{
 
                 if (postServiceResponse === 'OK') {
                     alert("Save successfully.. !");
-                    refreshAvailabilityTable();
+                    refreshDoctorAvailabilityTable();
                     formAvailabilityDoctor.reset();
                     refreshAvailabilityForm();
                     $("#availabilityAddModal").modal("hide");
@@ -136,6 +136,8 @@ const doctorAFormRefill =(ob,rowIndex)=>{
     //used JSON.parse stringify to convert them into string and to identify the difference
     doctoravailability = JSON.parse(JSON.stringify(ob));
     olddoctoravailability =JSON.parse(JSON.stringify(ob));
+    //close doctoravailability table modal
+    $('#availabilityTableModal').modal('hide');
     //open doctoravailability modal
     $('#availabilityAddModal').modal('show');
 
@@ -143,15 +145,13 @@ const doctorAFormRefill =(ob,rowIndex)=>{
     //set value into UI element
     //elementId.value = object.property
     
-    textMonth.value = doctor.licenseno;
-    startDate.value = doctor.nic;
-    endDate.value = doctor.nic;
+    textMonth.value = doctoravailability.month;
+    startDate.value = doctoravailability.startdate;
+    endDate.value = doctoravailability.enddate;
     
     doctors = ajaxRequestHere("/doctor/workingDoctors");
-    fillDataIntoSelect(selectDoctor,'Select Doctor',doctor,'fullname',ob.doctor_id.fullname);
-    
-   
-    
+    fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname',ob.doctor_id.fullname);
+
    
     if (userPrivilege.update) {
         btnUpdateAVDoctor.disabled = "";
@@ -188,6 +188,9 @@ const checkAVFormUpdate=()=>{
     }
     if(doctoravailability.enddate != olddoctoravailability.enddate){
         updates = updates + "enddate has updated," + olddoctoravailability.enddate + " into " + doctoravailability.enddate + "\n";
+    }
+    if (JSON.stringify(doctoravailability.doctorhasavailabilityList) !== JSON.stringify(olddoctoravailability.doctorhasavailabilityList)) {
+        updates += "Availability records have been updated (added/removed/modified).\n";
     }
 
     return updates;
@@ -231,7 +234,7 @@ const buttonADoctorUpdate = ()=>{
             });
             if (putServiceresponce == "OK"){
                 alert("Updated Successfully..!");
-                refreshAvailabilityTable();
+                refreshDoctorAvailabilityTable();
                 formAvailabilityDoctor.reset();
                 refreshAvailabilityForm();
                 $('#availabilityAddModal').modal('hide');
@@ -293,7 +296,7 @@ const deleteDAFunc =(ob,rowIndex)=>{
 
             if (deleteServerResponse == 'OK') {
                 alert('Delete Successfully...!!');
-                refreshAvailabilityTable();
+                refreshDoctorAvailabilityTable();
             } else {
                 alert('Delete not completed. You have following error \n' + deleteServerResponse);
             }
@@ -303,9 +306,9 @@ const deleteDAFunc =(ob,rowIndex)=>{
             row.classList.remove('table-danger')
         }
          else {
-             refreshAvailabilityTable();
+             refreshDoctorAvailabilityTable();
              } */
-             refreshAvailabilityTable();
+             refreshDoctorAvailabilityTable();
 
     }, 500);
 
@@ -353,9 +356,84 @@ const refreshAvailabilityForm = () =>{
 
 }
 
-const printAFunc = ()=>{
+const printAFunc = (rowOb, rowIndex)=>{
+    //open view details
+    $('#availabilityViewModal').modal('show');
 
+    viewDoctor.innerHTML = rowOb.doctor_id.fullname;
+    viewMonth.innerHTML = rowOb.month;
+    viewStartdate.innerHTML = rowOb.startdate;
+    viewEnddate.innerHTML = rowOb.enddate;
+
+    //refresh table area
+    let displayPropertyList = [
+        { dataType: "function", propertyName: getDate },
+        { dataType: "function", propertyName: getStarttime },
+        { dataType: "function", propertyName: getEndtime },
+    ];
+    fillDataIntoInnerTable(tableAVInner, rowOb.doctorhasavailabilityList, displayPropertyList, deleteInnerForm, false);
 }
+
+/* const btnPrintRow = () => {
+    console.log("print");
+    console.log(doctoravailability);
+
+    let newWindow = window.open();
+    newWindow.document.write("<html><head>" +
+        "<link rel='stylesheet' href='resources/bootstrap-5.3.1-dist/bootstrap-5.3.1-dist/css/bootstrap.min.css'></link>" +
+        "<title>" + "Doctor Availability Details" + "</title>"
+        + "</head><body>" +
+        "<h2>" + "Doctor Availability Details" + "</h2>" +
+        printAVTable.outerHTML + "<script>printAVTable.classList.remove('d-none');</script></body></html>"
+    );
+
+    setTimeout(() => {
+        newWindow.stop();//table ek load wena ek nawathinw
+        newWindow.print();//table ek print weno
+        newWindow.close();//aluthin open una window tab ek close weno
+        //ar data load wenn nm  time out ekk oni weno aduma 500k wth
+    }, 500)
+} */
+const btnPrintRow = () => {
+    console.log("print");
+
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#availabilityViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Doctor Availability Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Doctor Availability Details</h2>
+            ${printContent}
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 // Define function to get the 7th day from a given date
 const getSeventhDay = () => {
@@ -393,6 +471,8 @@ const validateSelectedDate = () => {
 };
 
 
+
+
 //Doctor availability inner form starts here
 
 const refreshInnerFormAndTable = ()=>{
@@ -425,8 +505,6 @@ const deleteInnerForm =(innerOb ,rowIndex)=>{
     //row.classList.add('table-danger');
 
     console.log(innerOb);
-
-    
     //need a time to change the color
     //setTimeout(function () {
     // get user confirmation
@@ -444,24 +522,17 @@ const deleteInnerForm =(innerOb ,rowIndex)=>{
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            // call delete service
-            let deleteServerResponce = ajaxRequestBody("/availability", "DELETE", innerOb);
-            // check delete service responce
-            if (deleteServerResponce == "OK") {
+            let extIndex = doctoravailability.doctorhasavailabilityList.findIndex(dohav => dohav.id === innerOb.id);
+            if (extIndex != -1) {
+                doctoravailability.doctorhasavailabilityList.splice(extIndex, 1);
                 refreshInnerFormAndTable();
 
-               Swal.fire({
+                Swal.fire({
                     title: 'Success',
                     text: 'Availability Deleted Successfully!',
                     icon: 'success'
                 });
-            } else {
-                
-                 Swal.fire({
-                    title: 'Form Error',
-                    text: 'Failed to delete Availability details \n' + deleteServerResponce,
-                    icon: 'error'
-                });
+
             }
         }
     });
@@ -559,3 +630,13 @@ const restrictToCurrentMonth = () => {
         }
     });
 };
+
+const getDate = (innerOb) => {
+    return innerOb.date;
+}
+const getStarttime = (innerOb) => {
+    return innerOb.strat_time;
+}
+const getEndtime = (innerOb) => {
+    return innerOb.end_time;
+}

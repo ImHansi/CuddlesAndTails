@@ -21,9 +21,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
     List<Appointment> getAppointmentReport(String selectDate, int doctor, int appointmentstatus);
 
 
+    //query to get appointments to given date doctor and service
     @Query(value = "select a from Appointment a where a.dateofappointment =?1 and a.doctor_id.id=?3 and a.service_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2 )")
     public List<Appointment> getAppinmentByDateServiceDoctor(LocalDate dateofappointment, Integer serviceid, Integer doctorid);
 
+    //query to get appointments to the given date and service
     @Query(value = "select a from Appointment a where a.dateofappointment =?1 and a.service_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2)")
     public List<Appointment> getAppinmentByDateService(LocalDate dateofappointment, Integer serviceid);
 
@@ -35,4 +37,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
     //create query to get pending appointments
     @Query(value = "select a from Appointment a where a.appointmentstatus_id.id=1")
     List<Appointment> getPendingAppointments();
+
+    //query to get appointments to the given date and doctor
+    /* @Query("select a from Appointment a where a.dateofappointment =?1 and a.doctor_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2)")
+    List<Appointment> getAppinmentByDateDoctor(@Param("doctorId") Integer doctorId,@Param("dateofappointment")LocalDate dateofappointment);
+ */
+
+    @Query("SELECT a FROM Appointment a " +"WHERE a.dateofappointment = :date " +"AND a.doctor_id.id = :doctorId " +"AND (a.appointmentstatus_id.id = 1 OR a.appointmentstatus_id.id = 2)")
+    List<Appointment> getAppointmentsByDoctorAndDate(@Param("doctorId") Integer doctorId,@Param("date") LocalDate date);
 }

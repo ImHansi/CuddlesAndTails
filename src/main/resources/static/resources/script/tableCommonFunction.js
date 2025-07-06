@@ -677,3 +677,46 @@ const fillDataIntoTableWithPrint = (tableId, dataList, columnList, printFunc, bu
 
 
 }
+
+const fillDataIntoTableWithoutModify = (tableId, dataList, columnList ) => {
+
+    //const table = document.querySelector('#tableEmployee');
+    const tableBody = tableId.children[1];
+    tableBody.innerHTML = '';
+
+    dataList.forEach((element, index) => {
+
+        const tr = document.createElement('tr');
+
+        const tdIndex = document.createElement('td');
+        tdIndex.innerText = index + 1;
+        tr.appendChild(tdIndex);
+
+        columnList.forEach(column => {
+            const td = document.createElement('td');
+
+            if (column.dataType == 'text') {
+                td.innerText = element[column.propertyName];
+            }
+            if (column.dataType == 'function') {
+                td.innerHTML = column.propertyName(element);
+            }
+            if (column.dataType == 'imagearray') {
+                let img = document.createElement('img');
+                img.style.width = "50px";
+                img.style.height = "50px";
+                if (element[column.propertyName] != null) {
+                    img.src = atob(element[column.propertyName])
+                } else {
+                    img.src = "/resources/images/user.png";
+                }
+                td.appendChild(img);
+            }
+
+            tr.appendChild(td);
+        });
+
+        tableBody.appendChild(tr);
+
+    });
+}

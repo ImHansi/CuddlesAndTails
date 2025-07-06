@@ -134,6 +134,11 @@ const getAppointmentStatus=(ob)=>{
         return '<p class="status-Deleted">'+ ob.appointmentstatus_id.name +'</p>'
 
     }
+    if(ob.appointmentstatus_id.name == 'Cancelled'){
+
+        return '<p class="status-Cancelled">'+ ob.appointmentstatus_id.name +'</p>'
+
+    }
 
 }
 

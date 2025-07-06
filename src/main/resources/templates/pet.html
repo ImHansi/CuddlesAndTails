@@ -171,7 +171,7 @@
                             </option>
                             
                           </select> -->
-                          <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'','pet','owner_id');">
+                          <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'pet','owner_id');">
                           <datalist id="ownerList">
                             <option value="">
                           </datalist>
@@ -301,7 +301,7 @@
                               name="petbreed"
                               required
                               id="selectPetBreed"
-                              class="form-select form-input"
+                              class="form-select form-input" disabled
                               onchange="selectDValidator(this,'','pet','breed_id')"
                             >
                               <option value="" selected disabled>

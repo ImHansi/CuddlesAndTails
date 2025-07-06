@@ -7,12 +7,12 @@ window.addEventListener('load',()=>{
     fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname');
 
     
-    appointmentStatus = ajaxRequestHere("/appointmentstatus/showAppStatus");
-    fillDataIntoSelect(selectAppointmentStatus,'Select a Status',appointmentStatus,'name');
+    //appointmentStatus = ajaxRequestHere("/appointmentstatus/showAppStatus");
+    //fillDataIntoSelect(selectAppointmentStatus,'Select a Status',appointmentStatus,'name');
 
-    appointments =ajaxRequestHere("/appointment/showall");
+    //appointments =ajaxRequestHere("/appointment/showall");
 
-    refreshAppointmentTable(); //call table refresh function
+    //refreshAppointmentTable(); //call table refresh function
 
     
 });
@@ -28,29 +28,13 @@ const refreshAppointmentTable = () => {
                               {dataType:'function',propertyName:getPetName},
                               {dataType:'text',propertyName:'mobile'},
                               {dataType:'function',propertyName:getService},
-                              {dataType:'function',propertyName:getDoctor},
-                              {dataType:'text',propertyName:'dateofappointment'},
-                              {dataType:'function',propertyName:getTime},
+                              {dataType:'text',propertyName:'starttime'},
                               {dataType:'function',propertyName:getAppointmentStatus},
     ];
 
     //call filldataintotable function
     //(tableID , dataArrayName, displaypropertyarea,refill function name, delete function name, print function name , button visibility, privilegeOb)
-    fillDataIntoTable(tableReportAppointment, appointments, displayproperty,appointmentFormRefill,deleteFunc,printFunc,false, userPrivilege);
-
-    //disable delete button
-    /*appointments.forEach((element , index) => {
-        if (element.recordstatus_id.name == "Delete") {
-            if (userPrivilege.delete) {
-                tableAppointment.children[1].children[index].children[7].children[1].disabled ="disabled";
-            }
-            
-        }
-    });*/
-
-   $('#tableReportAppointment').dataTable();
-
-
+    fillDataIntoTableWithoutModify(tableReportAppointment, appointments, displayproperty);
 }
 
 //create function to get owners
@@ -71,34 +55,17 @@ const getService=(ob)=>{
 
 }
 
-//create functon to get doctors
-const getDoctor=(ob)=>{
-    return ob.doctor_id.fullname;
-
-}
-
-//create function to get appointment time
-const getTime=(ob)=>{
-    return ob.appointmenttime_id.name;
-
-}
-
 //create function get record status 
 const getAppointmentStatus=(ob)=>{
     
-    if(ob.appointmentstatus_id.name == 'Complete'){
-
-        return '<p class="status-Complete">'+ ob.appointmentstatus_id.name +'</p>'
-
-    }
     if(ob.appointmentstatus_id.name == 'Pending'){
 
         return '<p class="status-Pending">'+ ob.appointmentstatus_id.name +'</p>'
 
     }
-    if(ob.appointmentstatus_id.name == 'Deleted'){
+    if(ob.appointmentstatus_id.name == 'Confirm'){
 
-        return '<p class="status-Deleted">'+ ob.appointmentstatus_id.name +'</p>'
+        return '<p class="status-Confirm">'+ ob.appointmentstatus_id.name +'</p>'
 
     }
 
@@ -106,29 +73,12 @@ const getAppointmentStatus=(ob)=>{
 
 const generateReport=()=> {
 
-    appointments =ajaxRequestHere("/appointment/getappointmentreport?doctor="+ JSON.parse(selectDoctor.value).id+"&appointmentstatus="+JSON.parse(selectAppointmentStatus.value).id+"&date="+slctStartDate.value);
+    const doctorId = JSON.parse(selectDoctor.value).id;
+    const selectedDate = slctStartDate.value;
+
+    appointments =ajaxRequestHere("/appointment/appointmentByDateandDoctor?doctorId=" + doctorId + "&dateofappointment=" + selectedDate);
     refreshAppointmentTable();   
 
 }
 
-
-//function for appointment form refill
-const appointmentFormRefill =(ob,rowIndex)=>{
-    
-}
-
-const editFunc =(ob)=>{
-
-}
-
-//function for delete appointment record
-const deleteFunc =(ob,rowIndex)=>{
-
-}
-
-
-//function for print appointmnet record
-const printFunc =(ob, rowIndex)=>{
-
-}
 

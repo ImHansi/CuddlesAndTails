@@ -110,7 +110,7 @@
                       </div>
                     </div>
                     <!-- required mark -->
-                     <!-- vaccine, appointment starts here-->
+                     <!--  appointment starts here-->
                      <div class="row mt-2">
                       <div class="col-6">
                         <div>
@@ -124,7 +124,7 @@
                           </span>
 
                           <select name="consulno" id="selectAppNo"
-                              class="form-select form-input" onchange="selectDValidator(this,'','payment','appointment_id');generateAppointmentFee(); generateTotalFee();">
+                              class="form-select form-input" onchange="selectDValidator(this,'','payment','appointment_id');generateAppointmentFee();">
                               
                               <option value="" selected disabled>
                                 Select Channeling no
@@ -132,64 +132,37 @@
                             </select>
                         </div>
                       </div>
-                      <div class="col-6">
-                        <div>
-                          <label for="selectVaccineNo" class="col-form-label fw-bold">
-                            Vaccination No : <span class="text-danger"></span>
-                          </label>
-                        </div>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="fa-solid fa-syringe"></i>
-                          </span>
-
-                          <select name="vaccinationno" id="selectVaccineNo"
-                              class="form-select form-input" onchange="selectDValidator(this,'','payment','vaccinationrecord_id'); generateVaccinationFee(); generateTotalFee();">
-                              
-                              <option value="" selected disabled>
-                                Select vaccination No
-                              </option>
-                            </select>
-                        </div>
-                      </div>
-                      
-                     </div>
-                     <!-- vaccine, appointment ends here-->
-
-                     <div class="row mt-2">
+                      <!-- appointment fee ends here -->
                       <!-- appointment fee starts here -->
                     <div class="col-6">
                     <div>
-                        <label for="textAppointmentFee" class="col-form-label fw-bold">
+                        <label for="textTotalFee" class="col-form-label fw-bold">
                             Appointment Fee : <span class="text-danger"></span>
                         </label>
                     </div>
                     <div class="input-group">
                         <span class="input-group-text fw-bold">Rs :</span>
-                        <input type="text" class="form-control" id="textAppointmentFee" placeholder="Enter Appointment Fee" readonly>
-                        <span class="input-group-text">.00</span>
+                        <input type="text" class="form-control" id="textTotalFee" placeholder="Appointment Fee" readonly>
+                        
                     </div>
                     </div>
-                    <!-- appointment fee ends here -->
-                     <!-- vaccination fee starts here -->
-                     <div class="col-6">
-                      <div>
-                          <label for="textVaccinationFee" class="col-form-label fw-bold">
-                              Vaccination Fee : <span class="text-danger"></span>
-                          </label>
-                      </div>
-                      <div class="input-group">
-                          <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textVaccinationFee" placeholder="Enter Vaccination Fee" readonly >
-                          <span class="input-group-text">.00</span>
-                      </div>
+                    
+                      
                      </div>
-                     <!-- vaccination fee ends here -->
-                   
-                     </div>
+                     <!-- , appointment ends here-->
+
+                     
 
                      <div class="row mt-2">
                       <div class="col-4"></div>
+                      <div class="col-4">
+                        
+                      </div>
+                      <div class="col-4"></div>
+                     </div>
+
+                     <div class="row mt-2">
+                      <!--payment method-->
                       <div class="col-4">
                         <div>
                           <label for="selectMethod" class="col-form-label fw-bold">
@@ -210,24 +183,7 @@
                             </select>
                         </div>
                       </div>
-                      <div class="col-4"></div>
-                     </div>
-
-                     <div class="row mt-2">
-                      <!--total amount-->
-                      <div class="col-4">
-                        <div>
-                          <label for="textTotalFee" class="col-form-label fw-bold">
-                              Total Amount : <span class="text-danger">*</span>
-                          </label>
-                          
-                      </div>
-                      <div class="input-group">
-                          <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textTotalFee" placeholder="Total Amount" readonly required >
-                          <span class="input-group-text">.00</span>
-                      </div>
-                      </div>
+                      
                       <!--paid amount-->
                       <div class="col-4">
                         <div>
@@ -238,8 +194,7 @@
                       </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required onkeyup="generateBalance();">
-                          <span class="input-group-text">.00</span>
+                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required onkeyup="generateBalance(); generateValidAmount();">
                       </div>
                       </div>
                       <!--balance-->
@@ -253,7 +208,6 @@
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
                           <input type="text" class="form-control" id="textBalanceFee" placeholder="Balance Amount" readonly required >
-                          <span class="input-group-text">.00</span>
                       </div>
                       </div>
                      </div>
@@ -306,36 +260,57 @@
              </div>
             <div class="row mt-2">
               <div class="col-12">
-                
-                <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
-                <br>
-                <table id="printPaymentTable" class="table table-hover table-bordered table-striped border-primary">
-                  
-                  <tr>
-                    <th>Payment No</th>
-                    <th id="viewPaymentNo"></th>
-                  </tr>
-                  <tr>
-                    <th>Owner</th>
-                    <th id="viewOwner"></th>
-                  </tr>
-                  <tr>
-                    <th>Total</th>
-                    <th id="viewTotal"></th>
-                  </tr>
-                  <tr>
-                    <th>Paid</th>
-                    <th id="viewPaid"></th>
-                  </tr>
-                  <tr>
-                    <th>Balance</th>
-                    <th id="viewBalance"></th>
-                  </tr>
-                  <tr>
-                    <th>Date</th>
-                    <th id="viewAddedDate"></th>
-                  </tr>
-              </table>
+                <table id="printAVTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <td><b>Contact:</b> <br></td>
+                            <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
+                            <td><b>Address :</b></td>
+                            <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                        </tr>
+                        <tr>
+
+                        </tr>
+
+                        <tr>
+                            <th>Channeling No : </th>
+                            <td id="viewAppointmentNo" colspan="2"></td>
+
+                            <th>Appointment Date : </th>
+                            <td id="viewDate" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Doctor : </th>
+                            <td id="viewDoctor" colspan="2"></td>
+
+                            <th>Time: </th>
+                            <td id="viewTime" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Owner : </th>
+                            <td id="viewOwner" colspan="2"></td>
+
+                            <th>Service: </th>
+                            <td id="viewService" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Added Date, Time :</th>
+                            <th id="viewAddedDate"></th>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <th id="viewTotal"></th>
+                        </tr>
+                        <tr>
+                          <th>Paid</th>
+                          <th id="viewPaid"></th>
+                        </tr>
+                        <tr>
+                          <th>Balance</th>
+                          <th id="viewBalance"></th>
+                        </tr>
+
+                    </table>
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="printpage();">print</button>

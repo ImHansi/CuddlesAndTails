@@ -63,7 +63,7 @@ public class SuppaymentController {
     public List<Suppayment> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Suppayment");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"supplierpayment");
         //check privilege
         if(!logUserPrivi.get("select")){
             return new ArrayList<Suppayment>();
@@ -79,7 +79,7 @@ public class SuppaymentController {
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Suppayment");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "supplierpayment");
         // check privilege
         if (!logUserPrivi.get("insert")) {
             return "Payment save not completed : You don't have permission";

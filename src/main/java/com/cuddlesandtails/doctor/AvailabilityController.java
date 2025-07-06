@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +36,8 @@ public class AvailabilityController {
 
     // @Autowired
     // private UserRepository userDao;
+    @Autowired
+    private DoctorRepository doctorDao;
 
     @Autowired
     private PrivilegeController privilegeController;
@@ -43,7 +46,7 @@ public class AvailabilityController {
     public List<Availability> showAll() {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "doctor");
         // check privilege
         if (!logUserPrivi.get("select")) {
             return new ArrayList<Availability>();
@@ -93,7 +96,7 @@ public class AvailabilityController {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "doctor");
 
         if (!logUserPrivi.get("delete")) {
             return "Delete not completed : You don't have privileges";
@@ -127,7 +130,7 @@ public class AvailabilityController {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object using log user and relavent module
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "doctor");
         // check privilege
         if (!logUserPrivi.get("update")) {
             return "Update not Completed... :you haven't permission..!";
@@ -150,4 +153,17 @@ public class AvailabilityController {
         }
     }
 
+
+    //to get doctors to the given service and date
+    @GetMapping("/workingDoctorByServiceAndDate")
+    public List<Doctor> getWorkingDoctorsByServiceandDate(@RequestParam Integer serviceId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    return doctorDao.findWorkingDoctorsAvailableByServiceAndDate(serviceId, date);
+    }
+
+
+    //to get availability according to the given service and date
+    @GetMapping("/availabilityByServiceAndDate")
+    public List<Availability> getAvailabilityByServiceAndDate(@RequestParam Integer serviceId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    return AvailabilityDao.findDoctorAvailabilityByServiceAndDate(serviceId, date);
+}
 }

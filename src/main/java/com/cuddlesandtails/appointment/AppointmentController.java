@@ -1,5 +1,6 @@
 package com.cuddlesandtails.appointment;
 
+import java.time.LocalDate;
 //import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.transaction.Transactional;
 import com.cuddlesandtails.user.UserRepository;
-//import com.cuddlesandtails.doctor.AvailabilityRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +66,7 @@ public class AppointmentController {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),
-                "Appointment");
+                "appointment");
         // check privilege
         if (!logUserPrivi.get("select")) {
             return new ArrayList<Appointment>();
@@ -82,7 +83,7 @@ public class AppointmentController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),
-                "Appointment");
+                "appointment");
         // check privilege
         if (!logUserPrivi.get("insert")) {
             return "Appointment save not completed : You don't have permission";
@@ -126,7 +127,7 @@ public class AppointmentController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),
-                "Appointment");
+                "appointment");
 
         if (!logUserPrivi.get("delete")) {
             return "Delete not completed : You don't have privileges";
@@ -169,7 +170,7 @@ public class AppointmentController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object using log user and relavent module
         HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),
-                "Appointment");
+                "appointment");
         // check privilege
         if (!logUserPrivi.get("update")) {
             return "Update not Completed... :you haven't permission..!";
@@ -200,10 +201,21 @@ public class AppointmentController {
     }
 
     // for report
-    @GetMapping(value = "/getappointmentreport", params = { "selectDate", "doctor",
+    /* @GetMapping(value = "/getappointmentreport", params = { "selectDate", "doctor",
             "appointmentstatus" }, produces = "application/json")
     public List<Appointment> getAppointmentsRepo(@RequestParam("selectDate") String selectDate,
             @RequestParam("doctor") int doctor, @RequestParam("appointmentstatus") int appointmentstatus) {
         return AppointmentDao.getAppointmentReport(selectDate, doctor, appointmentstatus);
-    }
+    } */
+   //getAppinmentByDateDoctor
+
+   /* @GetMapping("/appointmentByDateandDoctor")
+    public List<Appointment> findappointmentsbydateanddoctor(@RequestParam Integer doctorId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateofappointment) {
+        return AppointmentDao.getAppinmentByDateDoctor(doctorId, dateofappointment);
+    } */
+
+    @GetMapping("/appointmentByDateandDoctor")
+    public List<Appointment> findAppointmentsByDateAndDoctor(@RequestParam Integer doctorId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateofappointment) {
+         return AppointmentDao.getAppointmentsByDoctorAndDate(doctorId, dateofappointment);
+}
 }

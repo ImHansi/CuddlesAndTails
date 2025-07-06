@@ -2,11 +2,16 @@ window.addEventListener('load',()=>{
 
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/appointment");
+    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/payment");
 
     refreshQuickAppointmentForm();//call form refresh function
 
 
+    //call owner form refresh function
+    refreshOwnerForm();
+
+    //call pet form refresh function
+    refreshPetForm();
 });
 
 //create function for form refresh 
@@ -107,6 +112,20 @@ const buttonFormSubmit = ()=>{
     console.log('add payment',payment);
     console.log(window['payment']);
 
+    const paid = parseFloat(textPaidFee.value);
+    const total = parseFloat(textTotalFee.value);
+
+    if (isNaN(paid) || isNaN(total) || paid < total) {
+        Swal.fire({
+            title: "Error",
+            html: "Have to pay the full Amount!",
+            icon: "error"
+        });
+        textPaidFee.value = "";
+        textBalanceFee.value = "";
+        return;
+    }
+
     const formErrors = checkQuickAppointmentFormError();
     payment.appointment_id = appointment;
      // If no errors
@@ -115,7 +134,7 @@ const buttonFormSubmit = ()=>{
         Swal.fire({
             title: 'Confirm Addition',
             html: 'Are you sure to add following Appointment? <br>'
-                + '<br> Owner is : ' + appointment.owner_id.name
+                + '<br> Owner is : ' + appointment.owner_id.name + ' (' + appointment.owner_id.mobile + ')'
                 + '<br> Pet is : ' + appointment.pet_id.name
                 + '<br> Date is : ' + appointment.dateofappointment
                 + '<br> Total Amount is : ' + payment.totalamount,
@@ -258,3 +277,240 @@ const filterDoctors = () => {
         selectDoctor.innerHTML = '<option value="" selected disabled>Select Doctor</option>';
     }
 };
+
+//owner form refresh
+const refreshOwnerForm = () =>{
+    ownerob = new Object();
+
+    textOwnersName.style.border ='1px solid #ced4da';
+    textNic.style.border ='1px solid #ced4da';
+    textMobileNo.style.border ='1px solid #ced4da';
+    textEmail.style.border ='1px solid #ced4da';
+    textAddress.style.border ='1px solid #ced4da';
+
+}
+
+//pet form refresh
+const refreshPetForm = ()=> {
+    petob = new Object();
+
+    //to get owners
+    owners = ajaxRequestHere("/owner/showOwner");
+    fillDataIntoDataList(ownerList,owners,'name');
+
+    pettypes = ajaxRequestHere("/pettype/showPettype"); 
+    fillDataIntoSelect(selectPetType,'Select pet type',pettypes,'name');
+
+
+    breeds = ajaxRequestHere("/breed/showBreed"); 
+    fillDataIntoSelect(selectPetBreed,'Select Breed',breeds,'name');
+
+    textOwnerName.style.border ='1px solid #ced4da';
+    textPetName.style.border ='1px solid #ced4da';
+    selectPetType.style.border='1px solid #ced4da';
+    selectPetBreed.style.border='1px solid #ced4da';
+    textWeight.style.border='1px solid #ced4da';
+    textAge.style.border='1px solid #ced4da';
+
+    //radio button set check false
+
+    radioGenderMale.checked=false;
+    radioGenderFemale.checked =false;
+
+
+}
+
+//function to submit owner form
+const btnOwnerSubmit=()=>{
+    console.log("submit Owner form");
+    console.log(ownerob)
+
+    if (ownerob.name != null) {
+        let userConfirm = confirm("Are you sure to add "+ ownerob.name + " ?");
+        if (userConfirm) {
+            let postResponse = ajaxRequestBody("/owner" , "POST" , ownerob);
+            if (postResponse == "OK") {
+                alert("Saved successfully!");
+ 
+                owners = ajaxRequestHere("/owner/showOwner");
+                fillDataIntoSelect(selectOwner, 'Select Owner', owners, 'name', selectOwner.value);
+                
+                //bind value 
+                petob.owner_id =JSON.parse(selectOwner.value);
+                refreshOwnerForm();
+                $("#collapseOwner").collapse('hide');
+            } else {
+                alert("Save NOT completed...! has following error \n" +postResponse);
+            }
+        }
+    }else{
+        alert("please enter owner name...!");
+    }
+}
+
+//function to submit pet details form
+const btnPetSubmit=()=>{
+    console.log("submit pet form");
+    console.log(petob)
+
+    //check the owner ?
+    /* const selectedOwner = selectOwner.value;
+    if (!selectedOwner) {
+        alert("Please select an owner for the pet.");
+        return;
+    } */
+
+    //bind value 
+    //petob.owner_id =JSON.parse(textOwnerName.value).id;
+    //petob.owner_id = JSON.parse(document.getElementById("textOwnerName").value);
+
+    if (petob.name != null) {
+        let userConfirm = confirm("Are you sure to add "+ petob.name + " ?");
+        if (userConfirm) {
+            let postResponse = ajaxRequestBody("/pet" , "POST" , petob);
+            if (postResponse == "OK") {
+                alert("Saved successfully!");
+
+                pets = ajaxRequestHere("/pet/showall");
+                fillDataIntoSelect(selectPet, 'Select Pet', pets, 'name', selectPet.value);
+                
+                
+                refreshPetForm();
+                $("#collapsePet").collapse('hide');
+            } else {
+                alert("Save NOT completed...! has following error \n" +postResponse);
+            }
+        }
+    }else{
+        alert("please enter Pet name!");
+    }
+}
+
+const generateOwnerMobile =()=>{
+    console.log(JSON.parse(selectOwner.value));
+
+    textMobile.value = JSON.parse(selectOwner.value).mobile;
+    appointment.mobile = textMobile.value;
+    textMobile.style.border = "4px solid green";
+}
+
+//function for print doctor record
+const printFunc =(ob, rowIndex)=>{
+    console.log('print');
+
+    viewChannelingNo.innerHTML = ob.channelingno;
+    viewDate.innerHTML = ob.dateofappointment;
+    viewTime.innerHTML = ob.starttime;
+    viewDoctor.innerHTML = ob.doctor_id.fullname;
+    viewService.innerHTML = ob.service_id.name;
+    viewOwner.innerHTML = ob.owner_id.name;
+    viewPaymentNo.innerHTML = ob.paymentno;
+    viewTotal.innerHTML = ob.totalamount;
+    viewPaid.innerHTML = ob.paidamount;
+    viewBalance.innerHTML = ob.balanceamount;
+
+}
+
+//function for print
+const printpage = () => { 
+    console.log("print");
+
+    const printContent = document.querySelector("#printCardArea").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title> Receipt </title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                    @media print {
+                    .btn {
+                        display: none !important;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Doctor Availability Details</h2>
+            ${printContent}
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
+  
+//define function to filter breed according to pet type
+const filterBreed=()=>{
+
+    const selectPetType = document.getElementById("selectPetType");
+    const selectPetBreed = document.getElementById("selectPetBreed");
+
+    //check if the pettype is selected
+    if (selectPetType.value) {
+    selectPetBreed.disabled = false;
+
+    const pettypeId = JSON.parse(selectPetType.value).id;
+    const breedByPettype = ajaxRequestHere("/breed/showBreedbypettype?pettypeid="+ pettypeId);
+    fillDataIntoSelect(selectPetBreed,'Select Breed',breedByPettype,'name');
+
+    }else {
+        //Disable the breed dropdown
+        selectPetBreed.disabled = true; 
+        selectPetBreed.innerHTML = '<option value="" selected disabled>Select Pet</option>';
+  }
+
+}
+
+/* const dataListValidator = (elementId,object,property)=>{
+
+    let elementValue = elementId.value;
+    elementId.style.border = "4px solid green";
+    petob.owner_id = JSON.parse(elementValue).id;
+    
+} */
+
+const dataListValidator = (element, objectName, property) => {
+    const elementValue = element.value;
+
+    //find the matched object from the global array
+    const matchedObj = owners.find(obj => obj.name === elementValue);
+
+    if (matchedObj) {
+        element.style.border = "4px solid green";
+        window[objectName][property] = { id: matchedObj.id };
+    } else {
+        element.style.border = "4px solid red";
+        window[objectName][property] = null;
+        alert("Invalid selection. Please choose a valid option from the list.");
+    }
+};  
+
+//validater to check the paid amount
+const generateValidAmount = () => {
+    if (new RegExp(/^[1-9][0-9]{0,6}([.][0-9]{2})?$/).test(textPaidFee.value) && parseFloat(textPaidFee.value) >= parseFloat(textTotalFee.value)) {
+        textPaidFee.style.border = "4px solid green";
+        payment.paidamount = textPaidFee.value;
+    } else {
+        textPaidFee.style.border = "4px solid red";
+        textBalanceFee.style.border = "3px solid red";
+        
+    }
+} 

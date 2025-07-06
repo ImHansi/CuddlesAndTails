@@ -51,12 +51,17 @@ const printFunc =(ob, rowIndex)=>{
     //open view modal
     $('#paymentViewModal').modal('show');
 
-    viewPaymentNo.innerHTML = ob.paymentno;
+    viewAppointmentNo.innerHTML = ob.appointment_id.channelingno;
+    viewDate.innerHTML = ob.appointment_id.dateofappointment;
+    viewDoctor.innerHTML = ob.appointment_id.doctor_id.fullname;
+    viewTime.innerHTML = ob.appointment_id.starttime;
     viewOwner.innerHTML = ob.owner_id.name;
+    viewService.innerHTML = ob.appointment_id.service_id.name;
+    viewAddedDate.innerHTML = ob.addeddatetime.split("T")[0] + " " + ob.addeddatetime.split("T")[1];
     viewTotal.innerHTML = ob.totalamount;
     viewPaid.innerHTML = ob.paidamount;
     viewBalance.innerHTML = ob.balanceamount;
-    viewAddedDate.innerHTML = ob.addeddatetime;
+    
 
 }
 
@@ -130,11 +135,25 @@ const buttonFormSubmit = ()=>{
     console.log('add payment',payment);
     console.log(window['payment']);
 
+    const paid = parseFloat(textPaidFee.value);
+    const total = parseFloat(textTotalFee.value);
+
+    if (isNaN(paid) || isNaN(total) || paid < total) {
+        Swal.fire({
+            title: "Error",
+            html: "Have to pay the full Amount!",
+            icon: "error"
+        });
+        textPaidFee.value = "";
+        textBalanceFee.value = "";
+        return;
+    }
+
 
     const formErrors = checkPayFormError();
     if (formErrors == '') {
         //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following consultation record? \n'
+        const userConfirm = confirm('Are you sure to add following payment record? \n'
                                     + '\n Total amount is : ' + payment.totalamount);
 
 
@@ -177,15 +196,15 @@ const refreshPaymentForm = () =>{
     appointments = ajaxRequestHere("/appointment/pendingAppointments");
     fillDataIntoSelectNewTwo(selectAppNo,'Select Channeling No & Owner',appointments,'channelingno','owner_id.name');
 
-    vaccinationrecords = ajaxRequestHere("/vaccinationrecord/pendingVaccinationRecordes");
-    fillDataIntoSelect(selectVaccineNo,'Select Vaccination No',vaccinationrecords,'vaccino');
+    //vaccinationrecords = ajaxRequestHere("/vaccinationrecord/pendingVaccinationRecordes");
+    //fillDataIntoSelect(selectVaccineNo,'Select Vaccination No',vaccinationrecords,'vaccino');
     
     paymentmethods = ajaxRequestHere("/paymentmethod/showspaymentmethod");
     fillDataIntoSelect(selectMethod,'Select Method',paymentmethods,'name');
     
     //set text field value as a empty
-    textAppointmentFee.style.border='1px solid #ced4da';
-    textVaccinationFee.style.border='1px solid #ced4da';
+    //textAppointmentFee.style.border='1px solid #ced4da';
+    //textVaccinationFee.style.border='1px solid #ced4da';
     textTotalFee.style.border='1px solid #ced4da';
     textPaidFee.style.border='1px solid #ced4da';
     textBalanceFee.style.border='1px solid #ced4da';
@@ -205,13 +224,15 @@ const refreshPaymentForm = () =>{
 
 
 //define function to generate vaccination fee automatically
-const generateVaccinationFee =()=>{
+/* const generateVaccinationFee =()=>{
     console.log(JSON.parse(selectVaccineNo.value));
 
     textVaccinationFee.value = JSON.parse(selectVaccineNo.value).totalamount;
     payment.vaccinationfee = parseFloat(textVaccinationFee.value);
+    const vaccinationDetails = JSON.parse(selectVaccineNo.value);
+    payment.owner_id = {id: vaccinationDetails.owner_id.id};
     textVaccinationFee.style.border = "4px solid green";
-}
+} */
 
 //define function to generate consultation fee automatically
 const generateAppointmentFee =()=>{
@@ -219,16 +240,19 @@ const generateAppointmentFee =()=>{
 
     const appointmentDetails = JSON.parse(selectAppNo.value);
     const totalFee = parseFloat(appointmentDetails.servicefee ?? 0 ) + parseFloat(appointmentDetails.doctor_id.specialization_id.doctorfee ?? 0) 
-    textAppointmentFee.value = totalFee;
-    payment.appointmentfee = totalFee;
+    //textAppointmentFee.value = totalFee;
+    textTotalFee.value = totalFee;
+    payment.totalamount = totalFee;
     payment.owner_id = {id: appointmentDetails.owner_id.id};
     //payment.appointmentfee = parseFloat(textAppointmentFee.value);
-    textAppointmentFee.style.border = "4px solid green";
+    textTotalFee.style.border = "4px solid green";
+    console.log(`Total Fee: ${totalFee}`);
 }
 
 //define function to generate total fee--> order fee + vaccination fee + consultation fee
-const generateTotalFee =()=>{
-    const totalFee = parseFloat(payment.vaccinationfee ?? 0) + parseFloat(payment.appointmentfee ?? 0);
+/* const generateTotalFee =()=>{
+    //const totalFee = parseFloat(payment.vaccinationfee ?? 0) + parseFloat(payment.appointmentfee ?? 0);
+    const totalFee = parseFloat(payment.appointmentfee ?? 0);
     textTotalFee.value = totalFee;
     payment.totalamount = totalFee;
     textBalanceFee.value =totalFee;
@@ -236,7 +260,7 @@ const generateTotalFee =()=>{
     console.log(`Total Fee: ${totalFee}`);
     
 
-}
+} */
 
 //define function to generate the balance paid amount - total amount
 const generateBalance =()=>{
@@ -249,6 +273,20 @@ const generateBalance =()=>{
     console.log(`Balance : ${balance}`);
     
 }
+
+//validater to check the paid amount
+const generateValidAmount = () => {
+    if (new RegExp(/^[1-9][0-9]{0,6}([.][0-9]{2})?$/).test(textPaidFee.value) && parseFloat(textPaidFee.value) >= parseFloat(textTotalFee.value)) {
+        textPaidFee.style.border = "4px solid green";
+        payment.paidamount = textPaidFee.value;
+    } else {
+        textPaidFee.style.border = "4px solid red";
+        textBalanceFee.style.border = "3px solid red";
+        
+    }
+} 
+
+
 
 
 

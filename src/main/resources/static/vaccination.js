@@ -2,7 +2,7 @@ window.addEventListener('load',()=>{
 
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/vaccination");
+    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/vaccinationrecord");
 
     refreshVaccinationTable(); //call table refresh function
 
@@ -138,6 +138,10 @@ const vaccinationFormRefill =(ob,rowIndex)=>{
 
     vaccinations = ajaxRequestHere("/vaccine/showall");
     fillDataIntoSelectNew(selectVaccination, 'Select Vaccine',vaccinations,'name','duration',vaccinationrecord.vaccine_id.name);
+
+    //paymentmethods = ajaxRequestHere("/paymentmethod/showspaymentmethod");
+    //fillDataIntoSelect(selectMethod,'Select Method',paymentmethods,'name');
+    
 
 
     //set value into UI element
@@ -417,9 +421,24 @@ const checkVaccReFormError =() =>{
         selectDoctor.style.background = 'rgba(255,0,0,0,1)';
         
     }
+    if (vaccinationrecord.paymentmethod_id==null) {
+        errors = errors +"Please enter a payment method..\n";
+        selectMethod.style.background = 'rgba(255,0,0,0,1)';
+        
+    }
     if (vaccinationrecord.totalamount== null) {
         errors = errors +"Please Enter the total amount..\n";
         textTotalFee.style.background = 'rgba(255,0,0,0,1)';
+        
+    }
+    if (vaccinationrecord.paidamount==null) {
+        errors = errors +"Please enter a paid amount..\n";
+        textPaidFee.style.background = 'rgba(255,0,0,0,1)';
+        
+    }
+    if (vaccinationrecord.balanceamount==null) {
+        errors = errors +"Please calculate the balance\n";
+        textBalanceFee.style.background = 'rgba(255,0,0,0,1)';
         
     }
     
@@ -431,6 +450,20 @@ const checkVaccReFormError =() =>{
 const buttonFormSubmit = ()=>{
     console.log('add vaccination record',vaccinationrecord);
     console.log(window['vaccinationrecord']);
+
+    const paid = parseFloat(textPaidFee.value);
+    const total = parseFloat(textTotalFee.value);
+
+    if (isNaN(paid) || isNaN(total) || paid < total) {
+        Swal.fire({
+            title: "Error",
+            html: "Have to pay the full Amount!",
+            icon: "error"
+        });
+        textPaidFee.value = "";
+        textBalanceFee.value = "";
+        return;
+    }
 
 
     const formErrors = checkVaccReFormError();
@@ -483,11 +516,15 @@ const refreshVaccinationForm = () =>{
     pets = ajaxRequestHere("/pet/showall");
     fillDataIntoSelect(selectPet,'Select Pet',pets,'name');
 
-    doctors = ajaxRequestHere("/doctor/showall");
+    doctors = ajaxRequestHere("/doctor/availableDoctorsToday");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname');
 
     vaccinations = ajaxRequestHere("/vaccine/showall");
     fillDataIntoSelectNew(selectVaccination, 'Select Vaccine',vaccinations,'name','duration');
+
+    paymentmethods = ajaxRequestHere("/paymentmethod/showspaymentmethod");
+    fillDataIntoSelect(selectMethod,'Select Method',paymentmethods,'name');
+    
 
 
     //set text field value as a empty
@@ -498,6 +535,9 @@ const refreshVaccinationForm = () =>{
     dateOfNextVaccination.style.border='1px solid #ced4da';
     selectDoctor.style.border='1px solid #ced4da';
     textTotalFee.style.border='1px solid #ced4da';
+    selectMethod.style.border='1px solid #ced4da';
+    textPaidFee.style.border='1px solid #ced4da';
+    textBalanceFee.style.border='1px solid #ced4da';
     
     //Set today's date for dateOfVaccination
     dateOfVaccination.value = new Date().toISOString().split('T')[0];
@@ -582,5 +622,28 @@ function calculateNextVaccinationDate() {
     }
 }
 
+//define function to generate the balance paid amount - total amount
+const generateBalance =()=>{
+    vaccinationrecord.paidamount = parseFloat(textPaidFee.value);
+    console.log("PAID", vaccinationrecord.paidamount)
+    const balance = parseFloat(vaccinationrecord.paidamount || 0) - parseFloat(vaccinationrecord.totalamount ?? 0);
+    textBalanceFee.value = balance;
+    textBalanceFee.style.border = "4px solid green";
+    vaccinationrecord.balanceamount = balance;
+    console.log(`Balance : ${balance}`);
+    
+}
+
+//validater to check the paid amount
+const generateValidAmount = () => {
+    if (new RegExp(/^[1-9][0-9]{0,6}([.][0-9]{2})?$/).test(textPaidFee.value) && parseFloat(textPaidFee.value) >= parseFloat(textTotalFee.value)) {
+        textPaidFee.style.border = "4px solid green";
+        vaccinationrecord.paidamount = textPaidFee.value;
+    } else {
+        textPaidFee.style.border = "4px solid red";
+        textBalanceFee.style.border = "3px solid red";
+        
+    }
+} 
 
 

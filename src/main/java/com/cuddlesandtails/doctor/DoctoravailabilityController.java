@@ -5,6 +5,7 @@ package com.cuddlesandtails.doctor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -42,7 +43,7 @@ public class DoctoravailabilityController {
     public List<Doctoravailability> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"doctor");
         //check privilege
         if(!logUserPrivi.get("select")){
             return new ArrayList<Doctoravailability>();
@@ -129,27 +130,34 @@ public class DoctoravailabilityController {
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // get privilege object using log user and relavent module
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "Doctor");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "doctor");
         // check privilege
         if (!logUserPrivi.get("update")) {
             return "Update not Completed... :you haven't permission..!";
         }
 
         //check existing
-        Doctoravailability extDoctoravailability = DoctoravailabilityDao.getReferenceById(doctoravailability.getId());
+        /* Doctoravailability extDoctoravailability = DoctoravailabilityDao.getReferenceById(doctoravailability.getId());
         if (extDoctoravailability == null) {
             return "Update not completed : doctor availability does not exist..!";
+        } */
+       Optional<Doctoravailability> opt = DoctoravailabilityDao.findById(doctoravailability.getId());
+       if (opt.isEmpty()) {
+           return "Update not completed : doctor availability does not exist..!";
+       }
+       try {
+        // Set parent reference on each child availability record
+        if (doctoravailability.getDoctorhasavailabilityList() != null) {
+            for (Availability a : doctoravailability.getDoctorhasavailabilityList()) {
+                a.setDoctoravailability_id(doctoravailability);
+            }
         }
-
-       
-
-        try {
-            //doctoravailability.setLastmodifydatetime(LocalDateTime.now());
-            //doctoravailability.setLastmodifyuser_id(userDao.getUserByUsername(auth.getName()).getId());
-            DoctoravailabilityDao.save(doctoravailability);
+         DoctoravailabilityDao.save(doctoravailability);
 
 
             return "OK";
+  
+           
         } catch (Exception e) {
             return "Update not completed :" + e.getMessage();
         }

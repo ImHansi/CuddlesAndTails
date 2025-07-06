@@ -2,7 +2,7 @@ window.addEventListener('load',()=>{
 
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/suppayment");
+    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/supplierpayment");
 
     refreshSupPaymentTable(); //call table refresh function
 
@@ -134,6 +134,20 @@ const buttonFormSubmit = ()=>{
     console.log('add payment',supplierpayment);
     console.log(window['supplierpayment']);
 
+    const paid = parseFloat(textPaidFee.value);
+    const total = parseFloat(textTotalFee.value);
+
+    if (isNaN(paid) || isNaN(total) || paid < total) {
+        Swal.fire({
+            title: "Error",
+            html: "Have to pay the full Amount!",
+            icon: "error"
+        });
+        textPaidFee.value = "";
+        textBalanceFee.value = "";
+        return;
+    }
+
 
     const formErrors = checkPayFormError();
     if (formErrors == '') {
@@ -243,6 +257,7 @@ const refreshInnerFormAndTable = () => {
 
     let TotalAmount = 0.00;
     for (const suppayreceive of supplierpayment.supplierpaymenthasreceivesList) {
+        console.log("suppayreceive.totalamount", suppayreceive.totalamount)
         TotalAmount = parseFloat(TotalAmount) + parseFloat(suppayreceive.totalamount);
     }
     //toFixed krpu gmnm mek string ekk bawata convert wenwa, mek aaye calculation wlt gnnw nm ek oni wididhta hadagnnd
@@ -287,7 +302,7 @@ const generateTotalFee =()=>{
     textTotalFee.value = (parseFloat(selectReceive.netamount) - parseFloat(selectReceive.paidamount)).toFixed(2);
     textTotalFee.style.border = "4px solid green";
     textTotalFee.disabled = "disabled";
-    supplierpaymenthasreceive.totalamount = textTotalAmount.value;
+    supplierpaymenthasreceive.totalamount = textTotalFee.value;
     
 }
 
@@ -367,7 +382,7 @@ const innerSubmit = () => {
     let selectReceive = JSON.parse(selectReceiveNote.value);
     let extReceive = false;
 
-    for (const suppayirn of supplierpayment.supplierpaymenthasreceivesList) {
+    for (const suppayreceive of supplierpayment.supplierpaymenthasreceivesList) {
         if (selectReceive.id == suppayreceive.receive_id.id) {
             extReceive = true;
             break;
@@ -418,5 +433,17 @@ const innerSubmit = () => {
                 showConfirmButton: true,
             });
         }
+    }
+}
+
+//validater to check the paid amount
+const generateValidAmount = () => {
+    if (new RegExp(/^[1-9][0-9]{0,6}([.][0-9]{2})?$/).test(textPaidFee.value) && parseFloat(textPaidFee.value) >= parseFloat(textTotalFee.value)) {
+        textPaidFee.style.border = "4px solid green";
+        payment.paidamount = textPaidFee.value;
+    } else {
+        textPaidFee.style.border = "4px solid red";
+        textBalanceFee.style.border = "3px solid red";
+        
     }
 }

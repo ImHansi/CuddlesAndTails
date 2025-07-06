@@ -3,7 +3,7 @@ window.addEventListener('load' ,() => {
 
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/Privilege");
+    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/privilege");
 
     //call table referesh function
     refreshPrivilegeTable();

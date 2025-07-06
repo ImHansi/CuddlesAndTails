@@ -2,7 +2,7 @@ window.addEventListener('load',()=>{
 
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/Doctor");
+    userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/doctor");
 
     refreshDoctorTable(); //call table refresh function
 

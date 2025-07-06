@@ -73,7 +73,7 @@
                                        </label>
                                     </div>
                                     <div>
-                                      <select name="doctor" required id="selectDoctor" class="form-select form-input" onchange="selectDValidator(this,'','appointment','doctor_id'); filterTimeSlot();">
+                                      <select name="doctor" required id="selectDoctor" class="form-select form-input" disabled onchange="selectDValidator(this,'','appointment','doctor_id'); filterTimeSlot();">
                                         <option value="" selected disabled>
                                           Select A Doctor
                                         </option>
@@ -115,7 +115,7 @@
               </div>
               <div class="tab-pane fade" id="nav-pet" role="tabpanel" aria-labelledby="nav-pet-tab">
                 <!--pet details-->
-                <form onsubmit="return false;" id="formQuickappointment">
+                <form onsubmit="return false;" id="formQuickappointmentpet">
                     <div class="card div-card">
                         <div class="card-body">
                             <!-- required mark -->
@@ -126,7 +126,7 @@
                             </div>
                             <!-- required mark -->
                              <div class="row mt-2">
-                                <div class="col-6">
+                                <div class="col-5">
                                     <div>
                                       <label for="textOwnerName" class="col-form-label fw-bold">
                                         Owners Name : <span class="text-danger">*</span>
@@ -138,15 +138,155 @@
                                       </span>
             
                                       <select name="owner" required id="selectOwner"
-                                          class="form-select form-input" onchange="selectDValidator(this,'','appointment','owner_id');filterPets();">
+                                          class="form-select form-input" onchange="selectDValidator(this,'','appointment','owner_id');filterPets();generateOwnerMobile();">
                                           
                                           <option value="" selected disabled>
                                             Select Owner
                                           </option>
                                         </select>
                                     </div>
+                                    <!--collapse owner-->
+                                    <div class="collapse mt-2" id="collapseOwner">
+                                      <div class="card card-body">
+                                        <form onsubmit="return false" id="formOwner">
+                                        <h3>Enter Owner Details</h3>
+                                        <div class="row mt-2">
+                                            <!-- owners name starts here -->
+                                            <div class="col-4">
+                                                <div>
+                                                    <label for="textOwnersName" class="col-form-label fw-bold">
+                                                        Owners Name : <span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="input-group">
+                                                    
+                                                        <span class="input-group-text">
+                                                        <i class="fa-solid fa-user"></i>
+                                                        </span>
+                                                    
+                                                    <input type="text" id="textOwnersName" class="form-control" placeholder="Enter Owners Name" required 
+                                                    onkeyup="textValidator(this,'^([A-Z][a-z]{2,15}[\\s]){1,10}([A-Z][a-z]{2,15}){1}$','ownerob','name')">
+                                                </div>
+                                            </div>
+                                            <!-- owners name ends here -->
+                            
+                                            <!-- nic starts here -->
+                                            <div class="col-4">
+                                                <div>
+                                                    <label for="textNic" class="col-form-label fw-bold">
+                                                        NIC : <span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="input-group">
+                                                        <span class="input-group-text">
+                                                        <i class="fa-solid fa-id-badge"></i>
+                                                        </span>
+                                                    
+                                                    <input type="text" id="textNic" class="form-control" placeholder="Enter NIC" 
+                                                    onkeyup="textValidator(this,'^([6789][0-9]{8}[VX])|(([1][9])|([2][0]))([0-9]{10})$','ownerob','nic')">
+                                                </div>
+                                            </div>
+                                            <!-- nic ends here -->
+                            
+                                            <!-- mobile no starts here -->
+                                            <div class="col-4">
+                                                <div>
+                                                    <label for="textMobileNo" class="col-form-label fw-bold">
+                                                        Mobile No : <span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">
+                                                        <i class="fa-solid fa-phone"></i>
+                                                    </span>
+                                                    
+                                                    <input type="text" id="textMobileNo" class="form-control" placeholder="Enter Mobile No" required 
+                                                    onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','ownerob','mobile')">
+                                                </div>
+                                            </div>
+                                            <!-- mobile no ends here -->
+                                        </div>
+                            
+                                        <div class="row mt-2">
+                            
+                                            <!-- email starts here -->
+                                            <div class="col-6">
+                                                <div>
+                                                    <label for="textEmail" class="col-form-label fw-bold">
+                                                        Email : <span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="input-group">
+                                                        <span class="input-group-text">
+                                                        <i class="fa-solid fa-envelope"></i>
+                                                        </span>
+                                                    
+                                                    <input type="email" id="textEmail" class="form-control" placeholder="Enter Email" 
+                                                    onkeyup="textValidator(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','ownerob','email')">
+                                                </div>
+                                            </div>
+                                            <!-- email ends here -->
+                            
+                                            <!-- address starts here -->
+                                            <div class="col-6" style="padding-top: 18px;">
+                                              <div class="form-floating">
+                                                <textarea
+                                                  name="textareaAddress"
+                                                  id="textAddress"
+                                                  cols="80"
+                                                  rows="2"
+                                                  class="form-control"
+                                                  placeholder="Address"
+                                                  required
+                                                  onkeyup="textValidator(this,'^.*$','ownerob','address')"
+                                                ></textarea>
+                                                <label for="textAddress" class="form-label fw-bold">
+                                                  Address : <span class="text-danger">*</span>
+                                                </label>
+                                              </div>
+                                            </div>
+                                            <!-- address ends here -->
+                            
+                                        </div>
+                                        <br><br>
+                                        <div class="row mt-2">
+                                          <div class="col-4"></div>
+                                          <div class="col-4"></div>
+                      
+                                          <!-- add button starts here -->
+                                          <div class="col-4 d-flex justify-content-center">
+                                            <button
+                                              class="btn btn-success rounded-1"
+                                              type="submit"
+                                              id="btnOwnerAdd"
+                                              onclick="btnOwnerSubmit()">
+                                              <i class="fa-solid fa-plus"></i> Submit
+                                            </button>
+                                          </div>
+                                          <!-- add button ends here -->
+                                        </div>
+                                        
+                                       
+                                        </form>
+                                      </div>
+                                    </div>
+                                    <!--collapse owner ends here-->
                                 </div>
-                                <div class="col-6">
+                                <div class="col-1">
+                                  <span>
+                                <a
+                                  class="btn btn-primary"
+                                  data-bs-toggle="collapse"
+                                  href="#collapseOwner"
+                                  role="button"
+                                  aria-expanded="false"
+                                  aria-controls="collapseOwner"
+                                  style="margin-top: 36px;">
+                                  new
+                                </a>
+                              </span>
+                                </div>
+                                <div class="col-5">
                                     <div>
                                        <label for="textPetName" class="col-form-label fw-bold">
                                          Pet Name :
@@ -166,7 +306,276 @@
                                           </option>
                                         </select>
                                     </div>
+                                    <!--collapse pet-->
+                                    <div class="collapse mt-2" id="collapsePet">
+                                      <div class="card card-body">
+                                        <form onsubmit="return false" id="formPet">
+                      
+                                          <div class="row mt-2">
+                                            <div class="col-4"></div>
+                                            <div class="col-4">
+                                              <div>
+                                                <label
+                                                  for="textOwnerName"
+                                                  class="col-form-label fw-bold"
+                                                >
+                                                  Owner : <span class="text-danger">*</span>
+                                                </label>
+                                              </div>
+                                              <div>
+                                                <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'petob','owner_id');">
+                                                <datalist id="ownerList">
+                                                  <option value="">
+                                                </datalist>
+                                              </div>
+                      
+                                            </div>
+                                            
+                                            <div class="col-4"> </div>
+                                          </div>
+                            
+                      
+                                            <div class="row mt-2">
+                                              <!-- pet name starts here -->
+                                              <div class="col-4">
+                                                <div>
+                                                  <label
+                                                    for="textPetName"
+                                                    class="col-form-label fw-bold"
+                                                  >
+                                                    Pet Name : <span class="text-danger">*</span>
+                                                  </label>
+                                                </div>
+                                                <div class="input-group">
+                                                  <span class="input-group-text">
+                                                    <i class="fa-solid fa-dog"></i>
+                                                  </span>
+                      
+                                                  <input
+                                                    type="text"
+                                                    id="textPetName"
+                                                    class="form-control"
+                                                    placeholder="Enter Pet Name"
+                                                    required
+                                                    onkeyup="textValidator(this, '^([A-Z][a-z]{2,20})$', 'petob','name')"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <!-- pet name ends here -->
+                      
+                                              <!-- type starts here(dog, cat, rabbit,bird, other) -->
+                                              <div class="col-4">
+                                                <div>
+                                                  <label
+                                                    for="selectPetType"
+                                                    class="col-form-label fw-bold"
+                                                  >
+                                                    Type : <span class="text-danger">*</span>
+                                                  </label>
+                                                </div>
+                                                <div>
+                                                  <select
+                                                    name="pettype"
+                                                    required
+                                                    id="selectPetType"
+                                                    class="form-select form-input"
+                                                    onchange="selectDValidator(this,'','petob','pettype_id'); filterBreed();"
+                                                  >
+                                                    <option value="" selected disabled>
+                                                      Select Pet Type
+                                                    </option>
+                                                    
+                                                  </select>
+                                                </div>
+                                                
+                                              </div>
+                                              <!-- type ends here -->
+                      
+                                              
+                                              <!-- breed starts here -->
+                                              <div class="col-4">
+                                                <div>
+                                                  <label
+                                                    for="selectPetBreed"
+                                                    class="col-form-label fw-bold"
+                                                  >
+                                                    Breed : <span class="text-danger">*</span>
+                                                  </label>
+                                                </div>
+                                                <div>
+                                                  <select
+                                                    name="petbreed"
+                                                    required
+                                                    id="selectPetBreed"
+                                                    class="form-select form-input" disabled
+                                                    onchange="selectDValidator(this,'','petob','breed_id')"
+                                                  >
+                                                    <option value="" selected disabled>
+                                                      Select Breed
+                                                    </option>
+                                                    
+                                                  </select>
+                                                </div>
+                                                
+                                              </div>
+                                              
+                                              <!-- breed ends here -->
+                      
+                                            </div>
+                      
+                                            <div class="row mt-2">
+                                              <!--weight starts here-->
+                                              <div class="col-4">
+                                                <div>
+                                                  <label
+                                                    for="textWeight"
+                                                    class="col-form-label fw-bold"
+                                                  >
+                                                    Weight :
+                                                    <span class="text-danger">(optional)</span>
+                                                  </label>
+                                                </div>
+                                                <div class="input-group">
+                                                  <span class="input-group-text">
+                                                    <i class="fa-solid fa-weight-scale"></i>
+                                                  </span>
+                      
+                                                  <input
+                                                    type="text"
+                                                    id="textWeight"
+                                                    class="form-control"
+                                                    placeholder="Enter Weight"
+                                                    onkeyup="textValidator(this,'^([1-9][0-9]{0,1})$','petob','weight')"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <!--weight ends here-->
+                                              <!--gender starts here-->
+                                              <div class="col-4">
+                                                <div>
+                                                  <label for="radioMale" class="form-label fw-bold">
+                                                    Gender : <span class="text-danger">*</span>
+                                                  </label>
+                                                </div>
+                      
+                                                <div class="form-check form-check-inline">
+                                                  <input
+                                                    type="radio"
+                                                    required
+                                                    id="radioGenderMale"
+                                                    value="Male"
+                                                    class="form-check-input"
+                                                    name="gender"
+                                                    onchange="petob.gender=this.value"
+                                                  />
+                                                  <label
+                                                    for="radioMale"
+                                                    class="form-check-label fw-bold"
+                                                  >
+                                                    Male</label
+                                                  >
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                  <input
+                                                    type="radio"
+                                                    required
+                                                    id="radioGenderFemale"
+                                                    value="Female"
+                                                    class="form-check-input"
+                                                    name="gender"
+                                                    onchange="petob.gender=this.value"
+                                                  />
+                                                  <label
+                                                    for="radioFemale"
+                                                    class="form-check-label fw-bold"
+                                                  >
+                                                    Female</label
+                                                  >
+                                                </div>
+                                              </div>
+                                              <!--gender ends here-->
+                                              <!--age starts here-->
+                                              <div class="col-4">
+                                                <div>
+                                                  <label
+                                                    for="textAge"
+                                                    class="col-form-label fw-bold"
+                                                  >
+                                                    Age : <span class="text-danger">*</span>
+                                                  </label>
+                                                </div>
+                                                <div>
+                                                  <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    placeholder="Enter age"
+                                                    required
+                                                    id="textAge"
+                                                    onkeyup="textValidator(this,'^([1-9][0-9]{0,1})$','petob','age')"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <!--age ends here-->
+                                            </div>
+                      
+                                            <div class="row mt-2">
+                                              <div class="col-4"></div>
+                                              <div class="col-4"></div>
+                      
+                                              <!-- add button starts here -->
+                                              <div class="col-4 d-flex justify-content-center">
+                                                <button
+                                                  class="btn btn-success rounded-1"
+                                                  type="submit"
+                                                  id="btnPetAdd"
+                                                  onclick="btnPetSubmit()"
+                                                >
+                                                  <i class="fa-solid fa-plus"></i> Submit
+                                                </button>
+                                              </div>
+                                              <!--add button ends here -->
+                                            </div>
+                                          </form>
+                                      </div>
+                                    </div>
+                                    <!--collapse pet ends here-->
                                 </div>
+                                <div class="col-1">
+                                  <span>
+                                <a
+                                  class="btn btn-primary"
+                                  data-bs-toggle="collapse"
+                                  href="#collapsePet"
+                                  role="button"
+                                  aria-expanded="false"
+                                  aria-controls="collapsePet"
+                                  style="margin-top: 36px;"
+                                >
+                                  new
+                                </a>
+                              </span>
+                                </div>
+                             </div>
+                             <div class="row mt-2">
+                              <div class="col-4"></div>
+                              <!-- mobile starts here -->
+                              <div class="col-4">
+                                <div>
+                                  <label for="textMobile" class="col-form-label fw-bold">
+                                    Mobile : <span class="text-danger">*</span>
+                                  </label>
+                                </div>
+                                <div class="input-group">
+                                  <span class="input-group-text">
+                                    <i class="fa-solid fa-mobile"></i>
+                                  </span>
+        
+                                  <input type="text" id="textMobile" class="form-control" placeholder="Enter Mobile"
+                                    required onkeyup="textValidator(this,'^[0][7][01245678][0-9]{7}$','appointment','mobile')" />
+                                </div>
+                              </div>
+                              <!-- mobile ends here -->
+                              <div class="col-4"></div>
                              </div>
                              
                              <div class="row mt-2">
@@ -185,7 +594,7 @@
               </div>
               <div class="tab-pane fade" id="nav-payment" role="tabpanel" aria-labelledby="nav-payment-tab">
                 <!--payment-->
-                <form onsubmit="return false;" id="formQuickappointment">
+                <form onsubmit="return false;" id="formQuickappointmentpayment">
                 <div class="card div-card">
                   <div class="card-body">
                     <!-- required mark -->
@@ -233,7 +642,7 @@
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
                           <input type="text" class="form-control" id="textTotalFee" placeholder="Total Amount" readonly required >
-                          <span class="input-group-text">.00</span>
+                          
                       </div>
                       </div>
                       <!--paid amount-->
@@ -246,8 +655,8 @@
                       </div>
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
-                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required onkeyup="generateBalance();">
-                          <span class="input-group-text">.00</span>
+                          <input type="text" class="form-control" id="textPaidFee" placeholder="Enter paid amount" required onkeyup="generateBalance(); generateValidAmount();">
+                          
                       </div>
                       </div>
                       <!--balance-->
@@ -261,7 +670,7 @@
                       <div class="input-group">
                           <span class="input-group-text fw-bold">Rs :</span>
                           <input type="text" class="form-control" id="textBalanceFee" placeholder="Balance Amount" readonly required >
-                          <span class="input-group-text">.00</span>
+                          
                       </div>
                       </div>
                      </div>
@@ -280,7 +689,7 @@
 
                       <!-- add button starts here -->
                       <div class="col-4 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-success rounded-1" id="btnPaymentAdd" onclick="buttonFormSubmit()">
+                        <button type="submit" class="btn btn-success rounded-1" id="btnPaymentAdd" onclick="buttonFormSubmit(); printFunc();">
                           <i class="fa-solid fa-plus"></i> Submit
                         </button>
                       </div>
@@ -293,10 +702,10 @@
               </div>
               <div class="tab-pane fade" id="nav-summery" role="tabpanel" aria-labelledby="nav-summery-tab">
                 <!--summery-->
-                <div class="row mt-3">
+                <div id="printCardArea" class="row mt-3">
                 <div class="col-1"></div>
                 <div class="col-10">
-                  <div class="card div-card">
+                  <div class="card div-card" style="background-color: rgb(255, 255, 255);">
                     <div class="card-body">
                       <!-- table area starts here -->
           
@@ -307,35 +716,51 @@
                          </div>
                         <div class="row mt-2">
                           <div class="col-12">
-                            
-                            <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
-                            <br>
-                            <table id="printPaymentTable" class="table table-hover table-bordered table-striped border-primary">
-                              
-                              <tr>
-                                <th>Payment No</th>
+                          <table id="printPaymentTable" class="table table-hover table-bordered table-striped">
+
+                            <tr>
+                                <td><b>Contact:</b> <br></td>
+                                <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
+                                <td><b>Address :</b></td>
+                                <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                            </tr>
+                            <tr>
+                                <th>Channeling No : </th>
+                                <td id="viewAppointmentNo" colspan="2"></td>
+    
+                                <th>Date : </th>
+                                <td id="viewDate" colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <th>Doctor : </th>
+                                <td id="viewDoctor" colspan="2"></td>
+    
+                                <th>Time: </th>
+                                <td id="viewTime" colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <th>Owner : </th>
+                                <td id="viewOwner" colspan="2"></td>
+    
+                                <th>Service: </th>
+                                <td id="viewService" colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <th>Payment No :</th>
                                 <th id="viewPaymentNo"></th>
-                              </tr>
-                              <tr>
-                                <th>Owner</th>
-                                <th id="viewOwner"></th>
-                              </tr>
-                              <tr>
+                            </tr>
+                            <tr>
                                 <th>Total</th>
                                 <th id="viewTotal"></th>
-                              </tr>
-                              <tr>
-                                <th>Paid</th>
-                                <th id="viewPaid"></th>
-                              </tr>
-                              <tr>
-                                <th>Balance</th>
-                                <th id="viewBalance"></th>
-                              </tr>
-                              <tr>
-                                <th>Date</th>
-                                <th id="viewAddedDate"></th>
-                              </tr>
+                            </tr>
+                            <tr>
+                              <th>Paid</th>
+                              <th id="viewPaid"></th>
+                            </tr>
+                            <tr>
+                              <th>Balance</th>
+                              <th id="viewBalance"></th>
+                            </tr>
                           </table>
             
                           <div class="modal-footer">

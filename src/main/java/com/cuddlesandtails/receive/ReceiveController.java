@@ -68,7 +68,7 @@ public class ReceiveController {
     public List<Receive> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Receive");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"receive");
         //check privilege
         if(!logUserPrivi.get("select")){
             return new ArrayList<Receive>();

@@ -39,7 +39,7 @@ public class VaccineinventoryController {
         ModelAndView vaccineinventoryView = new ModelAndView();
         vaccineinventoryView.addObject("logusername", auth.getName());
         vaccineinventoryView.addObject("title","Vaccine Inventory Management : BIT Project 2024");
-        vaccineinventoryView.setViewName("vaccinein.html");
+        vaccineinventoryView.setViewName("vaccineinventory.html");
         return vaccineinventoryView; 
     }
 
@@ -47,7 +47,7 @@ public class VaccineinventoryController {
     public List<Vaccineinventory> showAll(){
         //get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"Vaccine");
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),"vaccine");
         //check privilege
         if(!logUserPrivi.get("select")){
             return new ArrayList<Vaccineinventory>();

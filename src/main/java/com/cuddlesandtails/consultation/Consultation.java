@@ -51,8 +51,8 @@ public class Consultation {
     @NotNull
     private LocalDate dateofconsultation;
 
-    @Column(name = "totalfee")
-    private String totalfee;
+    /* @Column(name = "totalfee")
+    private String totalfee; */
 
     @Column(name = "note")
     private String note;

@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 import com.cuddlesandtails.appointment.Appointment;
 import com.cuddlesandtails.pet.Owner;
-import com.cuddlesandtails.vaccination.Vaccinationrecord;
+//import com.cuddlesandtails.vaccination.Vaccinationrecord;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,20 +59,20 @@ public class Payment {
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
-
+/* 
     @Column(name = "vaccinationfee")
-    private BigDecimal vaccinationfee;
+    private BigDecimal vaccinationfee; */
 
-    @Column(name = "appointmentfee")
+    /* @Column(name = "appointmentfee")
     private BigDecimal appointmentfee;
-
+ */
     @ManyToOne
     @JoinColumn(name = "paymentmethod_id",referencedColumnName = "id")
     private Paymentmethod paymentmethod_id;
-
+/* 
     @ManyToOne
     @JoinColumn(name = "vaccinationrecord_id",referencedColumnName = "id")
-    private Vaccinationrecord vaccinationrecord_id;
+    private Vaccinationrecord vaccinationrecord_id; */
 
     @ManyToOne
     @JoinColumn(name = "owner_id",referencedColumnName = "id")

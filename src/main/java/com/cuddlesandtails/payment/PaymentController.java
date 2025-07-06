@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cuddlesandtails.user.UserRepository;
-import com.cuddlesandtails.vaccination.Vaccinationrecord;
-import com.cuddlesandtails.vaccination.VaccinationrecordRepository;
+//import com.cuddlesandtails.vaccination.Vaccinationrecord;
+//import com.cuddlesandtails.vaccination.VaccinationrecordRepository;
 import com.cuddlesandtails.appointment.Appointment;
 import com.cuddlesandtails.appointment.AppointmentRepository;
 import com.cuddlesandtails.appointment.AppointmentstatusRepository;
-import com.cuddlesandtails.appointment.RecordstatusRepository;
+//import com.cuddlesandtails.appointment.RecordstatusRepository;
 //import com.cuddlesandtails.appointment.RecordstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,11 +46,11 @@ public class PaymentController {
     @Autowired
     private AppointmentstatusRepository appointmentstatusDao;
 
-    @Autowired
-    private VaccinationrecordRepository vaccinationrecordDao;
+    //@Autowired
+    //private VaccinationrecordRepository vaccinationrecordDao;
 
-    @Autowired
-    private RecordstatusRepository recordstatusDao;
+    //@Autowired
+    //private RecordstatusRepository recordstatusDao;
     
 
     //create mapping UI service [/payment -- return payment UI]
@@ -122,11 +122,11 @@ public class PaymentController {
            }
 
            //set vaccination recordstatus as complete id=4
-           if (payment.getVaccinationrecord_id() != null) {
+           /* if (payment.getVaccinationrecord_id() != null) {
             Vaccinationrecord vr = vaccinationrecordDao.getReferenceById(payment.getVaccinationrecord_id().getId());
             vr.setRecordstatus_id(recordstatusDao.getReferenceById(4)); 
             vaccinationrecordDao.save(vr);
-            }
+            } */
 
            //set nextPaymentNo 
            String nextPaymentNo = PaymentDao.getNextPaymentNo();

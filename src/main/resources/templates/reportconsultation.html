@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+
+    <!--link employee.js-->
+    <script src="reportconsultation.js"></script>
+
+    
+  </head>
+
+
+
+<body>
+  <!--Navbar-->
+    <!--<nav th:replace="~{ path::fragmentname}"></nav>-->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+    <!--Navbar ends here-->
+  <div class="container-fluid">
+    <div class="row mt-3">
+
+    </div>
+
+    <!-- title area starts here -->
+    <div class="row p-3" style="margin-top: 40px;">
+      <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+        <i class="fa-solid fa-dog fa-2x"></i>
+        <h2 class="h2 ms-3">Medical History</h2>
+      </div>
+    </div>
+    <!-- title area ends here -->
+
+    <div class="row mt-2">
+      <div class="col-4"></div>
+        
+      <div class="col-4">
+        <div class="col">
+          <div>
+          <label for="textOwnerName" class="col-form-label fw-bold">
+            Owners Name : <span class="text-danger">*</span>
+          </label>
+          </div>
+          <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <select name="owner" required id="selectOwner"
+              class="form-select form-input" onchange="filterPets();">
+              
+              <option value="" selected disabled>Select Owner</option>
+           </select>
+        </div>
+        </div>
+        <div class="col">
+          <div>
+          <label for="textPetName" class="col-form-label fw-bold">
+            Pet Name :
+            <span class="text-danger">*</span>
+          </label>
+          </div>
+          <div class="input-group">
+          <span class="input-group-text">
+            <i class="fa-solid fa-dog"></i>
+          </span>
+
+          <select name="pet" required id="selectPet"
+              class="form-select form-input" disabled>
+              <option value="" selected disabled>Select Pet</option>
+          </select>
+        </div>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary" style="margin-left: 250px; margin-top: 20px;" onclick="generateReport();">Generate</button>
+        </div>
+      </div>
+      <div class="col-4">
+        <button type="button" class="btn btn-primary" onclick="medicalHistoryPrint();">Print</button>
+      </div>
+    </div>
+<!-- table area starts here -->
+
+<div class="row mt-3">
+  <div class="col-2"></div>
+  <div class="col-8">
+    <table class="table table-hover table-bordered table-striped border-primary" id="tableConsultationReport">
+    <thead class="table-header">
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Doctor</th>
+        <th>Service</th>
+        <th>Medical Record</th>
+      </tr>
+    </thead>
+    <tbody class="table-light">
+      
+    </tbody>
+  </table>
+  </div>
+  <div class="col-2"></div>
+  
+</div>
+<!-- table area ends here -->
+
+</body>
+
+</html>
