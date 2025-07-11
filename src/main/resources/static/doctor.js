@@ -327,7 +327,7 @@ const buttonDoctorUpdate = ()=>{
                        }).then(() => {
                         $('#doctorAddModal').modal('hide');
                         refreshDoctorTable();
-                        FormDoctor.reset();
+                        formDoctor.reset();
                         refreshDoctorForm();
                         
                        });
@@ -600,7 +600,7 @@ const buttonFormSubmit = ()=>{
                     }).then(() => {
                         $('#doctorAddModal').modal('hide');
                         refreshDoctorTable();
-                        FormDoctor.reset();
+                        formDoctor.reset();
                         refreshDoctorForm();    
                     });
                 } else {

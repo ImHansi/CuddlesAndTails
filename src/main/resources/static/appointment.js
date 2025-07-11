@@ -101,7 +101,8 @@ const getPetName=(ob)=>{
 
 //create functon to get doctors
 const getDoctor=(ob)=>{
-    return ob.doctor_id.fullname;
+    //return ob.doctor_id.fullname;
+    return ob.doctor_id ? ob.doctor_id.fullname : "N/A";
 
 }
 

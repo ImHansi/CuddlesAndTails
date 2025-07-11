@@ -30,6 +30,8 @@ public interface DoctorRepository extends JpaRepository<Doctor,Integer>{
     @Query(value = "select d from Doctor d where d.id not in(select u.doctor_id from User u where u.doctor_id is not null)")
     public List<Doctor> getListBywithoutUserAccount1();
 
+    //sql way --> SELECT * FROM Doctor d WHERE d.id NOT IN (SELECT u.doctor_id FROM User u WHERE u.doctor_id IS NOT NULL);
+
     //SELECT d  FROM Doctor d  LEFT JOIN User u ON d.id = u.doctor_id WHERE u.doctor_id IS NULL;
     //select d.id,d.fullname from cuddlesandtails.doctor d where d.id not in(SELECT u.doctor_id FROM cuddlesandtails.user u where u.doctor_id is not null);
 

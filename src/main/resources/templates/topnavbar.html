@@ -1,18 +1,21 @@
 
-<nav class="navbar bg-body-tertiary fixed-top" style="background-color: rgba(59, 59, 166, 0.825);" th:fragment="topnavbarFragment">
+<nav class="navbar bg-body-tertiary fixed-top" style="background-color: rgb(46, 46, 160);" th:fragment="topnavbarFragment">
     <div class="container-fluid">
       <div class="d-flex align-items-center justify-content-start">
       <button type="button" data-bs-toggle="modal" data-bs-target="#userEditModal" style="background: none; border: none; padding: 0; cursor: pointer;">
         <i class="fa-solid fa-gear fa-2x" style="color: rgb(255, 254, 254);"></i>
       </button>
       <a class="navbar-brand" aria-current="page" href="/index" style="margin-left: 20px;"><i class="fa-solid fa-house" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
-      <a class="navbar-brand" href="#" th:text="${logusername}" style="color: white;"></a>
+      <div class="d-flex align-items-center" style="gap: 10px;">
+      <img id="navbarUserImg" src="/resources/images/user2.jpg" style="width: 35px; height: 35px; border-radius: 50%;" />
+      <a class="navbar-brand" href="#" id="navbarUsername" style="color: white;"></a>
+      </div>
       <a class="navbar-brand" aria-current="page" href="/pet" style="margin-left: 100px;"><i class="fa-solid fa-dog" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
       <a class="navbar-brand" aria-current="page" href="/appointment" style="margin-left: 15px;"><i class="fa-solid fa-hospital" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
       <a class="navbar-brand" aria-current="page" href="/vaccinationrecord" style="margin-left: 15px;"><i class="fa-solid fa-syringe" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
       <a class="navbar-brand" aria-current="page" href="/payment" style="margin-left: 15px;"><i class="fa-solid fa-sack-dollar" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
       <a class="navbar-brand" aria-current="page" href="/quickappointment" style="margin-left: 30px;"><i class="fa-solid fa-stethoscope" style="color: rgb(255, 254, 254); font-size: 15px;">quick appointment</i></a>
-      <a class="navbar-brand" aria-current="page" href="/login" style="margin-left: 700px;"><i class="fa-solid fa-right-from-bracket" style="color: rgb(187, 145, 145);"> Logout </i></a>
+      <a class="navbar-brand" aria-current="page" href="/login" style="margin-left: 600px;"><i class="fa-solid fa-right-from-bracket" style="color: rgb(229, 209, 209);"> Logout </i></a>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

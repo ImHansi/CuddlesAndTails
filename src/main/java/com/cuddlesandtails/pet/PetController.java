@@ -184,9 +184,11 @@ public class PetController {
         return PetDao.getByOwner(ownerid);
     }
 
+    //for the doughnut chart
+    @GetMapping("/report/pettype-summary")
+    public List<PetTypeCount> getPetTypeSummary() {
+        return PetDao.countPetsByType();
+    }
 
-
-
-
-    
+  
 }

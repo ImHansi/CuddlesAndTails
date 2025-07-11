@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DoctoravailabilityController {
 
     @Autowired
-    private DoctoravailabilityRepository DoctoravailabilityDao;
+    private DoctoravailabilityRepository doctoravailabilityDao;
 
     //@Autowired
     //private UserRepository userDao;
@@ -48,12 +48,12 @@ public class DoctoravailabilityController {
         if(!logUserPrivi.get("select")){
             return new ArrayList<Doctoravailability>();
         }
-        return DoctoravailabilityDao.findAll(Sort.by(Direction.DESC,"id"));
+        return doctoravailabilityDao.findAll(Sort.by(Direction.DESC,"id"));
     }
 
     //create post mapping for save doctor availability record
     @PostMapping //@RequestBody --> get request body value set in POST ajax call
-    public String saveEmployee(@RequestBody Doctoravailability doctoravailability){
+    public String saveDoctorAvailability(@RequestBody Doctoravailability doctoravailability){
 
         //authentication and authorization
         //get logged user authentication object
@@ -68,16 +68,24 @@ public class DoctoravailabilityController {
         
 
         try{
-            //set auto generate values
-            //set added date time
-           //doctoravailability.setAddeddatetime(LocalDateTime.now());
-           //doctoravailability.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
-
+           
+          //Check for duplicate before saving
+          Doctoravailability existing = doctoravailabilityDao.findOverlapping(
+              doctoravailability.getDoctor_id(),
+              doctoravailability.getStartdate(),
+              doctoravailability.getEnddate()
+          );
+  
+          if (existing != null) {
+              return "Duplicate record already exists";
+          }
+  
+          //Set the relationship for availability list
           for (Availability availability : doctoravailability.getDoctorhasavailabilityList()) {
             availability.setDoctoravailability_id(doctoravailability);
           }
 
-            DoctoravailabilityDao.save(doctoravailability);
+            doctoravailabilityDao.save(doctoravailability);
             return "OK";
         }catch(Exception e){
             return "Save Not Completed :"+ e.getMessage();
@@ -100,7 +108,7 @@ public class DoctoravailabilityController {
 
         try{
             //delete
-            Doctoravailability extdDoctoravailability =DoctoravailabilityDao.getReferenceById(doctoravailability.getId());
+            Doctoravailability extdDoctoravailability =doctoravailabilityDao.getReferenceById(doctoravailability.getId());
         if(extdDoctoravailability== null){
             return"Delete not completed!";
         }
@@ -109,7 +117,7 @@ public class DoctoravailabilityController {
             //extdDoctoravailability.setRecordstatus_id(recordStatusDao.getReferenceById(2));
             //extdDoctoravailability.setDeletedatetime(LocalDateTime.now());
             //doctoravailability.setDeleteuser_id(userDao.getUserByUsername(auth.getName()).getId());
-            DoctoravailabilityDao.save(extdDoctoravailability);
+            doctoravailabilityDao.save(extdDoctoravailability);
 
 
             
@@ -141,7 +149,7 @@ public class DoctoravailabilityController {
         if (extDoctoravailability == null) {
             return "Update not completed : doctor availability does not exist..!";
         } */
-       Optional<Doctoravailability> opt = DoctoravailabilityDao.findById(doctoravailability.getId());
+       Optional<Doctoravailability> opt = doctoravailabilityDao.findById(doctoravailability.getId());
        if (opt.isEmpty()) {
            return "Update not completed : doctor availability does not exist..!";
        }
@@ -152,7 +160,7 @@ public class DoctoravailabilityController {
                 a.setDoctoravailability_id(doctoravailability);
             }
         }
-         DoctoravailabilityDao.save(doctoravailability);
+         doctoravailabilityDao.save(doctoravailability);
 
 
             return "OK";

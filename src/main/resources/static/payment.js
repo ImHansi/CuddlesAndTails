@@ -239,7 +239,7 @@ const generateAppointmentFee =()=>{
     console.log(JSON.parse(selectAppNo.value));
 
     const appointmentDetails = JSON.parse(selectAppNo.value);
-    const totalFee = parseFloat(appointmentDetails.servicefee ?? 0 ) + parseFloat(appointmentDetails.doctor_id.specialization_id.doctorfee ?? 0) 
+    const totalFee = parseFloat(appointmentDetails.servicefee ?? 0 ) + parseFloat(appointmentDetails.doctor_id?.specialization_id?.doctorfee ?? 0) 
     //textAppointmentFee.value = totalFee;
     textTotalFee.value = totalFee;
     payment.totalamount = totalFee;
@@ -285,6 +285,17 @@ const generateValidAmount = () => {
         
     }
 } 
+
+function handlePaymentMethodChange(selectElement) {
+  const selectedText = selectElement.options[selectElement.selectedIndex].text.trim().toLowerCase();
+  const referenceField = document.getElementById("referenceField");
+
+  if (selectedText === "card") {
+    referenceField.style.display = "block";
+  } else {
+    referenceField.style.display = "none";
+  }
+}
 
 
 

@@ -395,19 +395,22 @@ const generateOwnerMobile =()=>{
 }
 
 //function for print doctor record
-const printFunc =(ob, rowIndex)=>{
+const printFunc =()=>{
     console.log('print');
+    console.log("app FUNC INPUT:", appointment);
+    console.log("pay FUNC INPUT:", payment);
 
-    viewChannelingNo.innerHTML = ob.channelingno;
-    viewDate.innerHTML = ob.dateofappointment;
-    viewTime.innerHTML = ob.starttime;
-    viewDoctor.innerHTML = ob.doctor_id.fullname;
-    viewService.innerHTML = ob.service_id.name;
-    viewOwner.innerHTML = ob.owner_id.name;
-    viewPaymentNo.innerHTML = ob.paymentno;
-    viewTotal.innerHTML = ob.totalamount;
-    viewPaid.innerHTML = ob.paidamount;
-    viewBalance.innerHTML = ob.balanceamount;
+    viewService.innerHTML = appointment.service_id?.name ?? "N/A";
+    viewDate.innerHTML = appointment.dateofappointment ?? "N/A";
+    // viewTime.innerHTML = appt.starttime ?? "N/A"; // if needed
+    viewDoctor.innerHTML = appointment.doctor_id?.fullname ?? "N/A";
+    viewPet.innerHTML = appointment.pet_id?.name ?? "N/A";
+    viewOwner.innerHTML = appointment.owner_id?.name ?? "N/A";
+
+    // Payment-related details (from main object)
+    viewTotal.innerHTML = payment.totalamount ?? "0.00";
+    viewPaid.innerHTML = payment.paidamount ?? "0.00";
+    viewBalance.innerHTML = payment.balanceamount ?? "0.00";
 
 }
 

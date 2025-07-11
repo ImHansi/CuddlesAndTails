@@ -93,9 +93,12 @@ public class SuppaymentController {
            suppayment.setAddeddatetime(LocalDateTime.now());
            suppayment.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
+           //set receive note status as Received id=2
+          
+
            //set nextPaymentNo 
            String nextSupPaymentNo = SuppaymentDao.getNextSupPaymentNo();
-           if (nextSupPaymentNo.equals(null) || nextSupPaymentNo.equals("")){
+           if (nextSupPaymentNo== null || nextSupPaymentNo.equals("")){
            suppayment.setPaymentno("0000000001");
            }else{
             suppayment.setPaymentno(nextSupPaymentNo);
@@ -118,10 +121,12 @@ public class SuppaymentController {
                 paidReceive.setPaidamount(paidReceive.getPaidamount().add(newSupPayReceive.getPaidamount()));
 
                 //change receive status to received
-                if (paidReceive.getNetamount().compareTo(paidReceive.getPaidamount())== 0 ) {
+                Rnstatus receivedStatus = rnstatusDao.getReferenceById(2);
+                paidReceive.setRnstatus_id(receivedStatus);
+                /* if (paidReceive.getNetamount().compareTo(paidReceive.getPaidamount())== 0 ) {
                     Rnstatus completeStatus = rnstatusDao.getReferenceById(2);
                     paidReceive.setRnstatus_id(completeStatus);
-                }
+                } */
                 // mek dann isslla receive_id ek block krnonh infinity recursion ekk ena
                 // nisa, ek block krlm tibila hariyann naa save krgnnd ek required nisa, itim me
                 // widihata ek dala save krgnnd oni

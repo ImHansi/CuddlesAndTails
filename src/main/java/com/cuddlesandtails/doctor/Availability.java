@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,5 +46,15 @@ public class Availability {
     @JsonIgnore //ignore property to stop recursion --> to block FK of many side
     @JoinColumn(name = "doctoravailability_id",referencedColumnName = "id")
     private Doctoravailability doctoravailability_id;
+
+    //in the report when the service and date is given we have to get the doctor but bcz of the jsonignore the doctoravailability_id is not 
+    //passing in the object , thats why this code is used to get the doctors fullname
+    @JsonProperty("doctorName")
+    public String getDoctorName(){
+        if (doctoravailability_id != null && doctoravailability_id.getDoctor_id() != null){
+            return doctoravailability_id.getDoctor_id().getFullname();
+        }
+        return null;
+    }
     
 }

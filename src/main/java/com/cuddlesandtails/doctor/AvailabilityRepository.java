@@ -17,6 +17,7 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Inte
     List<Availability> doctorAvailabilityByDateAndDoctor(LocalDate date, Integer doctorid);
 
 
+    //to the report
     @Query("SELECT a FROM Availability a " +"JOIN a.doctoravailability_id da " +"JOIN da.doctor_id d " +"WHERE d.specialization_id IN (" +"  SELECT s FROM Service se JOIN se.specializations s WHERE se.id = :serviceId" +") AND a.date = :date " +"AND d.employeestatus_id.id = 1")
     List<Availability> findDoctorAvailabilityByServiceAndDate(@Param("serviceId") Integer serviceId, @Param("date") LocalDate date);
 

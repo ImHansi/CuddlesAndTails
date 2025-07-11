@@ -15,7 +15,7 @@ const refreshReportDocAvailability = () => {
     //text-> string , number, date
     //function ->object, array, boolean, create function 
     //column count == object count
-    const displayproperty = [ {dataType:'function',propertyName:getDoctor},
+    const displayproperty = [ {dataType:'text',propertyName:'doctorName'},
                               {dataType:'text',propertyName:'strat_time'},
                               {dataType:'text',propertyName:'end_time'},
     ];
@@ -27,11 +27,11 @@ const refreshReportDocAvailability = () => {
 }
 
 //create functon to get doctors
-const getDoctor=(ob)=>{
+/* const getDoctor=(ob)=>{
     console.log(ob);
     return ob.id.doctor_id.fullname;
 
-} 
+}  */
 
 //create function get record status 
 

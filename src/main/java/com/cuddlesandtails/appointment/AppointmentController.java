@@ -3,6 +3,7 @@ package com.cuddlesandtails.appointment;
 import java.time.LocalDate;
 //import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +76,7 @@ public class AppointmentController {
     }
 
     // create post mapping for save appointment record
-    @PostMapping // @RequestBody --> get request body value set in POST ajax call
+    /* @PostMapping // @RequestBody --> get request body value set in POST ajax call
     public String saveAppointment(@RequestBody Appointment appointment) {
 
         // authentication and authorization
@@ -118,6 +119,75 @@ public class AppointmentController {
             return "Save Not Completed :" + e.getMessage();
         }
     }
+ */
+
+
+ @PostMapping
+public String saveAppointment(@RequestBody Appointment appointment) {
+
+    // authentication and authorization
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "appointment");
+
+    if (!logUserPrivi.get("insert")) {
+        return "Appointment save not completed: You don't have permission";
+    }
+
+    try {
+        // Set auto-generate values
+        appointment.setAddeddatetime(LocalDateTime.now());
+        appointment.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
+
+        // Get existing appointments for the same service and date
+        List<Appointment> nextChannelingNo = new ArrayList<>();
+        if (appointment.getDoctor_id() != null) {
+            nextChannelingNo = AppointmentDao.getAppinmentByDateServiceDoctor(
+                appointment.getDateofappointment(),
+                appointment.getService_id().getId(),
+                appointment.getDoctor_id().getId()
+            );
+        } else {
+            nextChannelingNo = AppointmentDao.getAppinmentByDateService(
+                appointment.getDateofappointment(),
+                appointment.getService_id().getId()
+            );
+        }
+
+        // Set channeling number
+        appointment.setChannelingno(nextChannelingNo.size() + 1);
+        int timeMin = nextChannelingNo.size() * appointment.getService_id().getDuration();
+        int duration = appointment.getService_id().getDuration();
+
+        if (appointment.getDoctor_id() == null) {
+            // Start at 8:00 AM if no doctor
+            LocalTime baseTime = LocalTime.of(8, 0);
+            LocalTime calculatedStart = baseTime.plusMinutes(timeMin);
+            LocalTime calculatedEnd = calculatedStart.plusMinutes(duration);
+
+            // Ensure appointment does not exceed 4:00 PM
+            if (calculatedEnd.isAfter(LocalTime.of(16, 0))) {
+                return "Appointment save not completed: Appointment cannot be scheduled after 4:00 PM";
+            }
+
+            appointment.setStarttime(calculatedStart);
+            appointment.setEndtime(calculatedEnd);
+        } else {
+            // Use existing start time (from frontend) for doctor-based appointments
+            appointment.setStarttime(appointment.getStarttime().plusMinutes(timeMin));
+            appointment.setEndtime(appointment.getEndtime().plusMinutes(timeMin + duration));
+        }
+
+        AppointmentDao.save(appointment);
+        return "OK";
+
+    } catch (Exception e) {
+        return "Save not completed: " + e.getMessage();
+    }
+}
+
+
+
+
 
     @Transactional
     @DeleteMapping

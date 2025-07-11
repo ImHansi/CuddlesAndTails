@@ -647,3 +647,13 @@ const generateValidAmount = () => {
 } 
 
 
+function handlePaymentMethodChange(selectElement) {
+  const selectedText = selectElement.options[selectElement.selectedIndex].text.trim().toLowerCase();
+  const referenceField = document.getElementById("referenceField");
+
+  if (selectedText === "card") {
+    referenceField.style.display = "block";
+  } else {
+    referenceField.style.display = "none";
+  }
+}

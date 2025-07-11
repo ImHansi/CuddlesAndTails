@@ -494,8 +494,6 @@ const buttonFormSubmit = ()=>{
 
 //create function for form refresh 
 const refreshPetForm = () =>{
-
-
     pet= new Object();
     oldpet =null;
 

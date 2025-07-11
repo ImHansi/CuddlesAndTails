@@ -11,16 +11,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cuddlesandtails.order.Order;
+import com.cuddlesandtails.order.OrderRepository;
+import com.cuddlesandtails.order.OrderstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import com.cuddlesandtails.user.UserRepository;
 import com.cuddlesandtails.vaccine.Vaccine;
@@ -45,6 +46,12 @@ public class ReceiveController {
 
     @Autowired
     private RnstatusRepository rnstatusDao;
+
+    @Autowired
+    private OrderRepository orderDao;
+
+    @Autowired
+    private OrderstatusRepository orderSDao;
 
     @Autowired
     private PrivilegeController privilegeController;
@@ -97,6 +104,13 @@ public class ReceiveController {
             receive.setAddeddatetime(LocalDateTime.now());
             receive.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
             receive.setPaidamount(BigDecimal.ZERO);
+
+            //set order status as Delivered id=3
+            if (receive.getOrder_id() != null) {
+            Order order = orderDao.getReferenceById(receive.getOrder_id().getId());
+            order.setOrderstatus_id(orderSDao.getReferenceById(3));
+            orderDao.save(order);
+           }
 
             // set receive code
             String nextReceiveNo = ReceiveDao.getNextRNCode();

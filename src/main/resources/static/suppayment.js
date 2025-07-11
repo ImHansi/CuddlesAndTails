@@ -134,8 +134,8 @@ const buttonFormSubmit = ()=>{
     console.log('add payment',supplierpayment);
     console.log(window['supplierpayment']);
 
-    const paid = parseFloat(textPaidFee.value);
-    const total = parseFloat(textTotalFee.value);
+    /* const paid = parseFloat(textPaidAmount.value);
+    const total = parseFloat(textTotalAmount.value);
 
     if (isNaN(paid) || isNaN(total) || paid < total) {
         Swal.fire({
@@ -147,7 +147,7 @@ const buttonFormSubmit = ()=>{
         textBalanceFee.value = "";
         return;
     }
-
+ */
 
     const formErrors = checkPayFormError();
     if (formErrors == '') {
@@ -446,4 +446,15 @@ const generateValidAmount = () => {
         textBalanceFee.style.border = "3px solid red";
         
     }
+}
+
+function handlePaymentMethodChange(selectElement) {
+  const selectedText = selectElement.options[selectElement.selectedIndex].text.trim().toLowerCase();
+  const referenceField = document.getElementById("referenceField");
+
+  if (selectedText === "card") {
+    referenceField.style.display = "block";
+  } else {
+    referenceField.style.display = "none";
+  }
 }

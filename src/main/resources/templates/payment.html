@@ -87,7 +87,7 @@
     </div>
   </div>
 
-  <!-- employee add model -->
+  <!-- payment add model -->
   <div class="modal" id="paymentAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -175,7 +175,7 @@
                           </span>
 
                           <select name="method" required id="selectMethod"
-                              class="form-select form-input" onchange="selectDValidator(this,'','payment','paymentmethod_id')">
+                              class="form-select form-input" onchange="handlePaymentMethodChange(this); selectDValidator(this,'','payment','paymentmethod_id')">
                               
                               <option value="" selected disabled>
                                 Select payment method
@@ -210,6 +210,14 @@
                           <input type="text" class="form-control" id="textBalanceFee" placeholder="Balance Amount" readonly required >
                       </div>
                       </div>
+                     </div>
+
+                     <!-- Reference Number Field (Hidden Initially) -->
+                     <div class="row mt-2" id="referenceField" style="display: none;">
+                       <div class="col-4">
+                         <label for="referenceNo" class="col-form-label fw-bold">Card Reference Number:</label>
+                         <input type="text" id="referenceNo" name="referenceNo" class="form-control" placeholder="Enter reference number" onkeyup="textValidator(this, '', 'payment','referenceno')">
+                       </div>
                      </div>
 
 

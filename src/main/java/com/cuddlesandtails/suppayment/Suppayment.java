@@ -46,9 +46,9 @@ public class Suppayment {
     @NotNull
     private BigDecimal totalamount;
 
-    @Column(name = "paidamaount")
+    @Column(name = "paidamount")
     @NotNull
-    private BigDecimal paidamaount;
+    private BigDecimal paidamount;
 
     @Column(name = "balanceamount")
     @NotNull
@@ -59,9 +59,9 @@ public class Suppayment {
     
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
-    
-    @Column(name = "paymentm")
-    private String paymentm; 
+
+    @Column(name ="referenceno")
+    private String referenceno;
 
     @Column(name = "chequeno")
     private String chequeno;

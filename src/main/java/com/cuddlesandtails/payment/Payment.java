@@ -59,6 +59,10 @@ public class Payment {
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
+
+    @Column(name ="referenceno")
+    private String referenceno;
+    
 /* 
     @Column(name = "vaccinationfee")
     private BigDecimal vaccinationfee; */

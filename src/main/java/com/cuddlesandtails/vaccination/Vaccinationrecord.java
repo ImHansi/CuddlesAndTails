@@ -107,6 +107,9 @@ public class Vaccinationrecord {
     @NotNull
     private BigDecimal balanceamount;
 
+    @Column(name ="referenceno")
+    private String referenceno;
+
     @ManyToOne
     @JoinColumn(name = "paymentmethod_id",referencedColumnName = "id")
     private Paymentmethod paymentmethod_id;

@@ -32,6 +32,8 @@ window.addEventListener('load', () => {
       datasets: [{
         label: 'Number of vaccinations',
         data: [],
+        backgroundColor: 'rgba(31, 102, 86, 0.79)',
+        borderColor: 'rgb(27, 109, 106)',
         borderWidth: 1
       }]
     },
