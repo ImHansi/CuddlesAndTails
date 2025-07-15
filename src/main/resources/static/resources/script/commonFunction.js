@@ -203,6 +203,35 @@ const fillDataIntoSelectNewTwo = (feildId, message, dataList, property, property
     });
 }
 
+//filldataintoselect with nested value properties like owner_id.name and to set 3 properties
+const fillDataIntoSelectNewFour = (feildId, message, dataList, property, propertyTwo,propertyThree,propertyFour, selectedValue) => {
+    feildId.innerHTML = '';
+
+    const optionMsg = document.createElement("option");
+    optionMsg.innerText = message;
+    optionMsg.selected = true;
+    optionMsg.disabled = true;
+    feildId.appendChild(optionMsg);
+
+    dataList.forEach(element => {
+        const option = document.createElement('option');
+
+        const value1 = getNestedValue(element, property);
+        const value2 = getNestedValue(element, propertyTwo);
+        const value3 = getNestedValue(element, propertyThree);
+        const value4 = getNestedValue(element, propertyFour);
+
+        option.innerText = value1 + " - " + value2 + " - " + value3 + " - " + value4;
+        option.value = JSON.stringify(element);
+
+        if (selectedValue == value1) {
+            option.selected = true;
+        }
+
+        feildId.appendChild(option);
+    });
+}
+
 //with filldataintoselectnewtwo Helper function to safely access nested values like 'owner_id.name'
 function getNestedValue(obj, path) {
     return path.split('.').reduce((o, key) => (o ? o[key] : 'N/A'), obj) || 'N/A';
@@ -235,3 +264,35 @@ const buttonClearImage = (ob) => {
         }
     }
 }
+
+
+//function to use when the select have null values
+const fillDataIntoSelectforUser = (feildId, message, dataList, property, selectedValue) => {
+    feildId.innerHTML = "";
+
+    if (message !== "") {
+        const optionMsgES = document.createElement('option');
+        optionMsgES.innerText = message;
+        optionMsgES.selected = true;
+        optionMsgES.disabled = true;
+
+        feildId.appendChild(optionMsgES);
+    }
+
+    dataList.forEach(element => {
+        // Skip null or malformed entries
+        if (!element || !element.hasOwnProperty(property)) {
+            return;
+        }
+
+        const option = document.createElement('option');
+        option.innerText = element[property];
+        option.value = JSON.stringify(element);
+
+        if (selectedValue === element[property]) {
+            option.selected = true;
+        }
+
+        feildId.appendChild(option);
+    });
+};

@@ -36,22 +36,6 @@ const refreshUserTable = () => {
   user = [];
   users = ajaxRequestHere("/user/showallusers");
 
-  //call jQuery ajax function
-  //ajax("URL" , {})
-  $.ajax("/user/showallusers", {
-    type: "GET",
-    contentType: "application/json",
-    async: false,
-    success: function (data) {
-      console.log("Success" + data);
-      users = data;
-    },
-    error: function (resData) {
-      console.log("Fail" + resData);
-      user = [];
-    },
-  });
-
   const displayPropertyList = [
     { dataType: "text", propertyName: "username" },
     { dataType: "text", propertyName: "email" },
@@ -115,78 +99,69 @@ const getUserStatus = (ob) => {
 
 //create refill function
 const refillUserForm = (ob, rowInd) => {
-  
-  //define user and old user object
-  //used JSON.parse stringify to convert them into string and to identify the difference
+  // Define user and old user object for comparison
   user = JSON.parse(JSON.stringify(ob));
   olduser = JSON.parse(JSON.stringify(ob));
 
-  //open user modal
+  // Open user modal
   $('#userAddModal').modal('show');
 
-  //console.log(user)
-
-  //focus form
-
-  //get data list for fill dynamic select element
+  // Get employee list and append current user’s employee (if exists)
   employeeListWithoutUserAccount = ajaxRequestHere("/employee/listwithoutuseraccount");
-  employeeListWithoutUserAccount.push(user.employee_id);
-  fillDataIntoSelect(selectEmployee,'Select Employee',employeeListWithoutUserAccount,'fullname',user.employee_id.fullname);
+  if (user.employee_id) {
+    employeeListWithoutUserAccount.push(user.employee_id);
+  }
+  fillDataIntoSelectforUser(selectEmployee,'Select Employee',employeeListWithoutUserAccount,'fullname',user.employee_id ? user.employee_id.fullname : null);
 
-  console.log(employeeListWithoutUserAccount);
-  
+  // Get doctor list and append current user’s doctor (if exists)
+  doctorListWithoutUserAccount = ajaxRequestHere("/doctor/doctorlistwithoutuseraccount");
+  if (user.doctor_id) {
+    doctorListWithoutUserAccount.push(user.doctor_id);
+  }
+  fillDataIntoSelectforUser(selectDoctor,'Select Doctor',doctorListWithoutUserAccount,'fullname',user.doctor_id ? user.doctor_id.fullname : null);
+
   selectEmployee.disabled = true;
+  selectDoctor.disabled = true;
 
-  //get role list for generate roles
+  // Load role list and render role checkboxes
   roleList = ajaxRequestHere("/role/getRoleListWithoutAdmin");
-  console.log("roleList", roleList)
   rolesDiv.innerHTML = "";
-  rolesDiv.innerHTML ='<label class="col-4 col-form-label fw-bold text-start"> Role : <span class="text-danger">*</span></label>';
+  rolesDiv.innerHTML = '<label class="col-4 col-form-label fw-bold text-start"> Role : <span class="text-danger">*</span></label>';
 
-  const rolesContainer = document.createElement('div')
-  rolesContainer.className = "d-flex flex-wrap"
-  roleList.forEach((element) => {
-    let div = document.createElement("div");
+  roleList.forEach(element => {
+    let div = document.createElement('div');
     div.className = "form-check form-check-inline";
-    let input = document.createElement("input");
-    input.classList.add("form-check-input");
-    input.type = "radio";
-    input.name = "role";
-    input.id = `radioRole-${element.name}`;
-    let label = document.createElement("label");
-    label.classList.add("form-check-label");
+
+    let input = document.createElement('input');
+    input.classList.add('form-check-input');
+    input.type = "checkbox";
+
+    let label = document.createElement('label');
+    label.classList.add('form-check-label');
     label.innerText = element.name;
 
-    /*input.onchange = function () {
+    input.onchange = function () {
       if (this.checked) {
         user.roles.push(element);
       } else {
-        //----------------------
-        //user.roles.pop(element);
-
-        //map() -->
-        //splice() -->
-        let extIndex = user.roles.map((role) => role.id).indexOf(element.id);
-        if (extIndex != -1) {
+        let extIndex = user.roles.map(role => role.id).indexOf(element.id);
+        if (extIndex !== -1) {
           user.roles.splice(extIndex, 1);
         }
       }
-    };*/
+    };
 
-    //to check the checkboxes 
-    //let extIndex = user.roles.map((role) => role.id).indexOf(element.id);
-    //if (extIndex != -1) {
-    //  input.checked = true;
-    //}
+    let extIndex = user.roles.map(role => role.id).indexOf(element.id);
+    if (extIndex !== -1) {
+      input.checked = true;
+    }
 
     div.appendChild(input);
     div.appendChild(label);
-
     rolesDiv.appendChild(div);
   });
 
-  rolesDiv.appendChild(rolesContainer);
-
+  // Set status
   if (user.status) {
     checkStatus.checked = true;
     checklblStatus.innerText = "User Account is Active";
@@ -195,32 +170,30 @@ const refillUserForm = (ob, rowInd) => {
     checklblStatus.innerText = "User Account is NOT Active";
   }
 
-  //set value into ui element
-  //elementId.value = object.property
+  // Set values into form fields
   textUsername.value = user.username;
   textPassword.value = user.password;
   textRePassword.value = user.password;
   textEmail.value = user.email;
 
+  // Privilege-based button enabling
+  if (userPrivilege.update) {
+    btnUserUpdate.disabled = false;
+    $("#btnUserUpdate").css("cursor", "pointer");
+  } else {
+    btnUserUpdate.disabled = true;
+    $("#btnUserUpdate").css("cursor", "not-allowed");
+  }
 
+  // Update button always enabled after privilege check
+  btnUserUpdate.disabled = false;
+  $("#btnUserUpdate").css("cursor", "pointer");
 
-    if (userPrivilege.update) {
-        btnUserUpdate.disabled = "";
-        $("#btnUserUpdate").css("cursor","pointer");
-    } else {
-      btnUserUpdate.disabled = "disabled";
-        $("#btnUserUpdate").css("cursor","not-allowed");
-    }
-    //update button
-    btnUserUpdate.disabled = "";
-    //btnUserUpdate.style.cursor ="not-allowed";
-    //jquery
-    $("#btnUserUpdate").css("cursor","pointer");
-    
-    //add button
-    btnUserAdd.disabled="disabled";
-    $("#btnUserAdd").css("cursor","not-allowed");
+  // Disable Add button
+  btnUserAdd.disabled = true;
+  $("#btnUserAdd").css("cursor", "not-allowed");
 };
+
 
 //define function for delete user account
 const deleteUser = (ob,rowInd) => {
@@ -277,7 +250,59 @@ const refreshUserForm = () => {
   rolesDiv.innerHTML = "";
   rolesDiv.innerHTML ='<label class="col-4 col-form-label fw-bold text-start"> Role : <span class="text-danger">*</span></label>';
 
-  const rolesContainer = document.createElement('div')
+
+  //role list ek piliwelata check box wlt gnnw foreach ekkin
+    roleList.forEach(element => {
+        //div tag ekk create krgen inno
+        let div = document.createElement('div');
+        //check box tikat class ekk dala thani line eke ena widihata hdgnnw
+        div.className = "form-check form-check-inline";
+        //input tag ekk hdnw
+        let input = document.createElement('input');
+        //methana ek checkbox ekk withrak nwi list ekkm enonh ek nisa tmi classlist ekk dagen add krgnn
+        input.classList.add('form-check-input');
+        //checkbox ek argnnw 
+        input.type = "checkbox";
+        //checkbox ekt label ek dagannw
+        let label = document.createElement('label');
+        label.classList.add('form-check-label');
+        //checkbox eke label ekt db eken nama(roleList array eke elemnt eke tiyen name ek) dagannw
+        label.innerText = element.name;
+
+        //select krn ewa array ekt dagann widiha----------------------------------------------------------------???????????
+        input.onchange = function () {
+            if (this.checked) {
+                user.roles.push(element);
+            } else {
+                //user.roles.pop(element); <-- meka welawkt hariyann naa waradi ek tmi pop wenn welawkt(pop karanna wenne anthimata enter wuna item eka misak apita one eka neme wenna puluwan,,e nisa index walin yanawa)
+                //ek nisa e wenuwata map eken me wade krgnn puluwn 
+                //map() --> ek element ekk tiyen id ek illganno 
+                //splice() --> dena index ekata adala element ek remove krno
+                let extIndex = user.roles.map(role => role.id).indexOf(element.id);
+                if (extIndex != -1) {
+                    user.roles.splice(extIndex, 1);
+                }
+            }
+        }
+
+        //uda hagaththa ewa piliwelata append krgen yano
+        div.appendChild(input);
+        div.appendChild(label);
+
+        rolesDiv.appendChild(div);
+
+        if (userPrivilege.insert) {
+            btnUserAdd.disabled = "";
+        } else {
+            btnUserAdd.disabled = "disabled"
+        }
+
+    });
+
+
+
+
+  /* const rolesContainer = document.createElement('div')
   rolesContainer.className = "d-flex flex-wrap"
   roleList.forEach((element) => {
     let div = document.createElement("div");
@@ -312,9 +337,9 @@ const refreshUserForm = () => {
     div.appendChild(label);
 
    rolesContainer.appendChild(div)
-  });
+  }); */
 
-  rolesDiv.appendChild(rolesContainer);
+  //rolesDiv.appendChild(rolesContainer);
 
   //checkbox set check false
   user.status = false;
@@ -330,7 +355,7 @@ const refreshUserForm = () => {
   textEmail.style.border='1px solid #ced4da';
   
   //radio button set check false
-  radioRole.checked=false;
+  //radioRole.checked=false;
 
   //update button
   btnUserUpdate.disabled = "disabled";
@@ -403,9 +428,9 @@ const checkUserFormError = () => {
 };
 
 //add function
-function add(param){
+/* function add(param){
   refreshUserTable();
-}
+} */
 
 //create function for submit user form
 const userAdd = () => {
@@ -443,10 +468,7 @@ const userAdd = () => {
 //create function for check form updates
 const checkFormUpdate = () => {
   let updates = "";
-
-  if (user.employee_id.fullname != olduser.employee_id.fullname) {
-    updates = updates + "Employee has changed \n";
-  }
+  
   if (user.username != olduser.username) {
     updates = updates + "Username has changed \n";
   }
@@ -534,6 +556,6 @@ const printUser = () => {
   console.log("print");
 };
 
-const editUser=(ob)=>{
+/* const editUser=(ob)=>{
   refillUserForm();
-}
+} */

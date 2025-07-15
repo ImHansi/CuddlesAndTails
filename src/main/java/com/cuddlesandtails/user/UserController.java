@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.cuddlesandtails.privilege.PrivilegeController;
 
+import jakarta.transaction.Transactional;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -77,7 +78,8 @@ public class UserController {
        // return EmployeeDao.getListBywithoutUserAccount();
     //}
 
-    @DeleteMapping(value = "/user")
+    @Transactional
+    @DeleteMapping
     public String deleteUser(@RequestBody User user){
         //authentication and authorization
         // get logged user authentication object
@@ -156,8 +158,40 @@ public class UserController {
     }
 
 
-    @PutMapping("/user")
-    public String userUpdate(@PathVariable String id, @RequestBody User user) {
+    @Transactional
+    @PutMapping
+    public String userUpdate(@RequestBody User user) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "user");
+    
+        if (!logUserPrivi.get("update")) {
+            return "Update not Completed... :you don't have permission..!";
+        }
+    
+        try {
+            User extUser = dao.getReferenceById(user.getId());
+            if (extUser == null) {
+                return "Update not Completed: User does not exist!";
+            }
+    
+            // Detect if the password was changed by comparing raw vs hashed
+            if (!user.getPassword().equals(extUser.getPassword())) {
+                // Assume it's in raw form and needs encoding
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            } else {
+                // If unchanged (user re-sent encrypted password), just keep original
+                user.setPassword(extUser.getPassword());
+            }
+    
+            dao.save(user);
+            return "OK";
+    
+        } catch (Exception e) {
+            return "Update not completed: " + e.getMessage();
+        }
+    }
+
+    /* public String userUpdate(@RequestBody User user) {
         // authentication and authorization
         // get logged user authentication object
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -173,9 +207,13 @@ public class UserController {
             return "Update not Completed: User does not exist !";
         } else {
             if (bCryptPasswordEncoder.matches(user.getPassword(), extUser.getPassword())) {
-                return "Update not completed : password is already existing !";
+                //return "Update not completed : password is already existing !";
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            } else {
+                user.setPassword(extUser.getPassword()); // keep the same
             }
         }
+        
         try {
             dao.save(user);
             return "OK";
@@ -184,8 +222,15 @@ public class UserController {
         }
 
     }
-
-    //to get added user id in print option
+ */
+    
+ 
+ 
+ 
+ 
+ 
+ 
+ //to get added user id in print option
     @GetMapping(value = "/byid/{userid}", produces = "application/json")
     public User getUserById(@PathVariable("userid") int userid){
         return dao.getUserNameById(userid);

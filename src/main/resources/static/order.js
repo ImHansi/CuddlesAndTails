@@ -269,13 +269,69 @@ const deleteFunc =(ob,rowIndex)=>{
 
 //function for view employee record
 const printFunc =(ob, rowIndex)=>{
+
+    $('#orderViewModal').modal('show');
+
+    viewSupplier.innerHTML = ob.supplier_id.name;
+    vieworderCode.innerHTML = ob.ordercode;
+    viewRequireDate.innerHTML = ob.requiredate;
+    viewTotal.innerHTML = ob.totalamount;
+    viewAddDateTime.innerHTML = ob.addeddatetime.split("T")[0] + " " + ob.addeddatetime.split("T")[1];;
+    viewStatus.innerHTML = ob.orderstatus_id.name;
+
+    //refresh table area
+    let displayPropertyList = [
+        { dataType: "function", propertyName: getVaccineName },
+        { dataType: "function", propertyName: getVaccinePrice },
+        { dataType: "function", propertyName: getVaccineQty },
+        { dataType: "function", propertyName: getLineprice },
+    ];
+    fillDataIntoInnerTable(tableOrderInner, ob.orderhasvaccinesList, displayPropertyList, deleteInnerForm, false);
+
     
 }
 
 //function for print
-function printpage() { 
-    window.print(); 
-}
+const btnPrintRow = () => {
+    console.log("print");
+
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#orderViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Order Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Order Details</h2>
+            ${printContent}
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //create function for check error
 const checkOrderFormError =() =>{
@@ -480,7 +536,8 @@ const getVaccinePrice = (innerOb) => {
 }
 
 const getVaccineQty = (innerOb) => {
-    return parseFloat(innerOb.quantity).toFixed(3);
+    //return parseFloat(innerOb.quantity).toFixed(3);
+    return parseFloat(innerOb.quantity);
 }
 
 const getLineprice = (innerOb) => {

@@ -1,5 +1,6 @@
 package com.cuddlesandtails.payment;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,15 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cuddlesandtails.user.UserRepository;
-//import com.cuddlesandtails.vaccination.Vaccinationrecord;
-//import com.cuddlesandtails.vaccination.VaccinationrecordRepository;
 import com.cuddlesandtails.appointment.Appointment;
 import com.cuddlesandtails.appointment.AppointmentRepository;
 import com.cuddlesandtails.appointment.AppointmentstatusRepository;
-//import com.cuddlesandtails.appointment.RecordstatusRepository;
-//import com.cuddlesandtails.appointment.RecordstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping(value= "/payment")
@@ -144,5 +143,12 @@ public class PaymentController {
     }
 
 
+
+    //for the report daily pyaments
+    @GetMapping("/dailypayments")
+    public List<Payment> getDailypayments(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    return PaymentDao.findDailyPayments(date);
+
+    }
 
 }

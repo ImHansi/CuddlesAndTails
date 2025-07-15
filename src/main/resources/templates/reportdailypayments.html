@@ -4,7 +4,7 @@
     <head th:replace="~{ head :: headFragment}"></head>
 
     <!--link employee.js-->
-    <script src="reportdocavailability.js"></script>
+    <script src="reportdailypayments.js"></script>
 
     
   </head>
@@ -23,7 +23,7 @@
     <div class="row p-3" style="margin-top: 40px;">
       <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
         <i class="fa-solid fa-user-tie fa-2x"></i>
-        <h2 class="h2 ms-3">Doctor Availability Report</h2>
+        <h2 class="h2 ms-3">Daily Payment Report</h2>
       </div>
     </div>
     <!-- title area ends here -->
@@ -32,32 +32,31 @@
       <div class="col-4"></div>
       <div class="col-4">
         
-          <!-- date of appointment starts here -->
+          <!-- date starts here -->
           <div class="col">
             <div>
-              <label for="dateOfAppointment" class="col-form-label fw-bold">
-                Date of Appointment : <span class="text-danger">*</span>
+              <label for="reportDate" class="col-form-label fw-bold">
+                Date : <span class="text-danger">*</span>
               </label>
             </div>
             <div>
-              <input type="date" class="form-control" required id="dateOfAppointment"/>
+              <input type="date" class="form-control" required id="reportDate"/>
             </div>
           </div>
-          <!-- date of appointment ends here -->
-           <!--service starts here-->
+          <!-- date ends here -->
+           <!--total starts here-->
            <div class="col">
             <div>
-              <label for="selectService" class="col-form-label fw-bold">
-                Select a Service : <span class="text-danger">*</span>
+              <label for="textTotalFee" class="col-form-label fw-bold">
+                Total Amount : <span class="text-danger">*</span>
               </label>
             </div>
-            <div>
-              <select name="service" required id="selectService" class="form-select form-input">
-                <option value="" selected disabled>Select A Service</option>  
-              </select>
+            <div class="input-group">
+                <span class="input-group-text fw-bold">Rs :</span>
+                <input type="text" class="form-control" id="textTotalFee" placeholder="Total Fee" readonly>    
             </div>
            </div>
-           <!--service ends here-->
+           <!--total ends here-->
            <div class="col">
             <button type="button" class="btn btn-primary" style="margin-left: 250px; margin-top: 20px;" onclick="generateReport()">Generate</button>
           </div>
@@ -72,15 +71,16 @@
   <div class="col-2"></div>
   <div class="col-8">
 
-    <table class="table table-hover table-bordered table-striped border-primary" id="tableReportDocAvailability">
+    <table class="table table-hover table-bordered table-striped border-primary" id="tableReportDailyPayments">
     <thead class="table-header">
       <tr>
         <th>#</th>
         <!-- #,No,Index -->
-        <th>Doctor Name</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>No of Appointments</th>
+        <th>Payment No</th>
+        <th>Owner</th>
+        <th>Total Amount</th>
+        <th>Paid Amount</th>
+        <th>Balance Amount</th>
       </tr>
     </thead>
     <tbody class="table-light">

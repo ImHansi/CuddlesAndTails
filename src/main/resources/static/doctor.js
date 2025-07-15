@@ -120,6 +120,7 @@ const getDoctorSpecialization=(ob)=>{
 }
 
 const getHasUserAccount=(ob)=>{
+    console.log("hey",ob);
 
     if(ob.hasUserAccount){
         return '<i class="fa-solid fa-circle-check fa-2x text-success"></i>';
@@ -446,6 +447,7 @@ function printpage() {
         <html>
             <head>
                 <title>Print Modal</title>
+                <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
                 <style>
                     body { font-family: Arial, sans-serif; padding: 20px; }
                 </style>

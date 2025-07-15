@@ -168,7 +168,8 @@ const petFormRefill =(ob,rowIndex)=>{
 
     //to get owners
     owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',pet.owner_id.name);
+    //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',pet.owner_id.name);
+    fillDataIntoDataList(ownerList,owners,'name',pet.owner_id.name);
 
 
     //to get breeds
@@ -375,10 +376,70 @@ const deleteFunc =(ob,rowIndex)=>{
 
 
 //function for print pet record
-const printFunc =(ob, rowIndex)=>{
+const printFunc =(rowOb, rowIndex)=>{
     console.log('print');
+     $('#petViewModal').modal('show');
+
+    viewTagNo.innerHTML = rowOb.tagno;
+    viewName.innerHTML = rowOb.name;
+    viewAge.innerHTML = rowOb.age;
+    viewWeight.innerHTML = rowOb.weight;
+    viewGender.innerHTML = rowOb.gender;
+    viewOwner.innerHTML = rowOb.owner_id.name;
+    viewPettype.innerHTML = rowOb.pettype_id.name;
+    viewBreed.innerHTML = rowOb.breed_id.name;
+
+    // Display image if available
+    if (rowOb.image) {
+        // Assuming the image is stored as Base64 string without prefix
+        viewImage.src = "data:image/jpeg;base64," + rowOb.image;
+    } else {
+        // Default image if not present
+        viewImage.src = "/resources/images/dog1.png";
+    }
 
 }
+
+const btnPrintPet = () => {
+    console.log("print");
+
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#petViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Pet Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Pet Details</h2>
+            ${printContent}
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //add function
 function add(param){
@@ -674,7 +735,8 @@ const dataListValidator = (element, objectName, property) => {
 
     if (matchedObj) {
         element.style.border = "4px solid green";
-        window[objectName][property] = { id: matchedObj.id };
+        window[objectName][property] = matchedObj;
+        //window[objectName][property] = { id: matchedObj.id };
     } else {
         element.style.border = "4px solid red";
         window[objectName][property] = null;

@@ -17,6 +17,11 @@
       });
      });
    </script>
+   <style>
+      @media print {
+        .btn, .modal-footer { display: none !important; }
+      }
+    </style>
   
   </head>
 
@@ -112,10 +117,10 @@
                     <!-- required mark -->
                      <!--  appointment starts here-->
                      <div class="row mt-2">
-                      <div class="col-6">
+                      <div class="col-8">
                         <div>
                           <label for="selectAppNo" class="col-form-label fw-bold">
-                            Channeling No + Owner : <span class="text-danger"></span>
+                            Channeling No + Owner + Service + Pet: <span class="text-danger"></span>
                           </label>
                         </div>
                         <div class="input-group">
@@ -134,7 +139,7 @@
                       </div>
                       <!-- appointment fee ends here -->
                       <!-- appointment fee starts here -->
-                    <div class="col-6">
+                    <div class="col-4">
                     <div>
                         <label for="textTotalFee" class="col-form-label fw-bold">
                             Appointment Fee : <span class="text-danger"></span>
@@ -282,28 +287,32 @@
 
                         <tr>
                             <th>Channeling No : </th>
-                            <td id="viewAppointmentNo" colspan="2"></td>
-
-                            <th>Appointment Date : </th>
-                            <td id="viewDate" colspan="2"></td>
+                            <th id="viewAppointmentNo" colspan="2"></th>
                         </tr>
                         <tr>
                             <th>Doctor : </th>
                             <td id="viewDoctor" colspan="2"></td>
 
-                            <th>Time: </th>
-                            <td id="viewTime" colspan="2"></td>
+                            <th>Service: </th>
+                            <td id="viewService" colspan="2"></td>
                         </tr>
                         <tr>
                             <th>Owner : </th>
                             <td id="viewOwner" colspan="2"></td>
 
-                            <th>Service: </th>
-                            <td id="viewService" colspan="2"></td>
+                            <th>Pet: </th>
+                            <td id="viewPet" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Appointment Date : </th>
+                            <td id="viewDate" colspan="2"></td>
+
+                            <th>Time: </th>
+                            <td id="viewTime" colspan="2"></td>
                         </tr>
                         <tr>
                             <th>Added Date, Time :</th>
-                            <th id="viewAddedDate"></th>
+                            <td id="viewAddedDate"></td>
                         </tr>
                         <tr>
                             <th>Total</th>
@@ -321,7 +330,7 @@
                     </table>
 
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+                <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
               </div>
 
               </div>

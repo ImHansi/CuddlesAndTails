@@ -45,9 +45,6 @@
     <div class="row mt-2">
       <div class="col-1"></div>
       <div class="col-10 text-end">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stockAddModal">
-          Add New Stock
-        </button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#vaccineAddModal">
           Add New Vaccine
         </button>
@@ -192,7 +189,7 @@
                     <div class="col-4">
                         <div>
                             <label for="textduration" class="col-form-label fw-bold">
-                                Duration : <span class="text-danger">*</span>
+                                Duration (Weeks): <span class="text-danger">*</span>
                             </label>
                         </div>
                         <div class="input-group">
@@ -290,7 +287,7 @@
                     <th id="viewSalesPrice"></th>
                   </tr>
                   <tr>
-                    <th>Duration</th>
+                    <th>Duration (Weeks)</th>
                     <th id="viewDuration"></th>
                   </tr>
                   <tr>
@@ -301,7 +298,7 @@
               </table>
 
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+                <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
               </div>
 
               </div>

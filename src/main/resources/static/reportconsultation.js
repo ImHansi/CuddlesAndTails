@@ -33,7 +33,8 @@ const refreshConsultationReportTable = () => {
 
 //create function get Doctor
 const getDoctor = (ob) => {
-    return ob.doctor_id.fullname;
+    //return ob.doctor_id.fullname;
+    return ob.doctor_id ? ob.doctor_id.fullname : "N/A";
 }
 
 const getService = (ob) => {

@@ -360,6 +360,87 @@
       </div>
     </div>
   </div>
+
+
+  <!--order view modal starts here-->
+  <div class="modal" id="orderViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">View Order Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body div-form">
+                    <div class="row">
+                      <div class="col-4"></div>
+                      <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+                      <div class="col-4"></div>
+                    </div>
+
+                    <table id="printTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <td><b>Contact:</b> <br></td>
+                            <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
+                            <td><b>Address :</b></td>
+                            <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                        </tr>
+
+                        <tr>
+                            <th>Order Code : </th>
+                            <td id="vieworderCode" colspan="2"></td>
+
+                            <th>Require Date : </th>
+                            <td id="viewRequireDate" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Order Status: </th>
+                            <td id="viewStatus" colspan="2"></td>
+
+                            <th>Supplier: </th>
+                            <td id="viewSupplier" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <th>Added Date</th>
+                          <td id="viewAddDateTime"></td>
+                        </tr>
+                        <tr>
+                          <th>Total Amount</th>
+                          <td id="viewTotal"></td>
+                        </tr>
+                        
+
+                        <tr>
+                            <th colspan="5">Vaccine Details</th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="5">
+                                <table class="table table-hover table-striped table-bordered"
+                                    id="tableOrderInner">
+                                    <thead class="table-warning">
+
+                                        <!-- # no index -->
+                                        <th> # </th>
+                                        <th>Vaccine</th>
+                                        <th>Unit Price</th>
+                                        <th>Quantity</th>
+                                        <th>Line Price</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
+                </div>
+            </div>
+        </div>
+    </div>
   
 </body>
 

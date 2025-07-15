@@ -1,8 +1,13 @@
 package com.cuddlesandtails.payment;
 
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 
 
 
@@ -21,6 +26,11 @@ public interface PaymentRepository extends JpaRepository<Payment , Integer>{
 
     // @Query(value = "select v.vaccino from Vaccinationrecord v where v.id=:vaccinationrecord_id")
     // public String getVaccineNoByVaccinationrecordId(@Param("vaccinationrecord_id") Integer vaccinationrecord_id);
+
+    //to the report daily payments
+    @Query("SELECT p FROM Payment p WHERE DATE(p.addeddatetime) = :date")
+    List<Payment> findDailyPayments(@Param("date") LocalDate date);
+
 
     
 }

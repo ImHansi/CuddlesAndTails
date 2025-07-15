@@ -164,7 +164,7 @@ const buttonAnnouncementUpdate = ()=>{
     console.log(oldannouncement);
 
    //2) check form errors
-   let errors = checkAnnouncementFormError();
+   let errors = checkAnnounceFormError();
    if (errors == "") {
        //3) check what we have to update
        let updates = checkFormUpdate();
@@ -273,10 +273,67 @@ const deleteFunc =(ob,rowIndex)=>{
 
 
 //function for print announcement record
-const printFunc =(ob, rowIndex)=>{
-    console.log('print');
+const printFunc = (rowOb, rowIndex)=>{
+    //open view details
+    $('#announcementViewModal').modal('show');
 
+    viewTitle.innerHTML = rowOb.title;
+    viewDescription.innerHTML = rowOb.description;
+    viewPublicationDate.innerHTML = rowOb.dateofpublication;
+    viewEventDate.innerHTML = rowOb.dateofevent;
+    viewStartTime.innerHTML = rowOb.starttime;
+    viewEndTime.innerHTML = rowOb.endtime;
+
+    // Display image if available
+    if (rowOb.image) {
+        // Assuming the image is stored as Base64 string without prefix
+        viewImage.src = "data:image/jpeg;base64," + rowOb.image;
+    } else {
+        // Default image if not present
+        viewImage.src = "/resources/images/petadoptevent.png";
+    }
 }
+
+const btnPrintRow = () => {
+    console.log("print");
+
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#announcementViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Announcement Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Announcement Details</h2>
+            ${printContent}
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //add function
 function add(param){
@@ -408,3 +465,13 @@ const refreshAnnouncementForm = () =>{
         $("#btnAnnounceAdd").css("cursor","not-allowed");
     }
 }
+
+
+// "Clear Image" button
+    const clearBtn = document.querySelector(".btn btn-info");
+    if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+            previewUserImage.src = "/resources/images/user2.jpg";
+            loggedUser.image = null;
+        });
+    }

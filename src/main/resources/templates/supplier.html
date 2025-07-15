@@ -397,6 +397,95 @@
   </div>
   <!--Supplier form ends-->
 
+
+  <!--supplier view modal starts here-->
+  <div class="modal" id="supplierViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">View Supplier Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body div-form">
+                    <div class="row">
+                      <div class="col-4"></div>
+                      <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+                      <div class="col-4"></div>
+                    </div>
+
+                    <table id="printTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <th>Supplier No : </th>
+                            <td id="viewSupplierNo" colspan="2"></td>
+
+                            <th>name : </th>
+                            <td id="viewSupplierName" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Mobile : </th>
+                            <td id="viewMobile" colspan="2"></td>
+
+                            <th>Address : </th>
+                            <td id="viewAddress" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Email : </th>
+                            <td id="viewEmail" colspan="2"></td>
+
+                            <th>Land No : </th>
+                            <td id="viewLandNo" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Note : </th>
+                            <td id="viewNote" colspan="2"></td>
+
+                            <th>Contact Person Name : </th>
+                            <td id="viewContactPerson" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Account Name : </th>
+                            <td id="viewAccName" colspan="2"></td>
+
+                            <th>Account No : </th>
+                            <td id="viewAccNo" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Bank Name : </th>
+                            <td id="viewBankName" colspan="2"></td>
+
+                            <th>Branch Town : </th>
+                            <td id="viewBranchTown" colspan="2"></td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="5">Vaccine Details</th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="5">
+                                <table class="table table-hover table-striped table-bordered"
+                                    id="tableSupplierInner">
+                                    <thead class="table-warning">
+
+                                        <!-- # no index -->
+                                        <th> # </th>
+                                        <th>Vaccine</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
+                </div>
+            </div>
+        </div>
+    </div>
   
 </body>
 </html>

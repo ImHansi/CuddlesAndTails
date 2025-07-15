@@ -63,6 +63,13 @@ public class OwnerController {
             
         }
 
+        Owner extOwnerMobile = dao.getOwnerByMobile(owner.getMobile());
+        if (extOwnerMobile != null) {
+
+            return "Save not completed :Mobile is already existing..!";
+            
+        }
+
         try{
             //set auto generate values
             //set added date time

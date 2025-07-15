@@ -305,6 +305,27 @@ const deleteFunc =(ob,rowIndex)=>{
 //function for print supplier record
 const printFunc =(ob, rowIndex)=>{
     console.log('print');
+    $('#supplierViewModal').modal('show');
+
+    viewSupplierNo.innerHTML = ob.supplier_no;
+    viewSupplierName.innerHTML = ob.name;
+    viewMobile.innerHTML = ob.mobile;
+    viewAddress.innerHTML = ob.address;
+    viewEmail.innerHTML = ob.email;
+    viewLandNo.innerHTML = ob.landno;
+    viewNote.innerHTML = ob.note;
+    viewContactPerson.innerHTML = ob.contactpersonname;
+    viewAccName.innerHTML = ob.supplierbankname;
+    viewAccNo.innerHTML = ob.bankaccountno;
+    viewBankName.innerHTML = ob.bankname;
+    viewBranchTown.innerHTML = ob.branchtown;
+
+    //refresh table area
+    let displayPropertyList = [
+        { dataType: "function", propertyName: getVaccineName },
+    ];
+    fillDataIntoInnerTable(tableSupplierInner, ob.supplierhasvaccinesList, displayPropertyList, deleteInnerForm, false);
+
 
 }
 //function for print

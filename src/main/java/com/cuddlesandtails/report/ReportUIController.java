@@ -66,6 +66,22 @@ public class ReportUIController {
     }
 
     //create mapping UI service [/report -- return report UI]
+    @RequestMapping(value="/reportdailypayments")
+    public ModelAndView reportdailypaymentsUI(){
+
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User loggedUser = userDao.getUserByUsername(auth.getName());
+
+
+        ModelAndView employeeView = new ModelAndView();
+        employeeView.addObject("logusername", auth.getName());
+        employeeView.addObject("title","Report Management : BIT Project 2024");
+        employeeView.setViewName("reportdailypayments.html");
+        return employeeView; 
+    }
+
+    //create mapping UI service [/report -- return report UI]
     @RequestMapping(value="/reportdoctorsbygivenserviceanddate")
     public ModelAndView reportdoctorsbygivenserviceanddateUI(){
 

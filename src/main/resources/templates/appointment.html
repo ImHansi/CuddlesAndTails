@@ -17,6 +17,11 @@
     });
    });
  </script>
+ <style>
+      @media print {
+        .btn, .modal-footer { display: none !important; }
+      }
+ </style>
 
 
 </head>
@@ -117,7 +122,7 @@
 
                     <!-- owner name starts here -->
                     <div class="row mt-2">
-                      <div class="col-4">
+                      <!-- <div class="col-4">
                         <div>
                           <label for="textOwnerName" class="col-form-label fw-bold">
                             Owners Name : <span class="text-danger">*</span>
@@ -136,7 +141,38 @@
                               </option>
                             </select>
                         </div>
+                      </div> -->
+                      
+                      <div class="col-4">
+                        <div>
+                          <label
+                            for="textOwnerName"
+                            class="col-form-label fw-bold"
+                          >
+                            Owner : <span class="text-danger">*</span>
+                          </label>
+                        </div>
+                        <div>
+                          <!-- <select
+                            name="owner"
+                            required
+                            id="selectOwner"
+                            class="form-select form-input"
+                            onchange="selectDValidator(this,'','pet','owner_id');"
+                          >
+                            <option value="" selected disabled>
+                              Select Owner
+                            </option>
+                            
+                          </select> -->
+                          <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'appointment','owner_id');">
+                          <datalist id="ownerList">
+                            <option value="">
+                          </datalist>
+                        </div>
+
                       </div>
+
                       <!-- owner name ends here -->
 
                       <!-- Pet name starts here -->
@@ -356,7 +392,7 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title">View of Appointment Record</h1>
+            <h1 class="modal-title">Appointment Receipt</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
@@ -369,45 +405,44 @@
             <div class="row mt-2">
               <div class="col-12">
                 
-                <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
-                <br>
-                <table id="printAppointmentTable" class="table table-hover table-bordered table-striped border-primary">
-                  
-                  <tr>
-                    <th>Channeling No</th>
-                    <th id="viewChannelingNo"></th>
-                  </tr>
-                  <tr>
-                    <th>Owner</th>
-                    <th id="viewOwner"></th>
-                  </tr>
-                  <tr>
-                    <th>Pet</th>
-                    <th id="viewPet"></th>
-                  </tr>
-                  <tr>
-                    <th>Date</th>
-                    <th id="viewDate"></th>
-                  </tr>
-                  <tr>
-                    <th>Doctor</th>
-                    <th id="viewDoctor"></th>
-                  </tr>
-                  <tr>
-                    <th>Service</th>
-                    <th id="viewService"></th>
-                  </tr>
-                  <tr>
-                    <th>Time</th>
-                    <th id="viewTime"></th>
-                  </tr>
-                  
-                  
-                  
-              </table>
+                <table id="printTable" class="table table-hover table-bordered table-striped">
 
+                        <tr>
+                            <td><b>Contact:</b> <br></td>
+                            <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
+                            <td><b>Address :</b></td>
+                            <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                        </tr>
+
+                        <tr>
+                            <th>Owner : </th>
+                            <td id="viewOwner" colspan="2"></td>
+
+                            <th>Pet : </th>
+                            <td id="viewPet" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Channeling No : </th>
+                            <td id="viewChannelingNo"></td>
+                        </tr>
+                        <tr>
+                            <th>Doctor : </th>
+                            <td id="viewDoctor" colspan="2"></td>
+
+                            <th>Service : </th>
+                            <td id="viewService" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Date : </th>
+                            <td id="viewDate" colspan="2"></td>
+
+                            <th>Time : </th>
+                            <td id="viewTime" colspan="2"></td>
+                        </tr>
+                        
+                    </table>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+                <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
               </div>
 
               </div>

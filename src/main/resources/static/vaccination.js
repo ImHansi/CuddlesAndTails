@@ -139,8 +139,8 @@ const vaccinationFormRefill =(ob,rowIndex)=>{
     vaccinations = ajaxRequestHere("/vaccine/showall");
     fillDataIntoSelectNew(selectVaccination, 'Select Vaccine',vaccinations,'name','duration',vaccinationrecord.vaccine_id.name);
 
-    //paymentmethods = ajaxRequestHere("/paymentmethod/showspaymentmethod");
-    //fillDataIntoSelect(selectMethod,'Select Method',paymentmethods,'name');
+    paymentmethods = ajaxRequestHere("/paymentmethod/showspaymentmethod");
+    fillDataIntoSelect(selectMethod,'Select Method',paymentmethods,'name',vaccinationrecord.paymentmethod_id.name);
     
 
 
@@ -150,6 +150,8 @@ const vaccinationFormRefill =(ob,rowIndex)=>{
     dateOfVaccination.value= vaccinationrecord.dateofvaccination;
     dateOfNextVaccination.value = vaccinationrecord.dateofnextvaccination;
     textTotalFee.value = vaccinationrecord.totalamount;
+    textPaidFee.value = vaccinationrecord.paidamount;
+    textBalanceFee.value = vaccinationrecord.balanceamount;
 
     
 
@@ -352,30 +354,46 @@ const printFunc =(ob, rowIndex)=>{
 }
 
 //function for print
-function printpage() { 
-    let modalContent = document.getElementById('vaccinationViewModal').innerHTML;
-    
-    let newWindow = window.open('', '', 'width=800,height=600');
+const btnPrintRow = () => {
+    console.log("print");
 
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#vaccinationViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
     newWindow.document.write(`
         <html>
-            <head>
-                <title>Print Modal</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                </style>
-            </head>
-            <body>
-                ${modalContent}
-            </body>
+        <head>
+            <title>Vaccination Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Vaccination Details</h2>
+            ${printContent}
+        </body>
         </html>
     `);
 
     newWindow.document.close();
-    newWindow.focus();
-    newWindow.print();
-    newWindow.close();
-}
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //add function
 function add(param){
@@ -653,7 +671,13 @@ function handlePaymentMethodChange(selectElement) {
 
   if (selectedText === "card") {
     referenceField.style.display = "block";
+    textPaidFee.disabled = true;
+    textPaidFee.value = textTotalFee.value;
+    payment.paidamount = parseFloat(textTotalFee.value);
+    textBalanceFee.value = "0";
+    payment.balanceamount = 0;
   } else {
     referenceField.style.display = "none";
+    textPaidFee.disabled = false;
   }
 }

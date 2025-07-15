@@ -25,7 +25,7 @@ public class WebConfiguration {
             .requestMatchers("/cuddlesandtails").permitAll()
             .requestMatchers("/index").hasAnyAuthority("Admin","manager","receptionist","staff-member","doctor")
             .requestMatchers("/employee/**").hasAnyAuthority("Admin","manager")
-            .requestMatchers("/user").hasAnyAuthority("Admin","manager")
+            .requestMatchers("/user").hasAnyAuthority("Admin","manager","doctor")
             .requestMatchers("/payment").hasAnyAuthority("Admin","manager","receptionist")
             .requestMatchers("/pet").hasAnyAuthority("Admin","manager","receptionist")
             .requestMatchers("/doctor").hasAnyAuthority("Admin","manager","receptionist")

@@ -46,7 +46,7 @@ const getOwnerName=(ob)=>{
 
 //function for print payment record
 const printFunc =(ob, rowIndex)=>{
-    console.log('print');
+    console.log(ob,'print');
 
     //open view modal
     $('#paymentViewModal').modal('show');
@@ -56,6 +56,7 @@ const printFunc =(ob, rowIndex)=>{
     viewDoctor.innerHTML = ob.appointment_id.doctor_id.fullname;
     viewTime.innerHTML = ob.appointment_id.starttime;
     viewOwner.innerHTML = ob.owner_id.name;
+    viewPet.innerHTML = ob.appointment_id.pet_id.name;
     viewService.innerHTML = ob.appointment_id.service_id.name;
     viewAddedDate.innerHTML = ob.addeddatetime.split("T")[0] + " " + ob.addeddatetime.split("T")[1];
     viewTotal.innerHTML = ob.totalamount;
@@ -66,31 +67,46 @@ const printFunc =(ob, rowIndex)=>{
 }
 
 //function for print
-function printpage() { 
-    let modalContent = document.getElementById('paymentViewModal').innerHTML;
-    
-    let newWindow = window.open('', '', 'width=800,height=600');
+const btnPrintRow = () => {
+    console.log("print");
 
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#paymentViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
     newWindow.document.write(`
         <html>
-            <head>
-                <link rel='stylesheet' href='resources/bootstrap-5.3.1-dist/bootstrap-5.3.1-dist/css/bootstrap.min.css'></link>
-                <title>Payment Details</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                </style>
-            </head>
-            <body>
-                ${modalContent}
-            </body>
+        <head>
+            <title>Payment Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Payment Details</h2>
+            ${printContent}
+        </body>
         </html>
     `);
 
     newWindow.document.close();
-    newWindow.focus();
-    newWindow.print();
-    newWindow.close();
-}
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //add function
 function add(param){
@@ -194,7 +210,7 @@ const refreshPaymentForm = () =>{
     oldpayment =null;
 
     appointments = ajaxRequestHere("/appointment/pendingAppointments");
-    fillDataIntoSelectNewTwo(selectAppNo,'Select Channeling No & Owner',appointments,'channelingno','owner_id.name');
+    fillDataIntoSelectNewFour(selectAppNo,'Select Channeling No & Owner',appointments,'channelingno','owner_id.name','service_id.name','pet_id.name');
 
     //vaccinationrecords = ajaxRequestHere("/vaccinationrecord/pendingVaccinationRecordes");
     //fillDataIntoSelect(selectVaccineNo,'Select Vaccination No',vaccinationrecords,'vaccino');
@@ -292,8 +308,14 @@ function handlePaymentMethodChange(selectElement) {
 
   if (selectedText === "card") {
     referenceField.style.display = "block";
+    textPaidFee.disabled = true;
+    textPaidFee.value = textTotalFee.value;
+    payment.paidamount = parseFloat(textTotalFee.value);
+    textBalanceFee.value = "0";
+    payment.balanceamount = 0;
   } else {
     referenceField.style.display = "none";
+    textPaidFee.disabled = false;
   }
 }
 

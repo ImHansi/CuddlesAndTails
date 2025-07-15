@@ -17,6 +17,11 @@
     });
    });
  </script>
+ <style>
+      @media print {
+        .btn, .modal-footer { display: none !important; }
+      }
+    </style>
 
 </head>
 
@@ -86,7 +91,7 @@
     </div>
   </div>
 
-  <!-- employee add model -->
+  <!-- announcement add model -->
   <div class="modal" id="announcementAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -181,8 +186,8 @@
                       <div class="col-6">
                           <label for="textImage" class="form-label fw-bold">
                             Image : <span class="text-danger">(optional)</span>
-                          </label>
-                          <button type="button" class="btn btn-primary" onclick="fileAnnoImage.click()" id="btnSelectImage"> Select Image</button>
+                          </label><!-- 
+                          <button type="button" class="btn btn-primary" onclick="fileAnnoImage.click()" id="btnSelectImage"> Select Image</button> -->
                           <button type="button" class="btn btn-info" id="btnClearImage" onclick="buttonClearImage()"> Clear Image</button>
                           <input type="file" class="form-control" id="fileAnnoImage" onchange="validateFileField(this,'announcement','image','imagename','oldannouncement')">
                         
@@ -222,6 +227,67 @@
       </div>
     </div>
   </div>
+
+  <!--announcement view model starts here-->
+  <div class="modal" id="announcementViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">View Announcement Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body div-form">
+                    <div class="row">
+                      <div class="col-4"></div>
+                      <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+                      <div class="col-4"></div>
+                    </div>
+
+                    <table id="printTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <td><b>Contact:</b> <br></td>
+                            <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
+                            <td><b>Address :</b></td>
+                            <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                        </tr>
+
+                        <tr>
+                            <th>Title : </th>
+                            <td id="viewTitle" colspan="2"></td>
+
+                            <th>Description : </th>
+                            <td id="viewDescription" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Date of publication : </th>
+                            <td id="viewPublicationDate" colspan="2"></td>
+
+                            <th>Date of event : </th>
+                            <td id="viewEventDate" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Start time : </th>
+                            <td id="viewStartTime" colspan="2"></td>
+
+                            <th>End time : </th>
+                            <td id="viewEndTime" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <td colspan="3">
+                            <strong>Image:</strong><br />
+                            <img id="viewImage" alt="Event Image" class="img-fluid rounded" width="500px"/>
+                          </td>
+                        </tr> 
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  <!--announcement view model ends here-->
 </body>
 
 </html>

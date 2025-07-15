@@ -775,5 +775,107 @@
     </div>
     <!--owner add modal ends-->
     
+    <!--pet view model-->
+    <div class="modal" id="petViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">View Pet Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body div-form">
+                    <div class="row">
+                      <div class="col-4"></div>
+                      <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+                      <div class="col-4"></div>
+                    </div>
+
+                    <table id="printPetTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <th>Tag No : </th>
+                            <td id="viewTagNo" colspan="2"></td>
+
+                            <th>Name : </th>
+                            <td id="viewName" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Age : </th>
+                            <td id="viewAge" colspan="2"></td>
+
+                            <th>Weight : </th>
+                            <td id="viewWeight" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Gender : </th>
+                            <td id="viewGender" colspan="2"></td>
+
+                            <th>Owner : </th>
+                            <td id="viewOwner" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Pet Type : </th>
+                            <td id="viewPettype" colspan="2"></td>
+
+                            <th>Breed : </th>
+                            <td id="viewBreed" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <th>Image : </th>
+                          <td colspan="2">
+                            <img id="viewImage" alt="Event Image" class="img-fluid rounded" width="150px"/>
+                          </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="btnPrintPet();">print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--owner view model-->
+    <div class="modal" id="ownerViewModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">View Owner Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body div-form">
+                    <div class="row">
+                      <div class="col-4"></div>
+                      <div class="col-4"><img src="/resources/images/Cliniclogo.png" alt="logo" style="width: 250px;"></div>
+                      <div class="col-4"></div>
+                    </div>
+
+                    <table id="printTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <th>Name : </th>
+                            <td id="viewOwnerName" colspan="2"></td>
+
+                            <th>Mobile : </th>
+                            <td id="viewMobile" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>NIC : </th>
+                            <td id="viewNIC" colspan="2"></td>
+
+                            <th>Email : </th>
+                            <td id="viewEmail" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <th>Address :</th>
+                          <td id="viewAddress"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
+                </div>
+            </div>
+        </div>
+    </div>
   </body>
 </html>

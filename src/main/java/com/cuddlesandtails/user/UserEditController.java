@@ -45,7 +45,7 @@ public class UserEditController {
 
     }
 
-    @PutMapping(value = "/edituserinfo")
+    /* @PutMapping(value = "/edituserinfo")
     public String updateUserInfoFromPortal(@RequestBody UserEdit useredit) {
         try {
 
@@ -75,6 +75,35 @@ public class UserEditController {
             return "Profile update failed " + e.getMessage();
         }
     }
+ */
+
+ @PutMapping(value = "/edituserinfo")
+public String updateUserInfoFromPortal(@RequestBody UserEdit useredit) {
+    try {
+        User existingUser = userDao.getReferenceById(useredit.getId());
+
+        // Validate current password
+        if (!bCryptPasswordEncoder.matches(useredit.getCurrentpassword(), existingUser.getPassword())) {
+            return "Invalid current password!";
+        }
+
+        // Update password only if a new one is provided and non-empty
+        if (useredit.getNewpassword() != null && !useredit.getNewpassword().trim().isEmpty()) {
+            existingUser.setPassword(bCryptPasswordEncoder.encode(useredit.getNewpassword().trim()));
+        }
+
+        // Update other user details
+        existingUser.setUsername(useredit.getUsername().trim());
+        existingUser.setEmail(useredit.getEmail().trim());
+        existingUser.setImage(useredit.getImage()); // assuming image is optional or base64
+
+        userDao.save(existingUser);
+
+        return "OK";
+    } catch (Exception e) {
+        return "Profile update failed: " + e.getMessage();
+    }
+}
 
     // current pw eka validate karanna wenama url ekak hadala ekata if else danawa
     // edit karanna kalin or frontend ekedima eka check kranwa

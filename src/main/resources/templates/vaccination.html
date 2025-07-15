@@ -17,6 +17,11 @@
   });
  });
 </script>
+<style>
+      @media print {
+        .btn, .modal-footer { display: none !important; }
+      }
+    </style>
 </head>
 
 <body>
@@ -373,45 +378,45 @@
             <div class="row mt-2">
               <div class="col-12">
                 
-                <h6>Contact : 0322246867       Email : cuddlesandtails@email.com       Address : Colombo Road, Chilaw</h6>
-                <br>
-                <table id="printAppointmentTable" class="table table-hover table-bordered table-striped border-primary">
-                  
-                  <tr>
-                    <th>Vaccination Record No</th>
-                    <th id="viewVaccinationRecordNo"></th>
-                  </tr>
-                  <tr>
-                    <th>Owner</th>
-                    <th id="viewOwner"></th>
-                  </tr>
-                  <tr>
-                    <th>Pet</th>
-                    <th id="viewPet"></th>
-                  </tr>
-                  <tr>
-                    <th>Vaccination Name</th>
-                    <th id="viewVaccinationName"></th>
-                  </tr>
-                  <tr>
-                    <th>Vaccination Date</th>
-                    <th id="viewVaccinationDate"></th>
-                  </tr>
-                  <tr>
-                    <th>Next Vaccination Date</th>
-                    <th id="viewNextVaccinationDate"></th>
-                  </tr>
-                  <tr>
-                    <th>Doctor</th>
-                    <th id="viewDoctor"></th>
-                  </tr>
-                  
-                  
-                  
-              </table>
+                <table id="printTable" class="table table-hover table-bordered table-striped">
+
+                        <tr>
+                            <td><b>Contact:</b> <br></td>
+                            <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
+                            <td><b>Address :</b></td>
+                            <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                        </tr>
+
+                        <tr>
+                            <th>Vaccination Record No : </th>
+                            <td id="viewVaccinationRecordNo" colspan="2"></td>
+
+                            <th>Vaccination Name : </th>
+                            <td id="viewVaccinationName" colspan="2"></td>
+
+                        </tr>
+                        <tr>
+                            <th>Owner : </th>
+                            <td id="viewOwner" colspan="2"></td>
+
+                            <th>Pet : </th>
+                            <td id="viewPet" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Vaccination Date : </th>
+                            <td id="viewVaccinationDate" colspan="2"></td>
+
+                            <th>Next Vaccination Date : </th>
+                            <td id="viewNextVaccinationDate" colspan="2"></td>
+                        </tr>
+                        <tr>
+                          <th>Doctor : </th>
+                            <td id="viewDoctor" colspan="2"></td>
+                        </tr>
+                    </table>
 
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="printpage();">print</button>
+                <button type="button" class="btn btn-primary" onclick="btnPrintRow();">print</button>
               </div>
 
               </div>

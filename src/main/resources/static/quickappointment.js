@@ -517,3 +517,20 @@ const generateValidAmount = () => {
         
     }
 } 
+
+//for card payment
+function handlePaymentMethodChange(selectElement) {
+  const selectedText = selectElement.options[selectElement.selectedIndex].text.trim().toLowerCase();
+  const referenceField = document.getElementById("referenceField");
+
+  if (selectedText === "card") {
+    referenceField.style.display = "block";
+    textPaidFee.disabled = true;
+    textPaidFee.value = textTotalFee.value;
+    payment.paidamount = parseFloat(textTotalFee.value);
+    textBalanceFee.value = "0";
+    payment.balanceamount = 0;
+  } else {
+    referenceField.style.display = "none";
+  }
+}

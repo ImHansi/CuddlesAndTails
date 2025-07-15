@@ -242,10 +242,58 @@ const deleteOwnerFunc =(ob,rowIndex)=>{
 }
 
 //function for print pet record
-const printOwnerFunc =(ob, rowIndex)=>{
+const printOwnerFunc =(rowOb, rowIndex)=>{
     console.log('print');
+    $('#ownerViewModal').modal('show');
+
+    viewOwnerName.innerHTML = rowOb.name;
+    viewMobile.innerHTML = rowOb.mobile;
+    viewNIC.innerHTML = rowOb.nic;
+    viewEmail.innerHTML = rowOb.email;
+    viewAddress.innerHTML = rowOb.address;
 
 }
+
+const btnPrintRow = () => {
+    console.log("print");
+
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#ownerViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Owner Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Owner Details</h2>
+            ${printContent}
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //add function
 function add(param){

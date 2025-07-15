@@ -3,7 +3,7 @@ window.addEventListener('load',()=>{
 
     userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/doctor");
 
-    services = ajaxRequestHere("/service/showService");
+    services = ajaxRequestHere("/service/serviceswithspecialization");
     fillDataIntoSelect(selectService,'Select Service',services,'name');
     console.log(services);
 
@@ -18,6 +18,7 @@ const refreshReportDocAvailability = () => {
     const displayproperty = [ {dataType:'text',propertyName:'doctorName'},
                               {dataType:'text',propertyName:'strat_time'},
                               {dataType:'text',propertyName:'end_time'},
+                              {dataType:'function',propertyName:getNoofAppointments},
     ];
 
     //call filldataintotable function
@@ -26,12 +27,11 @@ const refreshReportDocAvailability = () => {
 
 }
 
-//create functon to get doctors
-/* const getDoctor=(ob)=>{
-    console.log(ob);
-    return ob.id.doctor_id.fullname;
+//create functon to get no of appointments
+const getNoofAppointments=(ob)=>{
 
-}  */
+    
+} 
 
 //create function get record status 
 

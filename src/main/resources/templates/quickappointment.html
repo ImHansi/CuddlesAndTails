@@ -619,7 +619,7 @@
                           </span>
 
                           <select name="method" required id="selectMethod"
-                              class="form-select form-input" onchange="selectDValidator(this,'','payment','paymentmethod_id')">
+                              class="form-select form-input" onchange="handlePaymentMethodChange(this); selectDValidator(this,'','payment','paymentmethod_id')">
                               
                               <option value="" selected disabled>
                                 Select payment method
@@ -627,7 +627,12 @@
                             </select>
                         </div>
                       </div>
-                      <div class="col-4"></div>
+                      <div class="col-4" id="referenceField" style="display: none;">
+                        <!-- Reference Number Field (Hidden Initially) -->
+                         <label for="referenceNo" class="col-form-label fw-bold">Card Reference Number:</label>
+                         <input type="text" id="referenceNo" name="referenceNo" class="form-control" placeholder="Enter reference number" onkeyup="textValidator(this, '', 'payment','referenceno')">
+                       
+                      </div>
                      </div>
 
                      <div class="row mt-2">

@@ -45,6 +45,8 @@ let loggedUser = null;
 
 
 window.addEventListener('DOMContentLoaded', async () => {
+
+    
     // DOM elements for form
     inputUserName = document.getElementById("textUserName");
     inputEmail = document.getElementById("textEmail");
@@ -109,6 +111,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 
 const refreshProfileEditForm = () => {
+    console.log("pw",inputCurrentPassword);
     inputUserName.value = loggedUser.username || '';
     inputEmail.value = loggedUser.email || '';
     inputPassword.value = '';
@@ -137,7 +140,10 @@ const submitUserAccChanges = async () => {
     loggedUser.username = inputUserName.value.trim();
     loggedUser.email = inputEmail.value.trim();
     loggedUser.currentpassword = inputCurrentPassword.value;
-    loggedUser.newpassword  = inputPassword.value;
+    if (inputPassword.value.trim() !== "") {
+    loggedUser.newpassword = inputPassword.value.trim();
+    }
+    //loggedUser.newpassword  = inputPassword.value;
 
     try {
         let response = await ajaxRequestBody("user/edituserinfo", "PUT", loggedUser);

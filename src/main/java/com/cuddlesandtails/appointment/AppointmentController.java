@@ -172,9 +172,11 @@ public String saveAppointment(@RequestBody Appointment appointment) {
             appointment.setStarttime(calculatedStart);
             appointment.setEndtime(calculatedEnd);
         } else {
-            // Use existing start time (from frontend) for doctor-based appointments
+            //here we firstly get the starttime of the doctor for a specific service then add the timeMin which is the sum of time of past appointments
             appointment.setStarttime(appointment.getStarttime().plusMinutes(timeMin));
-            appointment.setEndtime(appointment.getEndtime().plusMinutes(timeMin + duration));
+            //after that we add the duration of that service to the starttime of the appointment
+            appointment.setEndtime(appointment.getStarttime().plusMinutes(duration));
+            //appointment.setEndtime(appointment.getEndtime().plusMinutes(timeMin + duration)); // this way is wrong cuz here it takes end time as the doctors endtime not last appintment end time
         }
 
         AppointmentDao.save(appointment);
@@ -258,16 +260,22 @@ public String saveAppointment(@RequestBody Appointment appointment) {
     }
 
 
-    //to get appointment by the service
+    //to get appointments by the doctor and date for consultation form
+    @GetMapping(value = "/showallbydoctor",params = {"doctorid"}, produces = "application/json")
+    public List<Appointment> showAllDataByDoctor(@RequestParam("doctorid")Integer doctorid){
+        return AppointmentDao.getByDoctor(doctorid, LocalDate.now());
+    }
+
+    //to get appointments by the service and date for scan form
     @GetMapping(value = "/showallbyservice",params = {"serviceid"}, produces = "application/json")
-    public List<Appointment> showAllDataByServive(@RequestParam("serviceid")Integer serviceid){
-        return AppointmentDao.getByService(serviceid);
+    public List<Appointment> showAllDataByService(@RequestParam("serviceid")Integer serviceid){
+        return AppointmentDao.getByService(serviceid, LocalDate.now());
     }
     
     //toget pending appointments
     @GetMapping(value = "/pendingAppointments", produces = "application/json")
     public List<Appointment> getpendingAppointments() {
-        return AppointmentDao.getPendingAppointments();
+        return AppointmentDao.getPendingAppointments(LocalDate.now());
     }
 
     // for report
@@ -287,5 +295,8 @@ public String saveAppointment(@RequestBody Appointment appointment) {
     @GetMapping("/appointmentByDateandDoctor")
     public List<Appointment> findAppointmentsByDateAndDoctor(@RequestParam Integer doctorId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateofappointment) {
          return AppointmentDao.getAppointmentsByDoctorAndDate(doctorId, dateofappointment);
+
+
+         
 }
 }

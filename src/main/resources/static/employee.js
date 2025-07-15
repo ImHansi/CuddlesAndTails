@@ -47,8 +47,6 @@ window.addEventListener('load',()=>{
         selectEmployeeStatusElement.appendChild(option);
         
     });*/
-    //report form
-    refreshReportForm();
     //call designation form refresh function
     refreshDesignnationForm();
 });
@@ -794,16 +792,16 @@ const btnDesignationSubmit=()=>{
 }
 
 
-const refreshReportForm=()=>{
+/* const refreshReportForm=()=>{
 
     employeeSatatueses = ajaxRequestHere("/employeestatus/showStatus");
 
     fillDataIntoSelect(employeeStatus,'Select Status',employeeSatatueses,'name');
 
-}
+} */
 
 //report generating functions here 
-const generateReport = () => {
+/* const generateReport = () => {
     let selectedStatus = document.getElementById('employeeStatus').value;
     
     if (selectedStatus) {
@@ -839,4 +837,4 @@ const generateReport = () => {
     });
     
     reportContainer.appendChild(table);
-    }
+    } */

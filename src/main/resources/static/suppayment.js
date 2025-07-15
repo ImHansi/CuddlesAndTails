@@ -49,42 +49,68 @@ const printFunc =(ob, rowIndex)=>{
     console.log('print');
 
     //open view modal
-    $('#supPaymentViewModal').modal('show');
+    $('#paymentViewModal').modal('show');
 
+    viewPaymentNo.innerHTML = ob.paymentno;
     viewSupplier.innerHTML = ob.supplier_id.name;
+    viewPayMethod.innerHTML = ob.paymentmethod_id.name;
     viewTotal.innerHTML = ob.totalamount;
-    viewPaid.innerHTML = ob.totalpaidamount;
-    viewBalance.innerHTML = ob.totalbalanceamount;
-    viewAddDateTime.innerHTML = ob.addeddatetime.split("T")[0] + " " + ob.addeddatetime.split("T")[1];
+    viewPaid.innerHTML = ob.paidamount;
+    viewBalance.innerHTML = ob.balanceamount;
+    viewAddedDate.innerHTML = ob.addeddatetime.split("T")[0] + " " + ob.addeddatetime.split("T")[1];
+
+    //refresh table area
+    let displayPropertyList = [
+        { dataType: "function", propertyName: getReceiveId },
+        { dataType: "function", propertyName: getTotal },
+        { dataType: "function", propertyName: getPaid },
+        { dataType: "function", propertyName: getBalance },
+    ];
+    fillDataIntoInnerTable(tablePaymentInner, ob.supplierpaymenthasreceivesList, displayPropertyList, deleteInnerForm, false);
 
 }
 
 //function for print
-function printpage() { 
-    let modalContent = document.getElementById('supPaymentViewModal').innerHTML;
-    
-    let newWindow = window.open('', '', 'width=800,height=600');
+const btnPrintRow = () => {
+    console.log("print");
 
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#paymentViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
     newWindow.document.write(`
         <html>
-            <head>
-                <link rel='stylesheet' href='resources/bootstrap-5.3.1-dist/bootstrap-5.3.1-dist/css/bootstrap.min.css'></link>
-                <title>Payment Details</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                </style>
-            </head>
-            <body>
-                ${modalContent}
-            </body>
+        <head>
+            <title>Supplier Payment Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Supplier Payment Details</h2>
+            ${printContent}
+        </body>
         </html>
     `);
 
     newWindow.document.close();
-    newWindow.focus();
-    newWindow.print();
-    newWindow.close();
-}
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //add function
 function add(param){

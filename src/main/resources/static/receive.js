@@ -83,7 +83,9 @@ const printFunc =(ob, rowIndex)=>{
     viewNetAmount.innerHTML = ob.netamount;
     viewAddDateTime.innerHTML = ob.addeddatetime.split("T")[0] + " " + ob.addeddatetime.split("T")[1];;
     viewStatus.innerHTML = ob.rnstatus_id.name;
-    viewNote.innerHTML = ob.note;
+    viewSupplierBNo.innerHTML = ob.supplierbillno;
+    viewDiscount.innerHTML = ob.discount;
+    viewPaid.innerHTML = ob.paidamount;
 
     //refresh table area
     let displayPropertyList = [
@@ -92,32 +94,52 @@ const printFunc =(ob, rowIndex)=>{
         { dataType: "function", propertyName: getVaccineQty },
         { dataType: "function", propertyName: getLineprice },
     ];
-    fillDataIntoInnerTable(tableReceiveInner, ob.receivehasvaccineslist, displayPropertyList, deleteInnerForm, false);
+    fillDataIntoInnerTable(tableReceiveInner, ob.receivehasvaccinesList, displayPropertyList, deleteInnerForm, false);
 
     
 }
 
 //function for print
-function printpage() { 
-   console.log("print");
-    console.log(receive);
+const btnPrintRow = () => {
+    console.log("print");
 
-    let newWindow = window.open();
-    newWindow.document.write("<html><head>" +
-        "<link rel='stylesheet' href='resources/bootstrap-5.3.1-dist/bootstrap-5.3.1-dist/css/bootstrap.min.css'></link>" +
-        "<title>" + "Receive Note Details" + "</title>"
-        + "</head><body>" +
-        "<h2>" + "Receive Note Details" + "</h2>" +
-        printReceiveTable.outerHTML + "<script>printReceiveTable.classList.remove('d-none');</script></body></html>"
-    );
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#receiveViewModal .modal-body").innerHTML;
 
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Receive Note Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Receive Note Details</h2>
+            ${printContent}
+        </body>
+        </html>
+    `);
+
+    newWindow.document.close();
+
+    // Wait for styles to load, then print
     setTimeout(() => {
-        newWindow.stop();
         newWindow.print();
         newWindow.close();
-        
-    }, 500)
-}
+    }, 500);
+};
 
 //create function for check error
 const checkReceiveFormError =() =>{

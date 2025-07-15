@@ -29,24 +29,41 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
     @Query(value = "select a from Appointment a where a.dateofappointment =?1 and a.service_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2)")
     public List<Appointment> getAppinmentByDateService(LocalDate dateofappointment, Integer serviceid);
 
-    //create query to get confirmed Appointments by given service id
-    @Query("select a from Appointment a where a.service_id.id = :serviceId and a.appointmentstatus_id.id = 2")
-    List<Appointment> getByService(@Param("serviceId") Integer serviceId);
+    //create query to get confirmed Appointments by given doctor id and todays date for consultation form
+    @Query("select a from Appointment a" + " where a.doctor_id.id = :doctorId "+"and a.appointmentstatus_id.id = 2"+"and a.dateofappointment = :today")
+    List<Appointment> getByDoctor(@Param("doctorId") Integer doctorId , @Param("today") LocalDate today);
+    
+
+    //create query to get confirmed Appointments by given service id and todays date for scan form
+    @Query("select a from Appointment a" + " where a.service_id.id = :serviceId "+"and a.appointmentstatus_id.id = 2"+"and a.dateofappointment = :today")
+    List<Appointment> getByService(@Param("serviceId") Integer serviceId , @Param("today") LocalDate today);
     
 
     //create query to get pending appointments
-    @Query(value = "select a from Appointment a where a.appointmentstatus_id.id=1")
-    List<Appointment> getPendingAppointments();
+    @Query(value = "select a from Appointment a where a.appointmentstatus_id.id=1"+"and a.dateofappointment = :today")
+    List<Appointment> getPendingAppointments(@Param("today") LocalDate today);
 
     //query to get appointments to the given date and doctor
     /* @Query("select a from Appointment a where a.dateofappointment =?1 and a.doctor_id.id=?2 and (a.appointmentstatus_id.id=1 or a.appointmentstatus_id.id=2)")
     List<Appointment> getAppinmentByDateDoctor(@Param("doctorId") Integer doctorId,@Param("dateofappointment")LocalDate dateofappointment);
  */
 
-    @Query("SELECT a FROM Appointment a " +"WHERE a.dateofappointment = :date " +"AND a.doctor_id.id = :doctorId " +"AND (a.appointmentstatus_id.id = 1 OR a.appointmentstatus_id.id = 2)")
+   //for the report of appointment to
+    @Query("SELECT a FROM Appointment a " +"WHERE a.dateofappointment = :date " +"AND a.doctor_id.id = :doctorId ")
     List<Appointment> getAppointmentsByDoctorAndDate(@Param("doctorId") Integer doctorId,@Param("date") LocalDate date);
 
     //for the dashboard card
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentstatus_id.name = 'Completed' AND MONTH(a.dateofappointment) = MONTH(CURRENT_DATE) AND YEAR(a.dateofappointment) = YEAR(CURRENT_DATE)")
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentstatus_id.id = 3 AND MONTH(a.dateofappointment) = MONTH(CURRENT_DATE) AND YEAR(a.dateofappointment) = YEAR(CURRENT_DATE)")
     long countCompletedAppointmentsThisMonth();
+
+    //for doctor availability status change
+    @Query("SELECT a FROM Appointment a WHERE a.doctor_id.id = :doctorId AND a.dateofappointment = :date")
+    List<Appointment> findByDoctorIdAndDate(@Param("doctorId") Integer doctorId, @Param("date") LocalDate date);
+
+
+    //for doctor availability report to get the no of appointments according to the doctor , date service
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.dateofappointment = :date AND a.service_id.id = :serviceId AND a.doctor_id.id = :doctorId")
+    long countAppointmentsByDateAndServiceAndDoctor(@Param("date") LocalDate date, @Param("serviceId") Integer serviceId, @Param("doctorId") Integer doctorId);
+
+
 }

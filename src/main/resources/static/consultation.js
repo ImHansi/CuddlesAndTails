@@ -77,12 +77,6 @@ const refreshConsultationTable = () => {
 
 }
 
-//create function to get channeling no
-/* const getChannelingNo=(ob)=>{
-    return ob.appointment_id.channelingno;
-
-} */
-
 
 //create function to get owners
 const getOwnerName=(ob)=>{
@@ -104,7 +98,8 @@ const getService=(ob)=>{
 
 //create functon to get doctors
 const getDoctor=(ob)=>{
-    return ob.doctor_id.fullname;
+    //return ob.doctor_id.fullname;
+    return ob.doctor_id ? ob.doctor_id.fullname : "N/A";
 
 }
 
@@ -137,13 +132,16 @@ const consultationFormRefill =(ob,rowIndex)=>{
     //open consultation modal
     $('#consultationAddModal').modal('show');
 
+    doctors = ajaxRequestHere("/doctor/showall");
+    fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname', consultation.doctor_id.fullname);
+
     appointments = ajaxRequestHere("/appointment/showall");
     fillDataIntoSelect(selectAppNo,'Select Channeling No',appointments,'channelingno',consultation.appointment_id.channelingno);
 
-    services = ajaxRequestHere("/service/showService");
+    /* services = ajaxRequestHere("/service/showService");
     fillDataIntoSelect(selectService,'Select Service',services,'name',consultation.service_id.name);
-
-    textDoctor.value = consultation.doctor_id.fullname;
+ */
+    
     textMobile.value = consultation.mobile;
     dateOfConsultation.value=consultation.dateofconsultation;
     textNote.value = consultation.note;
@@ -312,37 +310,53 @@ const printFunc =(ob, rowIndex)=>{
     viewOwner.innerHTML = ob.owner_id.name;
     viewPet.innerHTML = ob.pet_id.name;
     viewDate.innerHTML = ob.dateofconsultation;
-    viewDoctor.innerHTML = ob.doctor_id.fullname;
+    viewDoctor.innerHTML = ob.doctor_id ? ob.doctor_id.fullname : "N/A";
     viewService.innerHTML = ob.service_id.name;
     viewMedicalSummary.innerHTML = ob.note;
 
 }
 
 //function for print
-function printpage() { 
-    let modalContent = document.getElementById('consultationViewModal').innerHTML;
-    
-    let newWindow = window.open('', '', 'width=800,height=600');
+const btnPrintRow = () => {
+    console.log("print");
 
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#consultationViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
     newWindow.document.write(`
         <html>
-            <head>
-                <title>Print Modal</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                </style>
-            </head>
-            <body>
-                ${modalContent}
-            </body>
+        <head>
+            <title>Consultation Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Consultation Details</h2>
+            ${printContent}
+        </body>
         </html>
     `);
 
     newWindow.document.close();
-    newWindow.focus();
-    newWindow.print();
-    newWindow.close();
-}
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 //add function
 function add(param){
@@ -369,11 +383,11 @@ const checkConsulFormError =() =>{
         dateOfConsultation.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    if (consultation.service_id==null) {
+    /* if (consultation.service_id==null) {
         errors = errors +"Please select a service..\n";
         selectService.style.background = 'rgba(255,0,0,0,1)';
         
-    }
+    } */
     
     return errors;
 
@@ -431,14 +445,17 @@ const refreshConsultationForm = () =>{
     appointments = ajaxRequestHere("/appointment/showall");
     fillDataIntoSelect(selectAppNo,'Select Channeling No',appointments,'channelingno');
 
-    services = ajaxRequestHere("/service/showService");
-    fillDataIntoSelect(selectService,'Select a Service',services,'name');
+    doctors = ajaxRequestHere("/doctor/showall");
+    fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname');
 
     //set text field value as a empty
    
     textMobile.style.border ='1px solid #ced4da';
     dateOfConsultation.style.border='1px solid #ced4da';
-    selectService.style.border='1px solid #ced4da';
+    selectDoctor.style.border='1px solid #ced4da';
+    selectAppNo.style.border='1px solid #ced4da';
+    textNote.style.border='1px solid #ced4da';
+    
     
     //set default color
     //textFullName.removeAttribute('style');
@@ -463,7 +480,9 @@ const refreshConsultationForm = () =>{
     
 }
 
-/*//define function to generate owner mobile automatically
+/*
+
+//define function to generate owner mobile automatically
 const generateOwnerMobile =()=>{
     console.log(JSON.parse(selectOwner.value));
 
@@ -482,6 +501,68 @@ const generateOwnerMobile =()=>{
     selectOwner.style.border = "4px solid green";
 } */
 
+
+
+
+/* const refreshConsultationForm = async () => {
+
+    consultation = {};
+    oldconsultation = null;
+
+    // 1. Load appointments
+    appointments = ajaxRequestHere("/appointment/showall");
+    fillDataIntoSelect(selectAppNo, 'Select Channeling No', appointments, 'channelingno');
+
+    // 2. Load all doctors (optional if dropdown is needed)
+    doctors = ajaxRequestHere("/doctor/showall");
+    fillDataIntoSelect(selectDoctor, 'Select A Doctor', doctors, 'fullname');
+
+    // 3. Get logged doctor user
+    const loggedUser = await  ajaxRequestHere("/user/loggeduser");
+
+    console.log("loggedUser =", loggedUser);
+
+    if (loggedUser && loggedUser.doctor_id) {
+        const loggedDoctor = loggedUser.doctor_id;
+
+        // 4. Insert doctor into the select box and mark as selected
+        const option = document.createElement("option");
+        option.value = JSON.stringify(loggedDoctor);
+        option.text = loggedDoctor.fullname;
+        option.selected = true;
+
+        const selectDoctor = document.getElementById("selectDoctor");
+        selectDoctor.insertBefore(option, selectDoctor.firstChild);
+        selectDoctor.style.border = "4px solid green";
+
+        // 5. Assign doctor to consultation object
+        consultation.doctor_id = loggedDoctor;
+    } else {
+        console.warn("Logged user does not have a doctor_id.");
+    }
+
+    // 6. Clear input borders
+    textMobile.style.border = '1px solid #ced4da';
+    dateOfConsultation.style.border = '1px solid #ced4da';
+
+    // 7. Handle button states
+    btnConsulUpdate.disabled = true;
+    $("#btnConsulUpdate").css("cursor", "not-allowed");
+
+    if (userPrivilege.insert) {
+        btnConsulAdd.disabled = false;
+        $("#btnConsulAdd").css("cursor", "pointer");
+    } else {
+        btnConsulAdd.disabled = true;
+        $("#btnConsulAdd").css("cursor", "not-allowed");
+    }
+}; */
+
+
+
+
+
+
 const generateAppointmentOtherDetails =()=>{
     console.log(JSON.parse(selectAppNo.value));
 
@@ -489,36 +570,22 @@ const generateAppointmentOtherDetails =()=>{
 
     const appointmentDate = selectedAppointment.dateofappointment;
     const mobile = selectedAppointment.mobile;
-    document.getElementById('textDoctor').value = selectedAppointment.doctor_id.fullname;
+    //document.getElementById('textDoctor').value = selectedAppointment.doctor_id.fullname;
     const channelingNo = selectedAppointment.channelingno;
-
 
     dateOfConsultation.value = appointmentDate;
     textMobile.value = mobile;
 
-    consultation.doctor_id = { id: selectedAppointment.doctor_id.id };
-    consultation.pet_id = { id: selectedAppointment.pet_id.id };
-    consultation.owner_id = { id: selectedAppointment.owner_id.id };
+    //consultation.doctor_id = { id: selectedAppointment.doctor_id.id };
+    consultation.pet_id = selectedAppointment.pet_id;
+    consultation.owner_id =selectedAppointment.owner_id;
+    consultation.service_id =selectedAppointment.service_id;
     consultation.mobile = mobile;
     consultation.channelingno = channelingNo;
     consultation.dateofconsultation = appointmentDate;
     
-    
-
     dateOfConsultation.style.border = "4px solid green";
     textMobile.style.border = "4px solid green";
-    textDoctor.style.border = "4px solid green";
-
-    // const appointmentDoctor = JSON.parse(selectAppNo.value).doctor_id.fullname;
-    // selectDoctor.value = appointmentDoctor;
-    // consultation.doctor_id = appointmentDoctor;
-
-
-    // selectDoctor.value = JSON.parse(selectAppNo.value).doctor_id.id;
-    // console.log("JSON.parse(selectAppNo.value).doctor_id.id",JSON.parse(selectAppNo.value).doctor_id.id)
-    // console.log("selectDoctor", selectDoctor)
-    // consultation.doctor_id = selectDoctor.value;
-   
 
 } 
 
@@ -527,16 +594,16 @@ const generateAppointmentOtherDetails =()=>{
 //define function to filter Appointments according to the service
 const filterAppointments=()=>{
 
-    const selectService = document.getElementById("selectService");
+    const selectDoctor = document.getElementById("selectDoctor");
     const selectAppNo = document.getElementById("selectAppNo");
 
     //check if the service is selected
-    if (selectService.value) {
+    if (selectDoctor.value) {
     selectAppNo.disabled = false;
 
-    const serviceId = JSON.parse(selectService.value).id;
-    const appointmentByService = ajaxRequestHere("/appointment/showallbyservice?serviceid="+ serviceId);
-    fillDataIntoSelectNewTwo(selectAppNo,'Select Channeling No & Owner',appointmentByService,'channelingno','owner_id.name');
+    const doctorId = JSON.parse(selectDoctor.value).id;
+    const appointmentByDoctor = ajaxRequestHere("/appointment/showallbydoctor?doctorid="+ doctorId);
+    fillDataIntoSelectNewFour(selectAppNo,'Select Channeling No & Owner',appointmentByDoctor,'channelingno','owner_id.name','service_id.name','pet_id.name');
 
     }else {
         //Disable the appointment dropdown

@@ -3,6 +3,7 @@ window.addEventListener('load',()=>{
     $('[data-bs-toggle="tooltip"]').tooltip();
 
     userPrivilege =ajaxRequestHere("/privilege/bylogedusermodule/appointment");
+    console.log(userPrivilege);
 
     refreshAppointmentTable(); //call table refresh function
 
@@ -160,7 +161,8 @@ const appointmentFormRefill =(ob,rowIndex)=>{
     
 
     owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',appointment.owner_id.name);
+    //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',appointment.owner_id.name);
+    fillDataIntoDataList(ownerList,owners,'name',appointment.owner_id.name);
     
     pets = ajaxRequestHere("/pet/showall");
     fillDataIntoSelect(selectPet,'Select Pet',pets,'name',appointment.pet_id.name);
@@ -175,7 +177,7 @@ const appointmentFormRefill =(ob,rowIndex)=>{
     fillDataIntoSelect(selectAppointmentStatus,'Select Status',appointmentSatatueses,'name',appointment.appointmentstatus_id.name);
 
     timeSlots = [];
-    fillDataIntoSelectNew(selectStartTime,'Select Time Slot',timeSlots,'strat_time','end_time');
+    fillDataIntoSelectNew(selectStartTime,'Select Time Slot',timeSlots,'strat_time','end_time',appointment.starttime, appointment.endtime);
 
 
 
@@ -382,30 +384,46 @@ const printFunc =(ob, rowIndex)=>{
 }
 
 //function for print
-function printpage() { 
-    let modalContent = document.getElementById('appointmentViewModal').innerHTML;
-    
-    let newWindow = window.open('', '', 'width=800,height=600');
+const btnPrintRow = () => {
+    console.log("print");
 
+    // Get the table and its surrounding content from the modal
+    const printContent = document.querySelector("#appointmentViewModal .modal-body").innerHTML;
+
+    // Open new window
+    let newWindow = window.open("", "_blank");
+
+    // Write the full document with Bootstrap styles
     newWindow.document.write(`
         <html>
-            <head>
-                <title>Print Modal</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                </style>
-            </head>
-            <body>
-                ${modalContent}
-            </body>
+        <head>
+            <title>Appointment Details</title>
+            <link rel='stylesheet' href='/resources/bootstrap-5.2.3/bootstrap-5.2.3/css/bootstrap.min.css'></link>
+            <style>
+                body {
+                    padding: 20px;
+                }
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Appointment Details</h2>
+            ${printContent}
+        </body>
         </html>
     `);
 
     newWindow.document.close();
-    newWindow.focus();
-    newWindow.print();
-    newWindow.close();
-}
+
+    // Wait for styles to load, then print
+    setTimeout(() => {
+        newWindow.print();
+        newWindow.close();
+    }, 500);
+};
 
 
 //add function
@@ -508,7 +526,11 @@ const refreshAppointmentForm = () =>{
     oldappointment =null;
 
     owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
+    //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
+    fillDataIntoDataList(ownerList,owners,'name');
+
+    console.log(ownerList);
+    console.log(owners);
 
     pets = ajaxRequestHere("/pet/showall");
     fillDataIntoSelect(selectPet,'Select Pet',pets,'name');
@@ -532,10 +554,12 @@ const refreshAppointmentForm = () =>{
 
 
     //set text field value as a empty
-    selectOwner.style.border ='1px solid #ced4da';
+    textOwnerName.style.border ='1px solid #ced4da';
     selectPet.style.border ='1px solid #ced4da';
     textMobile.style.border ='1px solid #ced4da';
+    textServiceFee.style.border ='1px solid #ced4da';
     selectDoctor.style.border='1px solid #ced4da';
+    selectService.style.border='1px solid #ced4da';
     dateOfAppointment.style.border='1px solid #ced4da';
     selectStartTime.style.border='1px solid #ced4da';
 
@@ -564,13 +588,13 @@ const refreshAppointmentForm = () =>{
 }
 
 //define function to generate owner mobile automatically
-const generateOwnerMobile =()=>{
+/* const generateOwnerMobile =()=>{
     console.log(JSON.parse(selectOwner.value));
 
     textMobile.value = JSON.parse(selectOwner.value).mobile;
     appointment.mobile = textMobile.value;
     textMobile.style.border = "4px solid green";
-}
+} */
 //define function to generate owner address automatically
 /* const generateOwnerAddress =()=>{
     console.log(JSON.parse(selectOwner.value));
@@ -601,7 +625,7 @@ const generateServiceFee =()=>{
 }
 
 //define function to filter pets according to owner
-const filterPets=()=>{
+/* const filterPets=()=>{
 
     const selectOwner = document.getElementById("selectOwner");
     const selectPet = document.getElementById("selectPet");
@@ -620,7 +644,7 @@ const filterPets=()=>{
         selectPet.innerHTML = '<option value="" selected disabled>Select Pet</option>';
   }
 
-}
+} */
 
 //define function to filter pets according to owner
 const filterTimeSlot=()=>{
@@ -731,5 +755,123 @@ const filterDoctors = () => {
     }
 };
 
+/* const dataListValidator = (element, objectName, property) => {
+    const elementValue = element.value;
+
+    //find the matched object from the global array
+    const matchedObj = owners.find(obj => obj.name === elementValue);
+
+    if (matchedObj) {
+        element.style.border = "4px solid green";
+        window[objectName][property] = { id: matchedObj.id };
+    } else {
+        element.style.border = "4px solid red";
+        window[objectName][property] = null;
+        alert("Invalid selection. Please choose a valid option from the list.");
+    }
+}; */
+/* 
+const dataListValidator = (element, objectName, property) => {
+    const elementValue = element.value;
+
+    // Find the matched owner object by name
+    const matchedOwner = owners.find(obj => obj.name === elementValue);
+
+    if (matchedOwner) {
+        element.style.border = "4px solid green";
+
+        // Set the owner ID in the target object (e.g., pet.owner_id = { id: ... })
+        window[objectName][property] = { id: matchedOwner.id };
+
+        // 👉 Set the mobile number
+        document.getElementById("textMobile").value = matchedOwner.mobile;
+        document.getElementById("textMobile").style.border = "4px solid green";
+
+        // 👉 Filter and show pets by this owner
+        filterPetsByOwnerId(matchedOwner.id);
+
+    } else {
+        element.style.border = "4px solid red";
+        window[objectName][property] = null;
+
+        // Clear mobile
+        document.getElementById("textMobile").value = "";
+        document.getElementById("textMobile").style.border = "";
+
+        // Clear pet list
+        clearPetDropdown();
+
+        alert("Invalid selection. Please choose a valid option from the list.");
+    }
+}; */
+
+/* const filterPetsByOwnerId = (ownerId) => {
+    const selectPet = document.getElementById("selectPet");
+
+    if (ownerId) {
+        selectPet.disabled = false;
+
+        const petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid=" + ownerId);
+        fillDataIntoSelect(selectPet, 'Select Pet', petByOwner, 'name');
+    } else {
+        clearPetDropdown();
+    }
+}; */
+
+/* const clearPetDropdown = () => {
+    const selectPet = document.getElementById("selectPet");
+    selectPet.disabled = true;
+    selectPet.innerHTML = '<option value="" selected disabled>Select Pet</option>';
+}; */
 
 
+const dataListValidator = (element, objectName, property) => {
+    const elementValue = element.value;
+
+    // Try to match the owner by name from the global owners array
+    const matchedOwner = owners.find(obj => obj.name === elementValue);
+
+    if (matchedOwner) {
+        element.style.border = "4px solid green";
+
+        //Set owner object
+        //window[objectName][property] = { id: matchedOwner.id };
+        window[objectName][property] = matchedOwner;
+
+        //owner's mobile number
+        const textMobile = document.getElementById("textMobile");
+        textMobile.value = matchedOwner.mobile;
+        textMobile.style.border = "4px solid green";
+        appointment.mobile = textMobile.value;
+
+        //Filter pets by owner ID and populate the select
+        const selectPet = document.getElementById("selectPet");
+        const petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid=" + matchedOwner.id);
+
+        //Fill the dropdown
+        selectPet.innerHTML = '<option value="" disabled selected>Select Pet</option>';
+        petByOwner.forEach(pet => {
+            const option = document.createElement("option");
+            option.text = pet.name;
+            //option.value = JSON.stringify({ id: pet.id });
+            option.value = JSON.stringify(pet);
+            selectPet.appendChild(option);
+        });
+
+        selectPet.disabled = false;
+
+    } else {
+        //Invalid input
+        element.style.border = "4px solid red";
+        window[objectName][property] = null;
+
+        //Clear mobile and pets
+        document.getElementById("textMobile").value = "";
+        document.getElementById("textMobile").style.border = "";
+        const selectPet = document.getElementById("selectPet");
+        selectPet.disabled = true;
+        selectPet.innerHTML = '<option value="" disabled selected>Select Pet</option>';
+
+        alert("Invalid selection. Please choose a valid option from the list.");
+    }
+};

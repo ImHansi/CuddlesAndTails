@@ -78,7 +78,7 @@ const checkAVFormError = () => {
     }
     if (doctoravailability.startdate == null) {
         errors = errors + "Please Enter Start Date \n";
-        selectMonth.style.background = 'rgba(255,0,0,0.1)';
+        startDate.style.background = 'rgba(255,0,0,0.1)';
     }
     if (doctoravailability.doctor_id == null) {
         errors = errors + "Please Select a Doctor \n";
@@ -92,6 +92,7 @@ const buttonAVSubmit = ()=>{
     
     console.log("submit");
 
+    
 
     const formErrors = checkAVFormError();
     if (formErrors == '') {
@@ -442,7 +443,7 @@ const getSeventhDay = () => {
     const date = new Date(inputDate);
 
     // Add 7 days to the date
-    date.setDate(date.getDate() + 7);
+    date.setDate(date.getDate() + 6);
 
     // Format the date as YYYY-MM-DD
     const formattedDate = date.toISOString().split('T')[0];
@@ -610,6 +611,7 @@ const restrictToCurrentMonth = () => {
     input.min = currentMonth;
     input.max = currentMonth;
     doctoravailability.month = input.value;
+    textMonth.style.border = "4px solid green";
 
  
     input.addEventListener('keydown', (e) => e.preventDefault());
@@ -640,3 +642,36 @@ const getStarttime = (innerOb) => {
 const getEndtime = (innerOb) => {
     return innerOb.end_time;
 }
+
+//to get last end date from doctoravailability table and put it in to start date of the UI
+const updateStartDateWithLastEndDate =  () => {
+  
+    const selectDoctor = document.getElementById("selectDoctor");
+
+    //Parse the selected option value as JSON
+    const selectedDoctor = JSON.parse(selectDoctor.value);
+
+    //Make the request using only the doctor ID
+    const response = ajaxRequestHere("/doctoravailability/last-enddate?doctorId="+selectedDoctor.id);
+   console.log(response);
+   
+   
+
+    let nextStartDateOb = new Date(response.enddate);
+    nextStartDateOb.setDate(nextStartDateOb.getDate()+1);
+    let month = nextStartDateOb.getMonth() + 1;
+    let date = nextStartDateOb.getDate();
+    if(month<10) month = "0"+month;
+    if(date<10) date = "0"+mondateth;
+  
+    document.getElementById("startDate").value = nextStartDateOb.getFullYear()+"-"+month+"-"+date;
+    getSeventhDay();
+
+    console.log(nextStartDateOb.getFullYear()+"-"+month+"-"+date);
+    doctoravailability.startdate = nextStartDateOb.getFullYear()+"-"+month+"-"+date;
+    startDate.style.border = "4px solid green";
+
+    
+    
+}
+

@@ -13,5 +13,8 @@ public interface OwnerRepository extends JpaRepository<Owner,Integer>{
 
     @Query(value = "select o from Owner o where o.email=:email")
     public Owner getOwnerByEmail(@Param("email") String email);
+
+    @Query(value = "select o from Owner o where o.mobile=:mobile")
+    public Owner getOwnerByMobile(@Param("mobile") String mobile);
     
 }

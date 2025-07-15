@@ -24,7 +24,7 @@ public interface EmployeeDao extends JpaRepository<Employee , Integer>{
 
 
     //define query for get employee without having user account
-    @Query(value = "select e from Employee e where e.id not in(select u.employee_id from User u)")
+    @Query(value = "select e from Employee e where e.id not in(select u.employee_id.id from User u where u.employee_id is not null)")
     public List<Employee> getListBywithoutUserAccount();
 
     //to write query 
