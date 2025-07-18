@@ -1,0 +1,147 @@
+<div th:fragment="userEditModalFragment">
+  <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="userEditModalLabel">Edit User Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form onsubmit="return false" id="formUserDetailsEdit">
+            <!-- user photo -->
+            <div class="row mt-2">
+              <div class="col-3 text-end fw-bold"></div>
+
+              <div class="col-3 text-center">
+                <img
+                  src="/resources/images/user2.jpg"
+                  style="width: 75px; height: 75px; border-radius: 50px"
+                  id="imgUserPhoto"
+                />
+                <input type="file" class="d-none" id="fileUserPhoto" />
+              </div>
+              <div class="col-3">
+                <button type="button" class="btn btn-primary fw-bold w-100" onclick="fileUserPhoto.click();">
+                  Select Image</button
+                ><br />
+                <button type="button" class="mt-1 btn btn-primary fw-bold w-100">Clear Image</button>
+              </div>
+              <div class="col-3 text-end fw-bold"></div>
+            </div>
+            <!-- user photo -->
+
+            <!-- username start -->
+            <div class="row mt-4">
+              <label for="textUserName" class="col-3 col-form-label fw-bold"
+                >User Name : <span class="text-danger">*</span>
+              </label>
+              <div class="col-8">
+                <input type="text" id="textUserName" class="form-control" required placeholder="Enter User Name" />
+              </div>
+              <div class="col-1">
+                <button
+                  type="button"
+                  class="form label fw-bold form-control btn btn-primary rounded-pill"
+                  id="btnUsernameEdit"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
+            </div>
+            <!-- username end -->
+
+            <!-- email start -->
+            <div class="row mt-2">
+              <label for="textEmail" class="col-3 col-form-label fw-bold"
+                >Email : <span class="text-danger">*</span>
+              </label>
+              <div class="col-8">
+                <input type="email" id="textEmail" class="form-control" required placeholder="Enter Email" />
+              </div>
+              <div class="col-1">
+                <button
+                  type="button"
+                  class="form label fw-bold form-control btn btn-primary rounded-pill"
+                  id="btnEmailEdit"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
+            </div>
+            <!-- email end -->
+
+            <!-- current password start -->
+            <div class="row mt-2">
+              <label for="textCurrentPassword" class="col-3 col-form-label fw-bold"
+                >Current Password: <span class="text-danger">*</span></label
+              >
+              <div class="col-8">
+                <input
+                  type="password"
+                  id="textCurrentPassword"
+                  class="form-control"
+                  required
+                  placeholder="Enter Current Password"
+                />
+              </div>
+              <div class="col-1">
+                <button type="button" class="form label fw-bold form-control btn btn-primary rounded-pill">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
+            </div>
+            <!-- current password end -->
+           <!-- password start -->
+            <div class="row mt-2">
+              <label for="textPassword" class="col-3 col-form-label fw-bold"
+                >Password : <span class="text-danger">*</span>
+              </label>
+              <div class="col-8">
+                <input type="password" id="textPassword" class="form-control" required placeholder="Enter Passowrd" />
+              </div>
+              <div class="col-1">
+                <button
+                  type="button"
+                  class="form label fw-bold form-control btn btn-primary rounded-pill"
+                  id="btnPasswordEdit"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
+            </div>
+            <!-- password end -->
+
+            <!-- RE password start -->
+            <div class="row mt-2">
+              <label for="textREPassword" class="col-3 col-form-label fw-bold"
+                >Re-Type Password : <span class="text-danger">*</span>
+              </label>
+              <div class="col-8">
+                <input
+                  type="password"
+                  id="textREPassword"
+                  class="form-control"
+                  required
+                  placeholder="Re-Type Passowrd"
+                />
+              </div>
+              <div class="col-1">
+                <button
+                  type="button"
+                  class="form label fw-bold form-control btn btn-primary rounded-pill"
+                  id="btnRepassword"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+              </div>
+            </div>
+            <!-- RE password end -->
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="submitUserAccChanges()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
