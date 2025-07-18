@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head th:replace="~{ head :: headFragment}"></head>
+
+    <!-- total payments this month report JS -->
+    <script src="reporttotalpayment.js"></script>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav th:replace="~{ topnavbar :: topnavbarFragment}"></nav>
+
+    <div class="container-fluid">
+      <div class="row mt-3"></div>
+
+      <!-- Title -->
+      <div class="row p-3" style="margin-top: 40px;">
+        <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
+          <i class="fa-solid fa-calendar-days fa-2x"></i>
+          <h2 class="h2 ms-3">This Month Payment Report</h2>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-4"></div>
+        <div class="col-4">
+
+          <!-- Total starts -->
+          <div class="col mb-3">
+            <label for="textTotal" class="col-form-label fw-bold">Total Amount :</label>
+            <div class="input-group">
+              <span class="input-group-text fw-bold">Rs :</span>
+              <input type="text" class="form-control" id="textTotal" placeholder="Total Fee" readonly>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-4"></div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-2"></div>
+        <div class="col-4">
+          <!-- Appointments Total starts -->
+          <div class="col mb-3">
+            <label for="textAppTotal" class="col-form-label fw-bold">Services Total Amount this Month:</label>
+            <div class="input-group">
+              <span class="input-group-text fw-bold">Rs :</span>
+              <input type="text" class="form-control" id="textAppTotal" placeholder="Total Fee" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <!-- Vaccination Total starts -->
+          <div class="col mb-3">
+            <label for="textVaccTotal" class="col-form-label fw-bold">Vaccination Total Amount This Month:</label>
+            <div class="input-group">
+              <span class="input-group-text fw-bold">Rs :</span>
+              <input type="text" class="form-control" id="textVaccTotal" placeholder="Total Fee" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-2"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -146,12 +146,16 @@ const doctorAFormRefill =(ob,rowIndex)=>{
     //set value into UI element
     //elementId.value = object.property
     
-    textMonth.value = doctoravailability.month;
-    startDate.value = doctoravailability.startdate;
-    endDate.value = doctoravailability.enddate;
-    
     doctors = ajaxRequestHere("/doctor/workingDoctors");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname',ob.doctor_id.fullname);
+
+    selectDoctor.disabled = true;
+    textMonth.value = doctoravailability.month;
+    textMonth.disabled = true;
+    startDate.value = doctoravailability.startdate;
+    startDate.disabled = true;
+    endDate.value = doctoravailability.enddate;
+    endDate.disabled = true;
 
    
     if (userPrivilege.update) {
@@ -375,26 +379,7 @@ const printAFunc = (rowOb, rowIndex)=>{
     fillDataIntoInnerTable(tableAVInner, rowOb.doctorhasavailabilityList, displayPropertyList, deleteInnerForm, false);
 }
 
-/* const btnPrintRow = () => {
-    console.log("print");
-    console.log(doctoravailability);
 
-    let newWindow = window.open();
-    newWindow.document.write("<html><head>" +
-        "<link rel='stylesheet' href='resources/bootstrap-5.3.1-dist/bootstrap-5.3.1-dist/css/bootstrap.min.css'></link>" +
-        "<title>" + "Doctor Availability Details" + "</title>"
-        + "</head><body>" +
-        "<h2>" + "Doctor Availability Details" + "</h2>" +
-        printAVTable.outerHTML + "<script>printAVTable.classList.remove('d-none');</script></body></html>"
-    );
-
-    setTimeout(() => {
-        newWindow.stop();//table ek load wena ek nawathinw
-        newWindow.print();//table ek print weno
-        newWindow.close();//aluthin open una window tab ek close weno
-        //ar data load wenn nm  time out ekk oni weno aduma 500k wth
-    }, 500)
-} */
 const btnPrintRow = () => {
     console.log("print");
 
@@ -467,6 +452,7 @@ const validateSelectedDate = () => {
         console.log("Valid date selected.");
     } else {
         document.getElementById('availableDate').style.border = "4px solid red";
+        document.getElementById('availableDate').value = "";
         alert("Please select a date within the start and end dates.");
     }
 };
@@ -675,3 +661,16 @@ const updateStartDateWithLastEndDate =  () => {
     
 }
 
+//set time range from 8 to 5
+const setStartTimeLimits = () => {
+  const timeInput = document.getElementById("startTime");
+  timeInput.min = "08:00";  
+  timeInput.max = "17:00";  
+};
+
+//set time range from 9 am to 6pm
+const setEndTimeLimits = () => {
+  const timeInput = document.getElementById("endTime");
+  timeInput.min = "09:00";  
+  timeInput.max = "18:00";  
+};

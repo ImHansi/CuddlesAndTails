@@ -720,3 +720,53 @@ const fillDataIntoTableWithoutModify = (tableId, dataList, columnList ) => {
 
     });
 }
+
+//for doctoravailability report table
+const fillDataIntoTableOnlyEdit = (tableId, dataList, columnList, editFunc) => {
+    const tableBody = tableId.querySelector('tbody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    dataList.forEach((element, index) => {
+        const tr = document.createElement('tr');
+
+        // Index column
+        const tdIndex = document.createElement('td');
+        tdIndex.innerText = index + 1;
+        tr.appendChild(tdIndex);
+
+        // Data columns
+        columnList.forEach(column => {
+            const td = document.createElement('td');
+
+            if (column.dataType === 'text') {
+                td.innerText = element[column.propertyName] || '';
+            } 
+            else if (column.dataType === 'function') {
+                td.innerHTML = column.propertyName(element);
+            } 
+            else if (column.dataType === 'imagearray') {
+                const img = document.createElement('img');
+                img.style.width = "50px";
+                img.style.height = "70px";
+                if (element[column.propertyName] != null) {
+                    img.src = "../images/petadopevent.png"; // Replace with actual logic
+                    td.appendChild(img);
+                }
+            }
+
+            tr.appendChild(td);
+        });
+
+        // Edit Button column
+        const tdEdit = document.createElement('td');
+        const buttonEdit = document.createElement('button');
+        buttonEdit.className = 'btn btn-primary fw-bold';
+        buttonEdit.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>'; // Edit icon
+        buttonEdit.onclick = () => editFunc(element, index);
+
+        tdEdit.appendChild(buttonEdit);
+        tr.appendChild(tdEdit);
+
+        tableBody.appendChild(tr);
+    });
+};

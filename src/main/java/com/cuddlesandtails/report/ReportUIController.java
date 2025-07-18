@@ -82,6 +82,54 @@ public class ReportUIController {
     }
 
     //create mapping UI service [/report -- return report UI]
+    @RequestMapping(value="/totalincomethismonth")
+    public ModelAndView reportmonthlincomeUI(){
+
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User loggedUser = userDao.getUserByUsername(auth.getName());
+
+
+        ModelAndView employeeView = new ModelAndView();
+        employeeView.addObject("logusername", auth.getName());
+        employeeView.addObject("title","Report Management : BIT Project 2024");
+        employeeView.setViewName("reporttotalpayment.html");
+        return employeeView; 
+    }
+
+    //create mapping UI service [/report -- return report UI]
+    @RequestMapping(value="/reportmonthlypayments")
+    public ModelAndView reportmonthlypaymentsUI(){
+
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User loggedUser = userDao.getUserByUsername(auth.getName());
+
+
+        ModelAndView employeeView = new ModelAndView();
+        employeeView.addObject("logusername", auth.getName());
+        employeeView.addObject("title","Report Management : BIT Project 2024");
+        employeeView.setViewName("reportmonthlyreport.html");
+        return employeeView; 
+    }
+
+    //create mapping UI service [/report -- return report UI]
+    @RequestMapping(value="/reportdailyvacpayments")
+    public ModelAndView reportdailyvacpaymentsUI(){
+
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User loggedUser = userDao.getUserByUsername(auth.getName());
+
+
+        ModelAndView employeeView = new ModelAndView();
+        employeeView.addObject("logusername", auth.getName());
+        employeeView.addObject("title","Report Management : BIT Project 2024");
+        employeeView.setViewName("reportdailyvacpayment.html");
+        return employeeView; 
+    }
+
+    //create mapping UI service [/report -- return report UI]
     @RequestMapping(value="/reportdoctorsbygivenserviceanddate")
     public ModelAndView reportdoctorsbygivenserviceanddateUI(){
 
@@ -111,6 +159,22 @@ public class ReportUIController {
         employeeView.addObject("title","Report Management : BIT Project 2024");
         employeeView.setViewName("reportconsultation.html");
         return employeeView; 
+    }
+
+    //create mapping UI service [/report -- return report UI]
+    @RequestMapping(value="/reportvaccinehistory")
+    public ModelAndView reportvaccinationhistoryUI(){
+
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //User loggedUser = userDao.getUserByUsername(auth.getName());
+
+
+        ModelAndView vacView = new ModelAndView();
+        vacView.addObject("logusername", auth.getName());
+        vacView.addObject("title","Report Management : BIT Project 2024");
+        vacView.setViewName("reportvaccination.html");
+        return vacView; 
     }
 
     //create mapping UI service [/petbyownerreport -- return petbuownerreport UI]

@@ -143,12 +143,46 @@ public class PaymentController {
     }
 
 
-
     //for the report daily pyaments
     @GetMapping("/dailypayments")
     public List<Payment> getDailypayments(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
     return PaymentDao.findDailyPayments(date);
 
     }
+
+    //for the report monthly payments
+    @GetMapping("/monthlypayments")
+    public List<Payment> getMonthlyPayments(@RequestParam int month, @RequestParam int year) {
+        return PaymentDao.findMonthlyPayments(month, year);
+    }
+
+    //for the report to get the sum
+    @GetMapping("/monthlyincome")
+    public Double getMonthlyIncome() {
+        return PaymentDao.getTotalMonthlyIncome();
+    }
+
+
+    //for the monthly income report
+    @GetMapping("/monthlyserviceincome")
+    public Double getMonthlyServiceIncome() {
+       return PaymentDao.getTotalIncomeThisMonth();
+    }
+
+
+
+    /* //end point to get payents to given service and date
+    @GetMapping("/paymentrecords")
+    public List<Payment> getPaymentsByServiceAndDate(@RequestParam Integer serviceId, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return PaymentDao.findPaymentsByServiceAndDate(serviceId, date);
+    }  */
+
+
+   /*  //end point to get payemnt to given service , doctor and date
+    @GetMapping("/paymentrecords/filter")
+    public List<Payment> getPaymentsByServiceDateAndDoctor(@RequestParam Integer serviceId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,@RequestParam Integer doctorId) {
+        return PaymentDao.findPaymentsByServiceDateAndDoctor(serviceId, date, doctorId);
+    } */
+
 
 }

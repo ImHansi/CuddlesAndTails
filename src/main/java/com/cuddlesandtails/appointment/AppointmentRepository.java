@@ -53,8 +53,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
     List<Appointment> getAppointmentsByDoctorAndDate(@Param("doctorId") Integer doctorId,@Param("date") LocalDate date);
 
     //for the dashboard card
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentstatus_id.id = 3 AND MONTH(a.dateofappointment) = MONTH(CURRENT_DATE) AND YEAR(a.dateofappointment) = YEAR(CURRENT_DATE)")
-    long countCompletedAppointmentsThisMonth();
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentstatus_id.id = 2 AND MONTH(a.dateofappointment) = MONTH(CURRENT_DATE) AND YEAR(a.dateofappointment) = YEAR(CURRENT_DATE)")
+    long countConfirmedAppointmentsThisMonth();
+
+    //to get confirmed appointments which are scheduled for today
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.appointmentstatus_id.id = 2 AND a.dateofappointment = CURRENT_DATE")
+    long countConfirmedAppointmentsToday();
+
 
     //for doctor availability status change
     @Query("SELECT a FROM Appointment a WHERE a.doctor_id.id = :doctorId AND a.dateofappointment = :date")
@@ -62,8 +67,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
 
 
     //for doctor availability report to get the no of appointments according to the doctor , date service
-    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.dateofappointment = :date AND a.service_id.id = :serviceId AND a.doctor_id.id = :doctorId")
-    long countAppointmentsByDateAndServiceAndDoctor(@Param("date") LocalDate date, @Param("serviceId") Integer serviceId, @Param("doctorId") Integer doctorId);
+    @Query("SELECT a FROM Appointment a WHERE a.dateofappointment = :date AND a.service_id.id = :serviceId AND a.doctor_id.fullname = :doctorId")
+    List<Appointment> getAppointmentsByDateAndServiceAndDoctor(@Param("date") LocalDate date, @Param("serviceId") Integer serviceId, @Param("doctorId") String doctorId);
 
 
 }

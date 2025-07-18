@@ -214,7 +214,7 @@
                       </div>
                      </div>
                      
-                    <div class="row mt-2">
+                    <div class="row mt-6">
                       <div class="col-3"></div>
                       <div class="col-6">
                         <div class="form-floating" style="margin-top: 16px;">
@@ -222,13 +222,13 @@
                             name="textareaNote"
                             id="textNote"
                             cols="80"
-                            rows="2"
+                            rows="5"
                             class="form-control"
                             placeholder="Note"
                             onkeyup="textValidator(this,'','consultation','note')"
                           ></textarea>
                           <label for="" class="form-label fw-bold">
-                            Medical Summary : <span class="text-danger">(optional)</span>
+                            Medical Summary & Prescription : <span class="text-danger">*</span>
                           </label>
                         </div>
                       </div>
@@ -317,8 +317,12 @@
                             <td id="viewDoctor" colspan="2"></td>
                         </tr>
                         <tr>
-                          <th>Medical Summary :</th>
+                          <th>Medical Summary / Reference No:</th>
                           <td id="viewMedicalSummary"></td>
+                        </tr>
+                        <tr>
+                          <th>File :</th>
+                          <td id="viewconsulfile"></td>
                         </tr>
                     </table>
 

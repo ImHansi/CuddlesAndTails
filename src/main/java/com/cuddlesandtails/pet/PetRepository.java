@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface PetRepository extends JpaRepository<Pet,Integer>{
     
@@ -19,4 +20,8 @@ public interface PetRepository extends JpaRepository<Pet,Integer>{
     @Query("SELECT p.pettype_id.name AS type, COUNT(p) AS count FROM Pet p GROUP BY p.pettype_id.name")
     List<PetTypeCount> countPetsByType();
     
+    @Query("SELECT p FROM Pet p WHERE p.name = :name AND p.owner_id.id = :ownerId")
+    Pet findByNameAndOwnerId(@Param("name") String name, @Param("ownerId") Integer ownerId);
+
+
 }

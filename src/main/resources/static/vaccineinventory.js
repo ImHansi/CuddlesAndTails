@@ -55,10 +55,10 @@ const printFunc =(ob, rowIndex)=>{
     viewBalance.innerHTML = ob.balanceamount;
     viewAddedDate.innerHTML = ob.addeddatetime;
 
-}
+} 
 
 //function for print
-function printpage() { 
+/* function printpage() { 
     let modalContent = document.getElementById('paymentViewModal').innerHTML;
     
     let newWindow = window.open('', '', 'width=800,height=600');
@@ -82,4 +82,4 @@ function printpage() {
     newWindow.focus();
     newWindow.print();
     newWindow.close();
-}
+} */

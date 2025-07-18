@@ -7,14 +7,14 @@
       </button>
       <a class="navbar-brand" aria-current="page" href="/index" style="margin-left: 20px;"><i class="fa-solid fa-house" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
       <div class="d-flex align-items-center" style="gap: 10px;">
-      <img id="navbarUserImg" src="/resources/images/user2.jpg" style="width: 35px; height: 35px; border-radius: 50%;" />
+      <img id="navbarUserImg" src="/resources/images/man1.png" style="width: 35px; height: 35px; border-radius: 50%;" />
       <a class="navbar-brand" href="#" id="navbarUsername" style="color: white;"></a>
       </div>
-      <a class="navbar-brand" aria-current="page" href="/pet" style="margin-left: 100px;"><i class="fa-solid fa-dog" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
-      <a class="navbar-brand" aria-current="page" href="/appointment" style="margin-left: 15px;"><i class="fa-solid fa-hospital" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
-      <a class="navbar-brand" aria-current="page" href="/vaccinationrecord" style="margin-left: 15px;"><i class="fa-solid fa-syringe" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
-      <a class="navbar-brand" aria-current="page" href="/payment" style="margin-left: 15px;"><i class="fa-solid fa-sack-dollar" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
-      <a class="navbar-brand" aria-current="page" href="/quickappointment" style="margin-left: 30px;"><i class="fa-solid fa-stethoscope" style="color: rgb(255, 254, 254); font-size: 15px;">quick appointment</i></a>
+      <a class="navbar-brand pet" aria-current="page" href="/pet" style="margin-left: 100px;"><i class="fa-solid fa-dog" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
+      <a class="navbar-brand appointment" aria-current="page" href="/appointment" style="margin-left: 15px;"><i class="fa-solid fa-hospital" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
+      <a class="navbar-brand vaccinationrecord" aria-current="page" href="/vaccinationrecord" style="margin-left: 15px;"><i class="fa-solid fa-syringe" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
+      <a class="navbar-brand payment" aria-current="page" href="/payment" style="margin-left: 15px;"><i class="fa-solid fa-sack-dollar" style="color: rgb(255, 254, 254); font-size: 25px;"></i></a>
+      <a class="navbar-brand payment" aria-current="page" href="/quickappointment" style="margin-left: 30px;"><i class="fa-solid fa-stethoscope" style="color: rgb(255, 254, 254); font-size: 15px;">quick appointment</i></a>
       <a class="navbar-brand" aria-current="page" href="/login" style="margin-left: 600px;"><i class="fa-solid fa-right-from-bracket" style="color: rgb(229, 209, 209);"> Logout </i></a>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -36,10 +36,10 @@
                   Administration
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/employee">Employee</a></li>
-                  <li><a class="dropdown-item" href="/user">User</a></li>
-                  <li><a class="dropdown-item" href="/privilege">Privilege</a></li>
-                  <li><a class="dropdown-item" href="/doctor">Doctor</a></li>
+                  <li class="employee"><a class="dropdown-item" href="/employee">Employee</a></li>
+                  <li class="user"><a class="dropdown-item" href="/user">User</a></li>
+                  <li class="privilege"><a class="dropdown-item" href="/privilege">Privilege</a></li>
+                  <li class="doctor"><a class="dropdown-item" href="/doctor">Doctor</a></li>
                 </ul>
               </li>
             </li>
@@ -49,11 +49,11 @@
                   Clinic Management
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/pet">Pet</a></li>
-                  <li><a class="dropdown-item" href="/appointment">Appointment</a></li>
-                  <li><a class="dropdown-item" href="/vaccinationrecord">Vaccination</a></li>
-                  <li><a class="dropdown-item" href="/consultation">Consultation</a></li>
-                  <li><a class="dropdown-item" href="/scan">Scan & Monitoring</a></li>
+                  <li class="pet"><a class="dropdown-item" href="/pet">Pet</a></li>
+                  <li class="Aappointment"><a class="dropdown-item" href="/appointment">Appointment</a></li>
+                  <li class="vaccinationrecord"><a class="dropdown-item" href="/vaccinationrecord">Vaccination</a></li>
+                  <li class="consultation"><a class="dropdown-item" href="/consultation">Consultation</a></li>
+                  <li class="consultation"><a class="dropdown-item" href="/scan">Scan & Monitoring</a></li>
                 </ul>
               </li>
             </li>
@@ -63,19 +63,19 @@
                   Storage
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/order">Order</a></li>
-                  <li><a class="dropdown-item" href="/vaccine">Vaccine</a></li>
-                  <li><a class="dropdown-item" href="/vaccineinventory">Vaccine Inventory</a></li>
-                  <li><a class="dropdown-item" href="/supplier">Supplier</a></li>
-                  <li><a class="dropdown-item" href="/receive">Receive Notes</a></li>
-                  <li><a class="dropdown-item" href="/supplierpayment">Supplier Payment</a></li>
+                  <li class="order"><a class="dropdown-item" href="/order">Order</a></li>
+                  <li class="vaccine"><a class="dropdown-item" href="/vaccine">Vaccine</a></li>
+                  <li class="vaccine"><a class="dropdown-item" href="/vaccineinventory">Vaccine Inventory</a></li>
+                  <li class="supplier"><a class="dropdown-item" href="/supplier">Supplier</a></li>
+                  <li class="receive"><a class="dropdown-item" href="/receive">Receive Notes</a></li>
+                  <li class="supplierpayment"><a class="dropdown-item" href="/supplierpayment">Supplier Payment</a></li>
                 </ul>
               </li>
             </li>
-            <li class="nav-item">
+            <li class="nav-item payment">
               <a class="nav-link active" aria-current="page" href="/payment">Payment</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item announcement">
               <a class="nav-link active" aria-current="page" href="/announcement">Announcement</a>
             </li>
             <li class="nav-item">
@@ -84,11 +84,15 @@
                   Report
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/reportonleaveemployee">Employee Report</a></li>
-                  <li><a class="dropdown-item" href="/reportdailypayments">Daily Payment Report</a></li>
-                  <li><a class="dropdown-item" href="/reportappointmentbydoctorstatus">Appointment Report</a></li>
-                  <li><a class="dropdown-item" href="/reportdoctorsbygivenserviceanddate">Doctor Availability Report</a></li>
-                  <li><a class="dropdown-item" href="/reportmedicalhistory">Medical History</a></li>
+                  <li class="employee"><a class="dropdown-item" href="/reportonleaveemployee">Employee Report</a></li>
+                  <li class="employee"><a class="dropdown-item" href="/totalincomethismonth">Income Report</a></li>
+                  <li class="payment"><a class="dropdown-item" href="/reportdailypayments">Daily Payment Report</a></li>
+                  <li class="payment"><a class="dropdown-item" href="/reportmonthlypayments">Monthly Payment Report</a></li>
+                  <li class="payment"><a class="dropdown-item" href="/reportdailyvacpayments">Daily Vaccination Payment Report</a></li>
+                  <li class="appointment"><a class="dropdown-item" href="/reportappointmentbydoctorstatus">Appointment Report</a></li>
+                  <li class="doctor"><a class="dropdown-item" href="/reportdoctorsbygivenserviceanddate">Doctor Availability Report</a></li>
+                  <li class="consultation"><a class="dropdown-item" href="/reportmedicalhistory">Medical History</a></li>
+                  <li class="consultation"><a class="dropdown-item" href="/reportvaccinehistory">Vaccination History</a></li>
                 </ul>
               </li>
             </li>

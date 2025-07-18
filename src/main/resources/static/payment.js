@@ -53,7 +53,7 @@ const printFunc =(ob, rowIndex)=>{
 
     viewAppointmentNo.innerHTML = ob.appointment_id.channelingno;
     viewDate.innerHTML = ob.appointment_id.dateofappointment;
-    viewDoctor.innerHTML = ob.appointment_id.doctor_id.fullname;
+    viewDoctor.innerHTML = ob.appointment_id.doctor_id? ob.appointment_id.doctor_id.fullname : "N/A";
     viewTime.innerHTML = ob.appointment_id.starttime;
     viewOwner.innerHTML = ob.owner_id.name;
     viewPet.innerHTML = ob.appointment_id.pet_id.name;
@@ -90,10 +90,16 @@ const btnPrintRow = () => {
                     text-align: center;
                     margin-bottom: 20px;
                 }
+                    /* Hide buttons and footer in print */
+                @media print {
+                    .btn, .modal-footer {
+                        display: none !important;
+                    }
+                }
             </style>
         </head>
         <body>
-            <h2>Payment Details</h2>
+            <h2>Payment Receipt</h2>
             ${printContent}
         </body>
         </html>
@@ -167,38 +173,50 @@ const buttonFormSubmit = ()=>{
 
 
     const formErrors = checkPayFormError();
+
+     // If no errors
     if (formErrors == '') {
-        //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following payment record? \n'
-                                    + '\n Total amount is : ' + payment.totalamount);
-
-
-            if (userConfirm) {
-                //pass data into backend
-                //check server response
-
-
+        // Get user confirmation using SweetAlert2
+        Swal.fire({
+            title: 'Confirm Addition',
+            html: 'Are you sure to add following Payment? <br>'
+                + '<br> Total Amount is : ' + payment.totalamount,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, add it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call POST service
                 let postServiceResponse = ajaxRequestBody("/payment", "POST", payment);
 
-
-
-                if (postServiceResponse === 'OK') {
-                    alert("Save successfully.. !");
-                    refreshPaymentTable();
-                    formPayment.reset();
-                    refreshPaymentForm();
-                    $("#paymentAddModal").modal("hide");
-                    
+                // Check post service response
+                if (postServiceResponse === "OK") {
+                    Swal.fire({
+                        title: 'Success',
+                        html: 'Saved successfully!',
+                        icon: 'success'
+                    });
                 } else {
-                    alert('Save not completed..You have following errors \n' + postServiceResponse);
+                    Swal.fire({
+                        title: 'Form Error',
+                        html: 'Failed to submit the appointment \n' + postServiceResponse,
+                        icon: 'error'
+                    });
                 }
+                refreshPaymentTable();
+                formPayment.reset();
+                refreshPaymentForm();
+                $("#paymentAddModal").modal("hide");
             }
-    
-        
+        });
     } else {
-
-        //form has errors
-        alert("form has following errors..\n" + formErrors);
+        Swal.fire({
+            title: 'Form Error',
+            html: 'The form has the following errors. Please check the form again:\n' + formErrors,
+            icon: 'error'
+        });
     }
  
 }

@@ -51,10 +51,11 @@ public class Consultation {
     @NotNull
     private LocalDate dateofconsultation;
 
-    /* @Column(name = "totalfee")
-    private String totalfee; */
+    @Column(name = "consulfile")
+    private byte[] consulfile;
 
     @Column(name = "note")
+    @NotNull
     private String note;
 
     @Column(name = "addeduser_id")

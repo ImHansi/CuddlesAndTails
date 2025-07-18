@@ -100,7 +100,7 @@
                       <th>Mobile</th>
                       <th>Email</th>
                       <th>Specialization</th>
-                      <th>U.ACC</th>
+                      <!-- <th>U.ACC</th> -->
                       <th>Status</th>
                       <th style="width: 140px">Modify</th>
                     </tr>
@@ -831,7 +831,7 @@
                                     type="time"
                                     class="form-control"
                                     id="startTime"
-                                    onchange="textValidator(this,'','doctorhasavailability','strat_time')"
+                                    onchange="textValidator(this,'','doctorhasavailability','strat_time'); setStartTimeLimits();"
                                   />
                                 </div>
                               </div>
@@ -850,7 +850,7 @@
                                     type="time"
                                     class="form-control"
                                     id="endTime"
-                                    onchange="textValidator(this,'','doctorhasavailability','end_time')"
+                                    onchange="textValidator(this,'','doctorhasavailability','end_time'); setEndTimeLimits();"
                                   />
                                 </div>
                               </div>
@@ -1060,12 +1060,12 @@
                     <td>Availability type</td>
                     <td id="viewAvailabilitytype"></td>            
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <td>Image</td>
                     <td>
                       <img id="viewImage" alt="Doctor Photo" style="max-width: 50px;" />
                     </td>            
-                  </tr>
+                  </tr> -->
               </table>
 
               <div class="modal-footer">

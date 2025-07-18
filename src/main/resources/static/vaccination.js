@@ -153,6 +153,18 @@ const vaccinationFormRefill =(ob,rowIndex)=>{
     textPaidFee.value = vaccinationrecord.paidamount;
     textBalanceFee.value = vaccinationrecord.balanceamount;
 
+    selectOwner.disabled = true;
+    selectPet.disabled = true;
+    selectDoctor.disabled = true;
+    selectVaccination.disabled = true;
+    selectMethod.disabled = true;
+    textMobile.disabled = true;
+    dateOfVaccination.disabled = true;
+    dateOfNextVaccination.disabled = true;
+    textTotalFee.disabled = true;
+    textPaidFee.disabled = true;
+    textBalanceFee.disabled = true;
+
     
 
     if (userPrivilege.update) {
@@ -350,6 +362,10 @@ const printFunc =(ob, rowIndex)=>{
     viewVaccinationDate.innerHTML = ob.dateofvaccination;
     viewNextVaccinationDate.innerHTML = ob.dateofnextvaccination;
     viewDoctor.innerHTML = ob.doctor_id.fullname;
+    viewAddedDate.innerHTML = ob.addeddatetime.split("T")[0] + " " + ob.addeddatetime.split("T")[1];
+    viewTotal.innerHTML = ob.totalamount;
+    viewPaid.innerHTML = ob.paidamount;
+    viewBalance.innerHTML = ob.balanceamount;
 
 }
 
@@ -376,6 +392,12 @@ const btnPrintRow = () => {
                 h2 {
                     text-align: center;
                     margin-bottom: 20px;
+                }
+                    /* Hide buttons and footer in print */
+                @media print {
+                    .btn, .modal-footer {
+                        display: none !important;
+                    }
                 }
             </style>
         </head>
@@ -485,38 +507,53 @@ const buttonFormSubmit = ()=>{
 
 
     const formErrors = checkVaccReFormError();
+
+    // If no errors
     if (formErrors == '') {
-        //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following vaccination record? \n'
-                                    + '\n Owner is : ' + vaccinationrecord.owner_id.name
-                                    + '\n Pet is : ' + vaccinationrecord.pet_id.name
-                                    + '\n Vaccine is : ' + vaccinationrecord.vaccine_id.name
-                                    + '\n Date of vaccination is : ' + vaccinationrecord.dateofvaccination);
-
-
-            if (userConfirm) {
-                //pass data into backend
-                //check server response
+        // Get user confirmation using SweetAlert2
+        Swal.fire({
+            title: 'Confirm Addition',
+            html: 'Are you sure to add following Vaccination Record? <br>'
+                + '<br> Owner is : ' + vaccinationrecord.owner_id.name
+                + '<br> Pet is : ' + vaccinationrecord.pet_id.name
+                + '<br> Vaccine is : ' + vaccinationrecord.vaccine_id.name
+                + '<br> Date of vaccination is : ' + vaccinationrecord.dateofvaccination,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, add it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call POST service
                 let postServiceResponse= ajaxRequestBody("/vaccinationrecord", "POST", vaccinationrecord);
 
-
-                if (postServiceResponse === 'OK') {
-                    alert("Save successfully.. !");
-                    refreshVaccinationTable();
-                    formVaccination.reset();
-                    refreshVaccinationForm();
-                    $("#vaccinationAddModal").modal("hide");
-                    
+                // Check post service response
+                if (postServiceResponse === "OK") {
+                    Swal.fire({
+                        title: 'Success',
+                        html: 'Saved successfully!',
+                        icon: 'success'
+                    });
                 } else {
-                    alert('Save not completed..You have following errors \n' + postServiceResponse);
+                    Swal.fire({
+                        title: 'Form Error',
+                        html: 'Failed to submit the Vaccination Record \n' + postServiceResponse,
+                        icon: 'error'
+                    });
                 }
+                refreshVaccinationTable();
+                formVaccination.reset();
+                refreshVaccinationForm();
+                $("#vaccinationAddModal").modal("hide");
             }
-    
-        
+        });
     } else {
-
-        //form has errors
-        alert("form has following errors..\n" + formErrors);
+        Swal.fire({
+            title: 'Form Error',
+            html: 'The form has the following errors. Please check the form again:\n' + formErrors,
+            icon: 'error'
+        });
     }
  
 }
@@ -529,13 +566,23 @@ const refreshVaccinationForm = () =>{
     oldvaccinationrecord =null;
 
     owners = ajaxRequestHere("/owner/showOwner");
-    fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
+    //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
+    fillDataIntoDataListTwo(ownerList,owners,'name','nic');
     
     pets = ajaxRequestHere("/pet/showall");
     fillDataIntoSelect(selectPet,'Select Pet',pets,'name');
 
     doctors = ajaxRequestHere("/doctor/availableDoctorsToday");
+    doctor = ajaxRequestHere("/doctor/showloggeddoctor");
     fillDataIntoSelect(selectDoctor,'Select Doctor',doctors,'fullname');
+
+    selectDoctor.style.border='1px solid #ced4da';
+    if(doctor != null){
+        selectDoctor.value = JSON.stringify(doctor);
+        vaccinationrecord.doctor_id = doctor;
+        selectDoctor.style.border="4px solid green";
+        selectDoctor.disabled = true;
+    }
 
     vaccinations = ajaxRequestHere("/vaccine/showall");
     fillDataIntoSelectNew(selectVaccination, 'Select Vaccine',vaccinations,'name','duration');
@@ -546,12 +593,11 @@ const refreshVaccinationForm = () =>{
 
 
     //set text field value as a empty
-    selectOwner.style.border ='1px solid #ced4da';
+    textOwnerName.style.border ='1px solid #ced4da';
     textMobile.style.border ='1px solid #ced4da';
     selectPet.style.border ='1px solid #ced4da';
     selectVaccination.style.border='1px solid #ced4da';
     dateOfNextVaccination.style.border='1px solid #ced4da';
-    selectDoctor.style.border='1px solid #ced4da';
     textTotalFee.style.border='1px solid #ced4da';
     selectMethod.style.border='1px solid #ced4da';
     textPaidFee.style.border='1px solid #ced4da';
@@ -561,6 +607,9 @@ const refreshVaccinationForm = () =>{
     dateOfVaccination.value = new Date().toISOString().split('T')[0];
     vaccinationrecord.dateofvaccination = dateOfVaccination.value;
     dateOfVaccination.style.border = "4px solid green";
+    dateOfVaccination.disabled= true;
+    dateOfNextVaccination.disabled= true;
+    textTotalFee.disabled= true;
 
     //update button
     btnVaccineUpdate.disabled = "disabled";
@@ -673,11 +722,63 @@ function handlePaymentMethodChange(selectElement) {
     referenceField.style.display = "block";
     textPaidFee.disabled = true;
     textPaidFee.value = textTotalFee.value;
-    payment.paidamount = parseFloat(textTotalFee.value);
+    vaccinationrecord.paidamount = parseFloat(textTotalFee.value);
     textBalanceFee.value = "0";
-    payment.balanceamount = 0;
+    vaccinationrecord.balanceamount = 0;
   } else {
     referenceField.style.display = "none";
     textPaidFee.disabled = false;
   }
 }
+
+const dataListValidator = (element, objectName, property) => {
+    const elementValue = element.value;
+
+    // Try to match the owner by name from the global owners array
+    //const matchedOwner = owners.find(obj => obj.name === elementValue);
+    const matchedOwner = owners.find(owner => `${owner.name} - ${owner.nic}` === elementValue);
+
+    if (matchedOwner) {
+        element.style.border = "4px solid green";
+
+        //Set owner object
+        //window[objectName][property] = { id: matchedOwner.id };
+        window[objectName][property] = matchedOwner;
+
+        //owner's mobile number
+        const textMobile = document.getElementById("textMobile");
+        textMobile.value = matchedOwner.mobile;
+        textMobile.style.border = "4px solid green";
+        vaccinationrecord.mobile = textMobile.value;
+
+        //Filter pets by owner ID and populate the select
+        const selectPet = document.getElementById("selectPet");
+        const petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid=" + matchedOwner.id);
+
+        //Fill the dropdown
+        selectPet.innerHTML = '<option value="" disabled selected>Select Pet</option>';
+        petByOwner.forEach(pet => {
+            const option = document.createElement("option");
+            option.text = pet.name;
+            //option.value = JSON.stringify({ id: pet.id });
+            option.value = JSON.stringify(pet);
+            selectPet.appendChild(option);
+        });
+
+        selectPet.disabled = false;
+
+    } else {
+        //Invalid input
+        element.style.border = "4px solid red";
+        window[objectName][property] = null;
+
+        //Clear mobile and pets
+        document.getElementById("textMobile").value = "";
+        document.getElementById("textMobile").style.border = "";
+        const selectPet = document.getElementById("selectPet");
+        selectPet.disabled = true;
+        selectPet.innerHTML = '<option value="" disabled selected>Select Pet</option>';
+
+        alert("Invalid selection. Please choose a valid option from the list.");
+    }
+};

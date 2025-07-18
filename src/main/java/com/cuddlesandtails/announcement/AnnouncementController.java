@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.cuddlesandtails.appointment.RecordstatusRepository;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import com.cuddlesandtails.user.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 
 @RestController
@@ -107,6 +110,44 @@ public class AnnouncementController {
         } catch (Exception e) {
             return "Update not completed : "+ e.getMessage();
         }
+    }
+
+
+
+    //delete mapping
+    @Transactional
+    @DeleteMapping
+    public String deleteFunc(@RequestBody Announcement announcement){
+        //user authentication and authurization 
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+
+        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "announcement");
+
+        if (!logUserPrivi.get("delete")) {
+            return "Delete not completed : You don't have privileges";
+        }
+
+        try{
+            //delete
+            Announcement extAnnouncement =AnnouncementDao.getReferenceById(announcement.getId());
+        if(extAnnouncement== null){
+            return"Delete not completed!";
+        }
+        
+
+            extAnnouncement.setRecordstatus_id(recordstatusDao.getReferenceById(2));
+            extAnnouncement.setDeletedatetime(LocalDateTime.now());
+            announcement.setDeleteuser_id(userDao.getUserByUsername(auth.getName()).getId());
+            AnnouncementDao.save(extAnnouncement);
+
+            return"Ok";
+
+        }catch(Exception e){
+            return"Delete not completed!" + e.getMessage();
+        }
+
     }
 
     

@@ -96,7 +96,7 @@
     </div>
   </div>
 
-  <!-- employee add model -->
+  <!-- appointment add model -->
   <div class="modal" id="appointmentAddModal" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -122,27 +122,6 @@
 
                     <!-- owner name starts here -->
                     <div class="row mt-2">
-                      <!-- <div class="col-4">
-                        <div>
-                          <label for="textOwnerName" class="col-form-label fw-bold">
-                            Owners Name : <span class="text-danger">*</span>
-                          </label>
-                        </div>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="fa-solid fa-user"></i>
-                          </span>
-
-                          <select name="owner" required id="selectOwner"
-                              class="form-select form-input" onchange="selectDValidator(this,'','appointment','owner_id'); generateOwnerMobile();filterPets();">
-                              
-                              <option value="" selected disabled>
-                                Select Owner
-                              </option>
-                            </select>
-                        </div>
-                      </div> -->
-                      
                       <div class="col-4">
                         <div>
                           <label
@@ -153,18 +132,6 @@
                           </label>
                         </div>
                         <div>
-                          <!-- <select
-                            name="owner"
-                            required
-                            id="selectOwner"
-                            class="form-select form-input"
-                            onchange="selectDValidator(this,'','pet','owner_id');"
-                          >
-                            <option value="" selected disabled>
-                              Select Owner
-                            </option>
-                            
-                          </select> -->
                           <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'appointment','owner_id');">
                           <datalist id="ownerList">
                             <option value="">
@@ -412,6 +379,10 @@
                             <td colspan="2"> 0372257260 <br> cuddlesandtails@email.com</td>
                             <td><b>Address :</b></td>
                             <td colspan="2"> Colombo Road,<br> Chilaw. </td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="5">Appointment Details</th>
                         </tr>
 
                         <tr>

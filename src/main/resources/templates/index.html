@@ -41,28 +41,28 @@
                         
                             
                                 <div class="col-3 d-flex justify-content-center">
-                                    <div class="card" style="width: 20rem;">
+                                    <div class="card" style="width: 20rem;" id="pet">
                                       <a href="/pet">
                                         <img class="card-img-top" src="/resources/images/cardpet3.png" alt="Card image cap" />
                                       </a>
                                     </div>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center">
-                                    <div class="card" style="width: 20rem;">
+                                    <div class="card" style="width: 20rem;" id="appointment">
                                         <a href="/appointment">
                                         <img class="card-img-top" src="/resources/images/cardapp1.png" alt="Card image cap">
                                         </a>
                                       </div>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center">
-                                    <div class="card" style="width: 20rem;">
+                                    <div class="card" style="width: 20rem;" id="consultation">
                                         <a href="consultation">
                                         <img class="card-img-top" src="/resources/images/cardcon4.png" alt="Card image cap">
                                         </a>
                                       </div>
                                 </div>
                                 <div class="col-3 d-flex justify-content-center">
-                                    <div class="card" style="width: 20rem;">
+                                    <div class="card" style="width: 20rem;" id="vaccinationrecord">
                                         <a href="vaccinationrecord">
                                         <img class="card-img-top" src="/resources/images/cardvac2.png" alt="Card image cap">
                                         </a>
@@ -218,7 +218,7 @@
 </div>
 
        
-      <script src="/resources/chart.umd.min.js"></script>"> 
+      <script src="/resources/chart.umd.min.js"></script>
       <script src="chart1.js"></script>
       <script src="chart2.js"></script>
 
@@ -229,5 +229,16 @@
         });
       </Script>
       <script src="useredit.js"></script>
+      <script>
+        window.addEventListener("load",() => {
+           moduleList = ajaxRequestHere("/modulewithoutuser");
+            for (const module of moduleList){
+                console.log("Hiding module:", module.name);
+                $(`#${module.name}`).css("display","none")
+                $(`.${module.name}`).css("display","none")
+
+            }
+        })
+      </script>
 </body>
 </html>

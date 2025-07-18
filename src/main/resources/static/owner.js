@@ -361,6 +361,7 @@ const buttonOwnerSubmit = ()=>{
                     refreshOwnerTable();
                     formOwner.reset();
                     refreshOwnerForm();
+                    refreshPetForm();
                     $("#customerAddModal").modal("hide");
                     
                 } else {

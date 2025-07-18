@@ -131,7 +131,7 @@
                      </div>
                      
                     <div class="row mt-2">
-                      <div class="col-3"></div>
+                      <!--Reference / note-->
                       <div class="col-6">
                         <div class="form-floating" style="margin-top: 16px;">
                           <textarea
@@ -144,11 +144,28 @@
                             onkeyup="textValidator(this,'','consultation','note')"
                           ></textarea>
                           <label for="" class="form-label fw-bold">
-                            Medical Summary : <span class="text-danger">(optional)</span>
+                            Reference No / Note : <span class="text-danger">*</span>
                           </label>
                         </div>
                       </div>
-                      <div class="col-3"></div>
+                      <div class="col-6">
+                        <div>
+                            <label for="fileImage" class="form-label fw-bold" >
+                              Image / Pdf :
+                            <span class="text-danger">(optional)</span>
+                            </label>
+                            <button type="button" class="btn btn-info" id="btnClearImage" onclick="buttonClearImagecon()">
+                              Clear Image
+                            </button>
+                          </div>
+                          <div style="margin-top: 5px">
+                            <input type="file" class="form-control" id="fileImage"
+                              onchange="validateAndPreviewFile(this,'consultation','consulfile')" accept="image/*,application/pdf"/>
+                              <!-- Preview area -->
+                              <img id="imagePreview" style="display: none; width: 150px; height: auto;" />
+                              <embed id="pdfPreview" type="application/pdf" style="display: none; width: 400px; height: 300px;" />
+                          </div>
+                      </div>
                     </div>
 
                     <div class="row mt-2">

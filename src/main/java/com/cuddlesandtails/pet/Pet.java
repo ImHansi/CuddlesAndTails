@@ -46,7 +46,7 @@ public class Pet {
     private String age;
 
     @Column(name = "weight")
-    private Integer weight;
+    private String weight;
 
     @Column(name = "gender")
     @NotNull

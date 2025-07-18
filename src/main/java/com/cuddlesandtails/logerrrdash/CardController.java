@@ -27,11 +27,11 @@ public class CardController {
         Map<String, Object> summary = new HashMap<>();
 
         long totalPets = petDao.count();
-        long completedAppointmentsThisMonth = appointmentDao.countCompletedAppointmentsThisMonth();
+        long confirmedAppointmentsThisMonth = appointmentDao.countConfirmedAppointmentsThisMonth();
         long vaccinationsThisMonth = vaccinationDao.countVaccinationsThisMonth();
 
         summary.put("pets", totalPets);
-        summary.put("appointments", completedAppointmentsThisMonth);
+        summary.put("appointments", confirmedAppointmentsThisMonth);
         summary.put("vaccinations", vaccinationsThisMonth);
 
         return summary;

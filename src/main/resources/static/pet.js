@@ -138,9 +138,13 @@ const petFormRefill =(ob,rowIndex)=>{
     //set value into UI element
     //elementId.value = object.property
     textOwnerName.value= pet.owner_id.name;
+    textOwnerName.disabled= true;
     textPetName.value= pet.name;
+    textPetName.disabled= true;
     selectPetType.value=pet.pettype_id.name;
+    selectPetType.disabled=true;
     selectPetBreed.value=pet.breed_id.name;
+    selectPetBreed.disabled=true;
     textWeight.value= pet.weight;
     textAge.value= pet.age;
     textNote.value= pet.note;
@@ -152,8 +156,12 @@ const petFormRefill =(ob,rowIndex)=>{
     if (pet.gender == "Male"){
 
         radioGenderMale.checked=true;
+        radioGenderMale.disabled=true;
+        radioGenderFemale.disabled=true;
     }else{
         radioGenderFemale.checked=true;
+        radioGenderMale.disabled=true;
+        radioGenderFemale.disabled=true;
     }
 
     //to get pettype
@@ -176,14 +184,7 @@ const petFormRefill =(ob,rowIndex)=>{
     breeds = ajaxRequestHere("/breed/showBreed");
     fillDataIntoSelect(selectPetBreed,'Select Breed',breeds,'name',pet.breed_id.name);
     
-    //to add newly adding values to the select
-    selectPetBreed.addEventListener('change', (event) => {
-        const newPetbreedId = JSON.parse(event.target.value);
-        updatePetbreed(newPetbreedId)
-    })
-
     
-
     if (userPrivilege.update) {
         btnPetUpdate.disabled = "";
         $("#btnPetUpdate").css("cursor","pointer");
@@ -208,13 +209,13 @@ const petFormRefill =(ob,rowIndex)=>{
 //create function for check form update on pet form
 const checkFormUpdate=()=>{
     let updates = "";
-    if(pet.owner_id.name != oldpet.owner_id.name){
+    /* if(pet.owner_id.name != oldpet.owner_id.name){
         updates = updates + "Owner name has been updated," + oldpet.owner_id.name + "into" + pet.owner_id.name + "\n";
     }
 
-    if(pet.name != pldpet.name){
+    if(pet.name != oldpet.name){
         updates = updates + "Pet name has been updated," + oldpet.name + "into" + pet.name + "\n";
-    }
+    } */
 
     if(pet.age != oldpet.age){
         updates = updates + "age has been updated," + oldpet.age + "into" + pet.age + "\n";
@@ -224,25 +225,21 @@ const checkFormUpdate=()=>{
         updates = updates + "weight has been updated," + oldpet.weight + "into" + pet.weight + "\n";
     }
 
-    if(pet.gender != oldpet.gender){
+    /* if(pet.gender != oldpet.gender){
         updates = updates + "gender has been updated," + oldpet.gender + "into" + pet.gender + "\n";
-    }
-
-    /* if(pet.image != oldpet.image){
-        updates = updates + "image has been updated," + oldpet.image + "into" + pet.image + "\n";
     } */
 
     if(pet.note != oldpet.note){
         updates = updates + "note has been updated," + oldpet.note + "into" + pet.note + "\n";
     }
 
-    if(pet.pettype_id.name != oldpet.pettype_id.name){
+    /* if(pet.pettype_id.name != oldpet.pettype_id.name){
         updates = updates + "pettype has been updated,"+ oldpet.pettype_id.name + "into" + pet.pettype_id.name + "\n";
     }
 
     if(pet.breed_id != oldpet.breed_id){
-        updates = updates + "breed has been updated," + pldpet.breed_id + "into" + pet.breed_id +"\n";
-    }
+        updates = updates + "breed has been updated," + oldpet.breed_id + "into" + pet.breed_id +"\n";
+    } */
     return updates;
 }
 
@@ -288,7 +285,7 @@ const buttonPetUpdate = ()=>{
                        }).then(() => {
                         $('#petAddModal').modal('hide');
                         refreshPetTable();
-                        FormPet.reset();
+                        formPet.reset();
                         refreshPetForm();
                         
                        });
@@ -348,7 +345,7 @@ const deleteFunc =(ob,rowIndex)=>{
             // call delete service
             let deleteServerResponce = ajaxRequestBody("/pet", "DELETE", ob);
             // check delete service responce
-            if (deleteServerResponce == "OK") {
+            if (deleteServerResponce == "Ok") {
                 refreshPetTable();
 
                Swal.fire({
@@ -561,7 +558,8 @@ const refreshPetForm = () =>{
     //to get owners
     owners = ajaxRequestHere("/owner/showOwner");
     //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
-    fillDataIntoDataList(ownerList,owners,'name');
+    //fillDataIntoDataList(ownerList,owners,'name');
+    fillDataIntoDataListTwo(ownerList,owners,'name','nic');
 
     console.log(ownerList);
     console.log(owners);
@@ -573,6 +571,11 @@ const refreshPetForm = () =>{
 
     breeds = ajaxRequestHere("/breed/showBreed"); 
     fillDataIntoSelect(selectPetBreed,'Select Breed',breeds,'name');
+    //to add newly adding values to the select
+    selectPetBreed.addEventListener('change', (event) => {
+        const newPetbreedId = JSON.parse(event.target.value);
+        updatePetbreed(newPetbreedId)
+    })
 
     //set text field value as a empty
     textOwnerName.style.border ='1px solid #ced4da';
@@ -727,7 +730,8 @@ const generateOwnerId =()=>{
 }
    */
 
-const dataListValidator = (element, objectName, property) => {
+//validater for a datalist which only have a one property
+/* const dataListValidator = (element, objectName, property) => {
     const elementValue = element.value;
 
     //find the matched object from the global array
@@ -742,7 +746,26 @@ const dataListValidator = (element, objectName, property) => {
         window[objectName][property] = null;
         alert("Invalid selection. Please choose a valid option from the list.");
     }
+}; */
+
+//validater for a datalist which has two propeties to display
+const validateOwnerSelection = (element, objectName, property) => {
+    const elementValue = element.value;
+
+    // Match by both name and NIC (to avoid duplicates)
+    const matchedOwner = owners.find(owner => `${owner.name} - ${owner.nic}` === elementValue);
+
+    if (matchedOwner) {
+        element.style.border = '3px solid green';
+        window[objectName][property] = matchedOwner;
+    } else {
+        element.style.border = '3px solid red';
+        window[objectName][property] = null;
+        alert("Invalid selection. Please select from the list.");
+    }
 };
+
+
 
 
 

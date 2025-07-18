@@ -133,7 +133,9 @@ const consultationFormRefill =(ob,rowIndex)=>{
     $('#consultationAddModal').modal('show');
 
     doctors = ajaxRequestHere("/doctor/showall");
-    fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname', consultation.doctor_id.fullname);
+    const doctorFullname = consultation.doctor_id?.fullname || null;
+    fillDataIntoSelect(selectDoctor, 'Select a Doctor', doctors, 'fullname', doctorFullname);
+    //fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname', consultation.doctor_id.fullname);
 
     appointments = ajaxRequestHere("/appointment/showall");
     fillDataIntoSelect(selectAppNo,'Select Channeling No',appointments,'channelingno',consultation.appointment_id.channelingno);
@@ -141,7 +143,10 @@ const consultationFormRefill =(ob,rowIndex)=>{
     /* services = ajaxRequestHere("/service/showService");
     fillDataIntoSelect(selectService,'Select Service',services,'name',consultation.service_id.name);
  */
-    
+    selectDoctor.disabled=true;
+    selectAppNo.disabled=true;
+    textMobile.disabled=true;
+    dateOfConsultation.disabled=true;
     textMobile.value = consultation.mobile;
     dateOfConsultation.value=consultation.dateofconsultation;
     textNote.value = consultation.note;
@@ -188,54 +193,58 @@ const buttonConsultationUpdate = ()=>{
         
     //check available update
     let updates = checkFormUpdate();
-    if(updates ==""){
-        alert("Nothing Updated");
-    }else{
 
-        //get user confirmation
-        let userConfirm = confirm("Are you sure to do the following changes..? \n" + updates);
-
-        if(userConfirm){
-            //call put service
-            let putServiceresponce;
-
-            $.ajax("/consultation" ,{
-                type:"PUT",
-                contentType:"application/json",
-                async: false,
-                data: JSON.stringify(consultation),
-                success: function(data){
-                    putServiceresponce=data;
-                }, error:function(resData){
-                    putServiceresponce=resData;
-                }
-
-            });
-            if (putServiceresponce == "OK"){
-                alert("Updated Successfully..!");
-                $('#consultationAddModal').modal('hide');
-                refreshConsultationTable();
-                formConsultation.reset();
-                refreshConsultationForm();
-
-            }else{
-                alert("failed to update following error..\n"+ putServiceresponce);
-
-            }
-
-        }
-
-        
-
-    }
-
-    
-
-    }else {
-
-        alert("Following errors can be seen in the form..!\n" + errors);
-
-    }
+    if (updates == "") {
+           Swal.fire({
+               icon: 'info',
+               html: 'Nothing to Update..!',
+               showConfirmButton: true,
+           });
+       } else {
+           //4) get user confirmation
+           Swal.fire({
+               title: 'Are you sure to UPDATE the following record?',
+               html: updates,
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonColor: '#3085d6',
+               cancelButtonColor: '#d33',
+               confirmButtonText: 'Yes, update it!'
+           }).then((result) => {
+               if (result.isConfirmed) {
+                   //5) call put service
+                   let putServiceResponce = ajaxRequestBody("/consultation", "PUT", consultation)
+                   //6) check put service response
+                   if (putServiceResponce == "OK") {
+                       Swal.fire({
+                           icon: 'success',
+                           html: 'Updated Successfully',
+                           showConfirmButton: true,
+                       }).then(() => {
+                        refreshConsultationTable();
+                        formConsultation.reset();
+                        refreshConsultationForm();
+                        $('#consultationAddModal').modal('hide');
+                       });
+                   } else {
+                       Swal.fire({
+                           icon: 'error',
+                           html: 'Failed to Update Consultation Details',
+                           text: putServiceResponce,
+                           showConfirmButton: true,
+                       });
+                   }
+               }
+           });
+       }
+   } else {
+       Swal.fire({
+           icon: 'error',
+           html: 'Form has some errors... please check the form again..',
+           text: errors,
+           showConfirmButton: true,
+       });
+   }
 
 }
 
@@ -313,6 +322,18 @@ const printFunc =(ob, rowIndex)=>{
     viewDoctor.innerHTML = ob.doctor_id ? ob.doctor_id.fullname : "N/A";
     viewService.innerHTML = ob.service_id.name;
     viewMedicalSummary.innerHTML = ob.note;
+    
+    if (ob.consulfile) {
+  const base64Data = ob.consulfile; // assuming it's already a base64 string
+  const fileType = "application/pdf"; // or image/png, etc.
+
+  // Set download/view link
+  viewconsulfile.innerHTML = `
+    <a href="data:${fileType};base64,${base64Data}" target="_blank">View File</a>
+  `;
+} else {
+  viewconsulfile.innerHTML = "N/A";
+}
 
 }
 
@@ -339,6 +360,12 @@ const btnPrintRow = () => {
                 h2 {
                     text-align: center;
                     margin-bottom: 20px;
+                }
+                    /* Hide buttons and footer in print */
+                @media print {
+                    .btn, .modal-footer {
+                        display: none !important;
+                    }
                 }
             </style>
         </head>
@@ -383,11 +410,11 @@ const checkConsulFormError =() =>{
         dateOfConsultation.style.background = 'rgba(255,0,0,0,1)';
         
     }
-    /* if (consultation.service_id==null) {
-        errors = errors +"Please select a service..\n";
-        selectService.style.background = 'rgba(255,0,0,0,1)';
+    if (consultation.note==null) {
+        errors = errors +"Please enter a medical summery..\n";
+        textNote.style.background = 'rgba(255,0,0,0,1)';
         
-    } */
+    }
     
     return errors;
 
@@ -400,38 +427,55 @@ const buttonFormSubmit = ()=>{
 
 
     const formErrors = checkConsulFormError();
+
+     // If no errors
     if (formErrors == '') {
-        //need to get user confirmation
-        const userConfirm = confirm('Are you sure to add following consultation record? \n'
-                                    + '\n Channeling No is : ' + consultation.channelingno
-                                    + '\n Owner is : ' + consultation.owner_id.name
-                                    + '\n Pet is : ' + consultation.pet_id.name
-                                    + '\n Date is : ' + consultation.dateofconsultation);
-
-
-            if (userConfirm) {
-                //pass data into backend
-                //check server response
+        // Get user confirmation using SweetAlert2
+        Swal.fire({
+            title: 'Confirm Addition',
+            html: 'Are you sure to add following Consultation? <br>'
+                + '<br> Channeling No is : ' + consultation.channelingno
+                + '<br> Owner is : ' + consultation.owner_id.name
+                + '<br> Pet is : ' + consultation.pet_id.name
+                + '<br> Date is : ' + consultation.dateofconsultation,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, add it!',
+            cancelButtonText: 'No, cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Call POST service
                 let postServiceResponse = ajaxRequestBody("/consultation", "POST", consultation);
 
-                if (postServiceResponse === 'OK') {
-                    alert("Save successfully.. !");
-                    refreshConsultationTable();
-                    formConsultation.reset();
-                    refreshConsultationForm();
-                    $("#consultationAddModal").modal("hide");
-                    
+                // Check post service response
+                if (postServiceResponse === "OK") {
+                    Swal.fire({
+                        title: 'Success',
+                        html: 'Saved successfully!',
+                        icon: 'success'
+                    });
                 } else {
-                    alert('Save not completed..You have following errors \n' + postServiceResponse);
+                    Swal.fire({
+                        title: 'Form Error',
+                        html: 'Failed to submit the Consultation \n' + postServiceResponse,
+                        icon: 'error'
+                    });
                 }
+                refreshConsultationTable();
+                formConsultation.reset();
+                refreshConsultationForm();
+                $("#consultationAddModal").modal("hide");
             }
-    
-        
+        });
     } else {
-
-        //form has errors
-        alert("form has following errors..\n" + formErrors);
+        Swal.fire({
+            title: 'Form Error',
+            html: 'The form has the following errors. Please check the form again:\n' + formErrors,
+            icon: 'error'
+        });
     }
+
  
 }
 
@@ -446,13 +490,23 @@ const refreshConsultationForm = () =>{
     fillDataIntoSelect(selectAppNo,'Select Channeling No',appointments,'channelingno');
 
     doctors = ajaxRequestHere("/doctor/showall");
+    doctor = ajaxRequestHere("/doctor/showloggeddoctor");
     fillDataIntoSelect(selectDoctor,'Select a Doctor',doctors,'fullname');
+
+    selectDoctor.style.border='1px solid #ced4da';
+    if(doctor != null){
+        selectDoctor.value = JSON.stringify(doctor);
+        consultation.doctor_id = doctor;
+        selectDoctor.style.border="4px solid green";
+        selectDoctor.disabled = true;
+        filterAppointments();
+    }
 
     //set text field value as a empty
    
     textMobile.style.border ='1px solid #ced4da';
     dateOfConsultation.style.border='1px solid #ced4da';
-    selectDoctor.style.border='1px solid #ced4da';
+    
     selectAppNo.style.border='1px solid #ced4da';
     textNote.style.border='1px solid #ced4da';
     

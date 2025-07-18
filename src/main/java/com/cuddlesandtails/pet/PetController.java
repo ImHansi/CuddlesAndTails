@@ -83,6 +83,11 @@ public class PetController {
             return "Pet save not completed : You don't have permission";
         }
 
+        Pet existingPet = PetDao.findByNameAndOwnerId(pet.getName(),pet.getOwner_id().getId());
+        if (existingPet != null) {
+            return "Save not completed: This owner already has a pet with the same name!";
+        }
+
 
         try{
             //set auto generate values

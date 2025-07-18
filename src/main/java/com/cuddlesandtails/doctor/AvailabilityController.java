@@ -109,6 +109,17 @@ public class AvailabilityController {
                 return "Delete not completed!";
             }
 
+
+            // Check if availableDate is today or in the past
+            LocalDate today = LocalDate.now();
+            LocalDate availableDate = extAvailability.getDate();
+            System.out.println("Today: " + today);
+            System.out.println("Available: " + availableDate);
+
+            if (!availableDate.isAfter(today)) {
+                return "Delete not allowed: Only future availabilities can be deleted.";
+            }
+
             // extAvailability.setRecordstatus_id(recordStatusDao.getReferenceById(r));
             // extAvailability.setDeletedatetime(LocalDateTime.now());
             // availability.setDeleteuser_id(userDao.getUserByUsername(auth.getName()).getId());

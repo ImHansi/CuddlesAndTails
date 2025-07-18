@@ -122,18 +122,11 @@
                             Owners Name : <span class="text-danger">*</span>
                           </label>
                         </div>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="fa-solid fa-user"></i>
-                          </span>
-
-                          <select name="owner" required id="selectOwner"
-                              class="form-select form-input" onchange="selectDValidator(this,'','vaccinationrecord','owner_id'); generateOwnerMobile();filterPets();">
-                              
-                              <option value="" selected disabled>
-                                Select Owner
-                              </option>
-                            </select>
+                        <div>
+                          <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'vaccinationrecord','owner_id');">
+                          <datalist id="ownerList">
+                            <option value="">
+                          </datalist>
                         </div>
 
                       </div>
@@ -412,6 +405,22 @@
                         <tr>
                           <th>Doctor : </th>
                             <td id="viewDoctor" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Added Date, Time :</th>
+                            <td id="viewAddedDate"></td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <th id="viewTotal"></th>
+                        </tr>
+                        <tr>
+                          <th>Paid</th>
+                          <th id="viewPaid"></th>
+                        </tr>
+                        <tr>
+                          <th>Balance</th>
+                          <th id="viewBalance"></th>
                         </tr>
                     </table>
 

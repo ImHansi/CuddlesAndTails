@@ -18,7 +18,7 @@ const refreshAppointmentTable = () => {
     appointment = [];
     appointments =ajaxRequestHere("/appointment/showall");
 
-    $.ajax("/appointment/showall",{
+   /*  $.ajax("/appointment/showall",{
         type:"GET",
         contentType:"json",
         async: false,
@@ -32,10 +32,7 @@ const refreshAppointmentTable = () => {
             console.log("fail"+resOb);
             appointment =[];
         }
-    });
-
-   
-
+    }); */
 
     //text-> string , number, date
     //function ->object, array, boolean, create function 
@@ -56,14 +53,6 @@ const refreshAppointmentTable = () => {
     fillDataIntoTable(tableAppointment, appointments,displayproperty,appointmentFormRefill,deleteFunc,printFunc,true, userPrivilege);
 
     //disable delete button
-    /*appointments.forEach((element , index) => {
-        if (element.recordstatus_id.name == "Delete") {
-            if (userPrivilege.delete) {
-                tableAppointment.children[1].children[index].children[7].children[1].disabled ="disabled";
-            }
-            
-        }
-    });*/
 
     appointments.forEach((element, index) => {
     if (element.appointmentstatus_id.name === "Delete") {
@@ -160,9 +149,9 @@ const appointmentFormRefill =(ob,rowIndex)=>{
 
     
 
-    owners = ajaxRequestHere("/owner/showOwner");
+    //owners = ajaxRequestHere("/owner/showOwner");
     //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name',appointment.owner_id.name);
-    fillDataIntoDataList(ownerList,owners,'name',appointment.owner_id.name);
+    //fillDataIntoDataList(ownerList,owners,'name',appointment.owner_id.name);
     
     pets = ajaxRequestHere("/pet/showall");
     fillDataIntoSelect(selectPet,'Select Pet',pets,'name',appointment.pet_id.name);
@@ -183,7 +172,15 @@ const appointmentFormRefill =(ob,rowIndex)=>{
 
     //set value into UI element
     //elementId.value = object.property
+    textOwnerName.value=appointment.owner_id.name;
+    textOwnerName.disabled=true;
+    selectPet.disabled=true;
+    selectDoctor.disabled=true;
+    selectService.disabled=true;
+    appointmentSatatueses.disabled=true;
+    selectAppointmentStatus.disabled=true;
     dateOfAppointment.value= appointment.dateofappointment;
+    dateOfAppointment.disabled= true;
     textMobile.value=appointment.mobile;
     textServiceFee.value=appointment.servicefee;
     
@@ -310,11 +307,10 @@ const buttonAppointmentUpdate = ()=>{
 
 }
 
-const editFunc =(ob)=>{
+/* const editFunc =(ob)=>{
     appointmentFormRefill();
 
-}
-
+} */
 //function for delete appointment record
 const deleteFunc =(ob,rowIndex)=>{
     //tableEmployee.children[1].children[rowIndex].style.backgroundColor = 'red';
@@ -367,7 +363,7 @@ const deleteFunc =(ob,rowIndex)=>{
 
 
 //function for print appointmnet record
-const printFunc =(ob, rowIndex)=>{
+const printFunc =(ob)=>{
     console.log('print');
 
     //open view modal
@@ -377,7 +373,7 @@ const printFunc =(ob, rowIndex)=>{
     viewOwner.innerHTML = ob.owner_id.name;
     viewPet.innerHTML = ob.pet_id.name;
     viewDate.innerHTML = ob.dateofappointment;
-    viewDoctor.innerHTML = ob.doctor_id.fullname;
+    viewDoctor.innerHTML = ob.doctor_id ? ob.doctor_id.fullname : "N/A";
     viewService.innerHTML = ob.service_id.name;
     viewTime.innerHTML = ob.starttime;
     
@@ -407,6 +403,12 @@ const btnPrintRow = () => {
                     text-align: center;
                     margin-bottom: 20px;
                 }
+                    /* Hide buttons and footer in print */
+                @media print {
+                    .btn, .modal-footer {
+                        display: none !important;
+                    }
+                }
             </style>
         </head>
         <body>
@@ -427,11 +429,11 @@ const btnPrintRow = () => {
 
 
 //add function
-function add(param){
+/* function add(param){
 
     refreshAppointmentTable();
 
-}
+} */
 
 
 //create function for check error
@@ -526,8 +528,10 @@ const refreshAppointmentForm = () =>{
     oldappointment =null;
 
     owners = ajaxRequestHere("/owner/showOwner");
+    console.log("owners",owners);
     //fillDataIntoSelect(selectOwner,'Select Owner',owners,'name');
-    fillDataIntoDataList(ownerList,owners,'name');
+    //fillDataIntoDataList(ownerList,owners,'name');
+    fillDataIntoDataListTwo(ownerList,owners,'name','nic');
 
     console.log(ownerList);
     console.log(owners);
@@ -546,6 +550,7 @@ const refreshAppointmentForm = () =>{
     selectAppointmentStatus.value = JSON.stringify(appointmentSatatueses[0]);
     appointment.appointmentstatus_id = appointmentSatatueses[0];
     selectAppointmentStatus.style.border = "4px solid green";
+    selectAppointmentStatus.disabled=true;
 
 
      timeSlots = [];
@@ -646,7 +651,7 @@ const generateServiceFee =()=>{
 
 } */
 
-//define function to filter pets according to owner
+//define function to filter time according to doctor
 const filterTimeSlot=()=>{
 
     timeSlots = ajaxRequestHere("/availability/bydatedoctor?date="+dateOfAppointment.value+"&doctorid="+JSON.parse(selectDoctor.value).id);
@@ -737,6 +742,8 @@ const btnServiceSubmit=()=>{
   fillDataIntoSelect(doctorSelect, 'Select A Doctor', doctors, 'name');
 }; */
 
+
+//function for filtering of doctor by service and date
 const filterDoctors = () => {
     const selectService = document.getElementById("selectService");
     const selectDoctor = document.getElementById("selectDoctor");
@@ -746,7 +753,8 @@ const filterDoctors = () => {
         selectDoctor.disabled = false;
 
         const serviceId = JSON.parse(selectService.value).id; // if service value is a JSON string
-        const doctors = ajaxRequestHere("/doctor/workingDoctorByService?serviceId=" + serviceId);
+        const selectedDate = dateOfAppointment.value;
+        const doctors = ajaxRequestHere("/doctor/workingDoctorByServiceAndDate?serviceId=" + serviceId + "&dateofappointment=" + selectedDate);
         
         fillDataIntoSelect(selectDoctor, 'Select Doctor', doctors,'fullname');
     } else {
@@ -755,81 +763,14 @@ const filterDoctors = () => {
     }
 };
 
-/* const dataListValidator = (element, objectName, property) => {
-    const elementValue = element.value;
 
-    //find the matched object from the global array
-    const matchedObj = owners.find(obj => obj.name === elementValue);
-
-    if (matchedObj) {
-        element.style.border = "4px solid green";
-        window[objectName][property] = { id: matchedObj.id };
-    } else {
-        element.style.border = "4px solid red";
-        window[objectName][property] = null;
-        alert("Invalid selection. Please choose a valid option from the list.");
-    }
-}; */
-/* 
-const dataListValidator = (element, objectName, property) => {
-    const elementValue = element.value;
-
-    // Find the matched owner object by name
-    const matchedOwner = owners.find(obj => obj.name === elementValue);
-
-    if (matchedOwner) {
-        element.style.border = "4px solid green";
-
-        // Set the owner ID in the target object (e.g., pet.owner_id = { id: ... })
-        window[objectName][property] = { id: matchedOwner.id };
-
-        // 👉 Set the mobile number
-        document.getElementById("textMobile").value = matchedOwner.mobile;
-        document.getElementById("textMobile").style.border = "4px solid green";
-
-        // 👉 Filter and show pets by this owner
-        filterPetsByOwnerId(matchedOwner.id);
-
-    } else {
-        element.style.border = "4px solid red";
-        window[objectName][property] = null;
-
-        // Clear mobile
-        document.getElementById("textMobile").value = "";
-        document.getElementById("textMobile").style.border = "";
-
-        // Clear pet list
-        clearPetDropdown();
-
-        alert("Invalid selection. Please choose a valid option from the list.");
-    }
-}; */
-
-/* const filterPetsByOwnerId = (ownerId) => {
-    const selectPet = document.getElementById("selectPet");
-
-    if (ownerId) {
-        selectPet.disabled = false;
-
-        const petByOwner = ajaxRequestHere("/pet/showallbyowner?ownerid=" + ownerId);
-        fillDataIntoSelect(selectPet, 'Select Pet', petByOwner, 'name');
-    } else {
-        clearPetDropdown();
-    }
-}; */
-
-/* const clearPetDropdown = () => {
-    const selectPet = document.getElementById("selectPet");
-    selectPet.disabled = true;
-    selectPet.innerHTML = '<option value="" selected disabled>Select Pet</option>';
-}; */
-
-
+// function for data list validate
 const dataListValidator = (element, objectName, property) => {
     const elementValue = element.value;
 
     // Try to match the owner by name from the global owners array
-    const matchedOwner = owners.find(obj => obj.name === elementValue);
+    //const matchedOwner = owners.find(obj => obj.name === elementValue);
+    const matchedOwner = owners.find(owner => `${owner.name} - ${owner.nic}` === elementValue);
 
     if (matchedOwner) {
         element.style.border = "4px solid green";

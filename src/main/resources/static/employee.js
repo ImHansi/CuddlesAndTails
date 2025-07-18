@@ -8,45 +8,6 @@ window.addEventListener('load',()=>{
 
     refreshEmployeeForm();//call form refresh function
 
-    //create object call employee
-    //employee= new Object();
-
-    //employeeSatatueses = [
-        //{id:1, name: 'working'},{id:2, name:'Resign'},{id:3, name:'Delete'}
-    //]
-    //fillDataIntoSelect(selectEmployeeStatus,'Select Status',employeeSatatueses);
-
-    //employee= new Object();
-
-    //designations = [
-        //{id:1, name:'hrManager'},{id:2, name:'salesManager'},{id:3, name:'productManager'}
-    //]
-
-    //
-   // fillDataIntoSelect(selectCivilstatus,'Select Designation',designations);
-     //calling fillDataIntoSelect function
-    //fillDataIntoSelect(selectStatus,'Select Status',employeeSatatueses); //calling fillDataIntoSelect function //have to create the selectStatus
-
-    //made a function for this in commonFunction.js and called the function above.
-    /*const selectEmployeeStatusElement = document.querySelector('#selectEmployeeStatus');
-    selectEmployeeStatusElement.innerHTML="";
-
-    const optionMsgES = document.createElement('option');
-    optionMsgES.innerText= 'Select Status';
-    optionMsgES.selected= 'Selected';
-    optionMsgES.disabled= 'disabled'; 
-
-    //optionMsgES.setAttribute('attributeName','value');
-
-    selectEmployeeStatusElement.appendChild(optionMsgES);
-
-    employeeSatatueses.forEach((element,index) => {
-        const option = document.createElement('option');
-        option.innerText=element.name;
-        option.value = JSON.stringify(element);
-        selectEmployeeStatusElement.appendChild(option);
-        
-    });*/
     //call designation form refresh function
     refreshDesignnationForm();
 });

@@ -75,66 +75,25 @@ public class AppointmentController {
         return AppointmentDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
-    // create post mapping for save appointment record
-    /* @PostMapping // @RequestBody --> get request body value set in POST ajax call
-    public String saveAppointment(@RequestBody Appointment appointment) {
-
-        // authentication and authorization
-        // get logged user authentication object
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(),
-                "appointment");
-        // check privilege
-        if (!logUserPrivi.get("insert")) {
-            return "Appointment save not completed : You don't have permission";
-        }
-
-        try {
-            // set auto generate values
-            // set added date time
-            appointment.setAddeddatetime(LocalDateTime.now());
-            appointment.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
-
-            // set channeling number
-            List<Appointment> nextChannelingNo = new ArrayList<>();
-            if (appointment.getDoctor_id() != null) {
-                nextChannelingNo = AppointmentDao.getAppinmentByDateServiceDoctor(appointment.getDateofappointment(),
-                        appointment.getService_id().getId(), appointment.getDoctor_id().getId());
-            } else {
-                nextChannelingNo = AppointmentDao.getAppinmentByDateService(appointment.getDateofappointment(),
-                        appointment.getService_id().getId());
-            }
-
-            appointment.setChannelingno(nextChannelingNo.size() + 1);
-            int timeMin = nextChannelingNo.size() * appointment.getService_id().getDuration();
-
-            appointment.setStarttime(appointment.getStarttime().plusMinutes(timeMin));
-            appointment.setEndtime(
-                    appointment.getEndtime().plusMinutes(timeMin + appointment.getService_id().getDuration()));
-
-            AppointmentDao.save(appointment);
-            return "OK";
-        } catch (Exception e) {
-            return "Save Not Completed :" + e.getMessage();
-        }
-    }
- */
-
-
- @PostMapping
+    
+// create post mapping for save appointment record
+ @PostMapping // @RequestBody --> get request body value set in POST ajax call
 public String saveAppointment(@RequestBody Appointment appointment) {
 
     // authentication and authorization
+    // get logged user authentication object
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     HashMap<String, Boolean> logUserPrivi = privilegeController.getPrivilegeByUserModule(auth.getName(), "appointment");
 
+    // check privilege
     if (!logUserPrivi.get("insert")) {
         return "Appointment save not completed: You don't have permission";
     }
 
     try {
-        // Set auto-generate values
+        
+        // set auto generate values
+        // set added date time
         appointment.setAddeddatetime(LocalDateTime.now());
         appointment.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
@@ -278,25 +237,16 @@ public String saveAppointment(@RequestBody Appointment appointment) {
         return AppointmentDao.getPendingAppointments(LocalDate.now());
     }
 
-    // for report
-    /* @GetMapping(value = "/getappointmentreport", params = { "selectDate", "doctor",
-            "appointmentstatus" }, produces = "application/json")
-    public List<Appointment> getAppointmentsRepo(@RequestParam("selectDate") String selectDate,
-            @RequestParam("doctor") int doctor, @RequestParam("appointmentstatus") int appointmentstatus) {
-        return AppointmentDao.getAppointmentReport(selectDate, doctor, appointmentstatus);
-    } */
+    
    //getAppinmentByDateDoctor
-
-   /* @GetMapping("/appointmentByDateandDoctor")
-    public List<Appointment> findappointmentsbydateanddoctor(@RequestParam Integer doctorId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateofappointment) {
-        return AppointmentDao.getAppinmentByDateDoctor(doctorId, dateofappointment);
-    } */
-
     @GetMapping("/appointmentByDateandDoctor")
     public List<Appointment> findAppointmentsByDateAndDoctor(@RequestParam Integer doctorId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateofappointment) {
          return AppointmentDao.getAppointmentsByDoctorAndDate(doctorId, dateofappointment);
-
-
-         
-}
+    }
+    
+    //for doctor availability table to get appointments by the date, doctor and service 
+    @GetMapping( value = "/appointmentByDateandDoctorandservice" ,params = {"doctorId","dateofappointment","serviceId"} , produces = "application/json")
+    public Appointment findappointmentsbydateanddoctor(@RequestParam ("doctorId") String doctorId,@RequestParam ("dateofappointment") String dateofappointment, @RequestParam ("serviceId") Integer serviceId) {
+        return  new Appointment(AppointmentDao.getAppointmentsByDateAndServiceAndDoctor( LocalDate.parse(dateofappointment), serviceId ,doctorId ).size()) ;
+    } 
 }

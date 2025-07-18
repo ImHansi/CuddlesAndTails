@@ -96,5 +96,10 @@ public class Appointment {
     @JoinColumn(name = "appointmentstatus_id",referencedColumnName = "id")
     private Appointmentstatus appointmentstatus_id;
 
+    //custom constructor
+    public Appointment(Integer id){
+        this.id = id;
+    }
+
     
 }

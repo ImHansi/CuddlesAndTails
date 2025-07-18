@@ -3,8 +3,8 @@
   <head>
     <head th:replace="~{ head :: headFragment}"></head>
 
-    <!--link reportdailypayments.js-->
-    <script src="reportdailypayments.js"></script>
+    <!--link reportdailyvacpayment.js-->
+    <script src="reportdailyvacpayment.js"></script>
 
     
   </head>
@@ -23,7 +23,7 @@
     <div class="row p-3" style="margin-top: 40px;">
       <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
         <i class="fa-solid fa-user-tie fa-2x"></i>
-        <h2 class="h2 ms-3">Daily Payment Report</h2>
+        <h2 class="h2 ms-3">Daily Vaccination Payment Report</h2>
       </div>
     </div>
     <!-- title area ends here -->
@@ -65,18 +65,18 @@
     </div>
           
   </div>
-<!-- table area starts here -->
 
+<!--vaccination payments table starts-->
 <div class="row mt-3">
   <div class="col-2"></div>
   <div class="col-8">
 
-    <table class="table table-hover table-bordered table-striped border-primary" id="tableReportDailyPayments">
+    <table class="table table-hover table-bordered table-striped border-primary" id="tableReportDailyVaccination">
     <thead class="table-header">
       <tr>
         <th>#</th>
         <!-- #,No,Index -->
-        <th>Payment No</th>
+        <th>Record No</th>
         <th>Owner</th>
         <th>Total Amount</th>
         <th>Paid Amount</th>
@@ -91,7 +91,7 @@
   </div>
   <div class="col-2"></div>
 </div>
-<!-- table area ends here -->
+<!--vaccination payments table ends -->
 
 </body>
 

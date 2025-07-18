@@ -9,6 +9,7 @@ import com.cuddlesandtails.privilege.PrivilegeController;
 import com.cuddlesandtails.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,23 +69,7 @@ public class QuickappointmentController {
             return "Payment save not completed : You don't have permission";
         }
 
-        /*
-         * Payment extPaymentInvoice =
-         * PaymentDao.getInvoiceNoByOrderId(payment.getOrder_id().getId());
-         * if (extPaymentInvoice != null) {
-         * 
-         * return "Save not completed : This Invoice is already existing..!";
-         * 
-         * }
-         */
-
-        // String extPaymentVaccineNo =
-        // PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
-        // if (extPaymentVaccineNo != null) {
-
-        // return "Save not completed : This Vaccination No is already existing..!";
-
-        // }
+       
 
         try {
             // set auto generate values
@@ -96,23 +81,46 @@ public class QuickappointmentController {
             appointment.setAddeddatetime(LocalDateTime.now());
             appointment.setAddeduser_id(userDao.getUserByUsername(auth.getName()).getId());
 
-            // set channeling number
-            List<Appointment> nextChannelingNo = new ArrayList<>();
-            if (appointment.getDoctor_id() != null) {
-                nextChannelingNo = appointmentDao.getAppinmentByDateServiceDoctor(appointment.getDateofappointment(),
-                        appointment.getService_id().getId(), appointment.getDoctor_id().getId());
-            } else {
-                nextChannelingNo = appointmentDao.getAppinmentByDateService(appointment.getDateofappointment(),
-                        appointment.getService_id().getId());
+            // Get existing appointments for the same service and date
+        List<Appointment> nextChannelingNo = new ArrayList<>();
+        if (appointment.getDoctor_id() != null) {
+            nextChannelingNo = appointmentDao.getAppinmentByDateServiceDoctor(
+                appointment.getDateofappointment(),
+                appointment.getService_id().getId(),
+                appointment.getDoctor_id().getId()
+            );
+        } else {
+            nextChannelingNo = appointmentDao.getAppinmentByDateService(
+                appointment.getDateofappointment(),
+                appointment.getService_id().getId()
+            );
+        }
+
+            // Set channeling number
+        appointment.setChannelingno(nextChannelingNo.size() + 1);
+        int timeMin = nextChannelingNo.size() * appointment.getService_id().getDuration();
+        int duration = appointment.getService_id().getDuration();
+
+        if (appointment.getDoctor_id() == null) {
+            // Start at 8:00 AM if no doctor
+            LocalTime baseTime = LocalTime.of(8, 0);
+            LocalTime calculatedStart = baseTime.plusMinutes(timeMin);
+            LocalTime calculatedEnd = calculatedStart.plusMinutes(duration);
+
+            // Ensure appointment does not exceed 4:00 PM
+            if (calculatedEnd.isAfter(LocalTime.of(16, 0))) {
+                return "Appointment save not completed: Appointment cannot be scheduled after 4:00 PM";
             }
 
-            appointment.setChannelingno(nextChannelingNo.size() + 1);
-            int timeMin = nextChannelingNo.size() * appointment.getService_id().getDuration();
-
+            appointment.setStarttime(calculatedStart);
+            appointment.setEndtime(calculatedEnd);
+        } else {
+            //here we firstly get the starttime of the doctor for a specific service then add the timeMin which is the sum of time of past appointments
             appointment.setStarttime(appointment.getStarttime().plusMinutes(timeMin));
-            appointment.setEndtime(
-                    appointment.getEndtime().plusMinutes(timeMin + appointment.getService_id().getDuration()));
-
+            //after that we add the duration of that service to the starttime of the appointment
+            appointment.setEndtime(appointment.getStarttime().plusMinutes(duration));
+            //appointment.setEndtime(appointment.getEndtime().plusMinutes(timeMin + duration)); // this way is wrong cuz here it takes end time as the doctors endtime not last appintment end time
+        }
             appointment.setAppointmentstatus_id(appointmentstatusDao.getReferenceById(2));
            Appointment newAppoinment = appointmentDao.save(appointment);
 

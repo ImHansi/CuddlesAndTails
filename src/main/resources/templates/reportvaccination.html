@@ -3,8 +3,8 @@
   <head>
     <head th:replace="~{ head :: headFragment}"></head>
 
-    <!--link reportconsultation.js-->
-    <script src="reportconsultation.js"></script>
+    <!--link reportvaccination.js-->
+    <script src="reportvaccination.js"></script>
 
     
   </head>
@@ -25,7 +25,7 @@
     <div class="row p-3" style="margin-top: 40px;">
       <div class="col-12 p-3 d-flex justify-content-center div-title text-white">
         <i class="fa-solid fa-dog fa-2x"></i>
-        <h2 class="h2 ms-3">Medical History</h2>
+        <h2 class="h2 ms-3">Vaccination History</h2>
       </div>
     </div>
     <!-- title area ends here -->
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="col-4">
-        <button type="button" class="btn btn-primary" onclick="medicalHistoryPrint();">Print</button>
+        <button type="button" class="btn btn-primary" onclick="vaccinationHistoryPrint();">Print</button>
       </div>
     </div>
 <!-- table area starts here -->
@@ -82,14 +82,15 @@
 <div class="row mt-3">
   <div class="col-2"></div>
   <div class="col-8">
-    <table class="table table-hover table-bordered table-striped border-primary" id="tableConsultationReport">
+    <table class="table table-hover table-bordered table-striped border-primary" id="tableVaccinationReport">
     <thead class="table-header">
       <tr>
         <th>#</th>
-        <th>Date</th>
+        <th>Record No</th>
+        <th>Vaccine Name</th>
+        <th>Vaccination Date</th>
+        <th>Next Vaccination Date</th>
         <th>Doctor</th>
-        <th>Service</th>
-        <th>Medical Record</th>
       </tr>
     </thead>
     <tbody class="table-light">

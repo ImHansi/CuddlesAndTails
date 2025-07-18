@@ -207,3 +207,45 @@ const validateFileField = (fieldId, object, imgProperty) => {
   };
   reader.readAsDataURL(file);
 };
+
+//validator for image and a pdf
+const validateAndPreviewFile = (field, objectName, property, allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'], maxSizeMB = 5) => {
+    const file = field.files?.[0];
+    if (!file) return;
+
+    // Validate type
+    if (!allowedTypes.includes(file.type)) {
+        alert(`Invalid file type. Allowed: ${allowedTypes.join(', ')}`);
+        field.value = '';
+        return;
+    }
+
+    // Validate size
+    const fileSizeMB = file.size / (1024 * 1024);
+    if (fileSizeMB > maxSizeMB) {
+        alert(`File too large. Max allowed: ${maxSizeMB} MB`);
+        field.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        const base64Data = e.target.result.split(',')[1];
+        window[objectName][property] = base64Data;
+
+        // Preview logic
+        if (file.type.startsWith('image/')) {
+            document.getElementById('imagePreview').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+            document.getElementById('pdfPreview').style.display = 'none';
+        } else if (file.type === 'application/pdf') {
+            document.getElementById('pdfPreview').src = e.target.result;
+            document.getElementById('pdfPreview').style.display = 'block';
+            document.getElementById('imagePreview').style.display = 'none';
+        }
+    };
+
+    reader.readAsDataURL(file);
+};
+

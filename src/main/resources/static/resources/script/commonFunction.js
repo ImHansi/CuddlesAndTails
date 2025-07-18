@@ -252,6 +252,23 @@ const fillDataIntoDataList = (feildId,dataList, property) => {
     });
 }
 
+//function for search on datalist with 2 properties
+const fillDataIntoDataListTwo = (feildId, dataList, propertyOne, propertyTwo) => {
+    feildId.innerHTML = "";
+
+    dataList.forEach(element => {
+        const option = document.createElement('option');
+
+        const value1 = getNestedValue(element, propertyOne);
+        const value2 = getNestedValue(element, propertyTwo);
+
+        option.value = `${value1} - ${value2}`;
+
+        feildId.appendChild(option);
+    });
+};
+
+
 //clear uploaded image (not delete)
 const buttonClearImage = (ob) => {
     if (ob.image != null) {

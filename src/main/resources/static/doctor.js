@@ -48,7 +48,7 @@ const refreshDoctorTable = () => {
                               {dataType:'text',propertyName:'mobileno'},
                               {dataType:'text',propertyName:'email'},
                               {dataType:'function',propertyName:getDoctorSpecialization},
-                              {dataType:'function',propertyName:getHasUserAccount},
+                              //{dataType:'function',propertyName:getHasUserAccount},
                               {dataType:'function',propertyName:getEmployeeStatus},
                               
     ];
@@ -119,7 +119,7 @@ const getDoctorSpecialization=(ob)=>{
     return ob.specialization_id.name;
 }
 
-const getHasUserAccount=(ob)=>{
+/* const getHasUserAccount=(ob)=>{
     console.log("hey",ob);
 
     if(ob.hasUserAccount){
@@ -127,7 +127,7 @@ const getHasUserAccount=(ob)=>{
     }else{
         return '<i class="fa-solid fa-circle-xmark fa-2x text-danger"></i>';
     }
-}
+} */
 
 const updateSpecialization = (value)=>{
     doctor.specialization_id = value;
@@ -433,7 +433,7 @@ const printFunc =(ob, rowIndex)=>{
     viewEmployeestatus.innerHTML = ob.employeestatus_id.name;
     viewDoctorfee.innerHTML = ob.specialization_id.doctorfee;
     viewAvailabilitytype.innerHTML = ob.doctoravailabilitytype;
-    viewImage.src = `/doctor/image/${ob.id}`;
+    //viewImage.src = `/doctor/image/${ob.id}`;
 
 }
 

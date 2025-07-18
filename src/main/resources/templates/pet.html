@@ -93,8 +93,8 @@
                       <th>Pet</th>
                       <th>Type</th>
                       <th>Gender</th>
-                      <th>Age</th>
-                      <th>Weight</th>
+                      <th>Age(Years)</th>
+                      <th>Weight(KG)</th>
                       <th>Owner</th>
                       <th>Mobile</th>
                       <th>Status</th>
@@ -171,7 +171,7 @@
                             </option>
                             
                           </select> -->
-                          <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'pet','owner_id');">
+                          <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="validateOwnerSelection(this,'pet','owner_id');">
                           <datalist id="ownerList">
                             <option value="">
                           </datalist>
@@ -384,7 +384,7 @@
                               for="textWeight"
                               class="col-form-label fw-bold"
                             >
-                              Weight :
+                              Weight (KG) :
                               <span class="text-danger">(optional)</span>
                             </label>
                           </div>
@@ -398,7 +398,7 @@
                               id="textWeight"
                               class="form-control"
                               placeholder="Enter Weight"
-                              onkeyup="textValidator(this,'^([1-9][0-9]{0,1})$','pet','weight')"
+                              onkeyup="textValidator(this,'^(0\.(1[0-9]{2}|[2-9][0-9]{2})|[1-9][0-9]?)$','pet','weight')"
                             />
                           </div>
                         </div>
@@ -454,7 +454,7 @@
                               for="textAge"
                               class="col-form-label fw-bold"
                             >
-                              Age : <span class="text-danger">*</span>
+                              Age (Years) : <span class="text-danger">*</span>
                             </label>
                           </div>
                           <div>
@@ -464,7 +464,7 @@
                               placeholder="Enter age"
                               required
                               id="textAge"
-                              onkeyup="textValidator(this,'^([1-9][0-9]{0,1})$','pet','age')"
+                              onkeyup="textValidator(this,'^(0\.(?:[1-9]|1[0-1])|[1-9]|1[0-9]|2[0-9])$','pet','age')"
                             />
                           </div>
                         </div>
@@ -477,8 +477,8 @@
                           <div>
                             <label for="filePetImage" class="form-label fw-bold">
                                 Image : <span class="text-danger">(optional)</span>
-                              </label>
-                              <button type="button" class="btn btn-info" id="btnClearImage" onclick="buttonClearImage()"> Clear Image</button>
+                              </label><!-- 
+                              <button type="button" class="btn btn-info" id="btnClearImage" onclick="buttonClearImage()"> Clear Image</button> -->
                           </div>
                           <div style="margin-top: 5px;">
 
@@ -500,7 +500,7 @@
                                 onkeyup="textValidator(this,'','pet','note')"
                               ></textarea>
                               <label for="" class="form-label fw-bold">
-                                Note : <span class="text-danger">(optional)</span>
+                                Previous Disease / Allergic : <span class="text-danger">(optional)</span>
                               </label>
                             </div>
                           </div>
@@ -623,6 +623,13 @@
             ></button>
           </div>
           <div class="modal-body">
+            <!-- required mark -->
+            <div class="row mt-2">
+              <div class="col-12 text-end fw-bold">
+                <span class="text-danger">*</span> Required
+              </div>
+            </div>
+            <!-- required mark -->
             
             <div class="row mt-2">
               <div class="col-12">
@@ -700,7 +707,7 @@
                                   </span>
                               
                               <input type="email" id="textEmail" class="form-control" placeholder="Enter Email" 
-                              onkeyup="textValidator(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','owner','email')">
+                              onkeyup="textValidator(this,'^[a-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','owner','email')">
                           </div>
                       </div>
                       <!-- email ends here -->
@@ -800,10 +807,10 @@
                             <td id="viewName" colspan="2"></td>
                         </tr>
                         <tr>
-                            <th>Age : </th>
+                            <th>Age (Years) : </th>
                             <td id="viewAge" colspan="2"></td>
 
-                            <th>Weight : </th>
+                            <th>Weight (Kg) : </th>
                             <td id="viewWeight" colspan="2"></td>
                         </tr>
                         <tr>

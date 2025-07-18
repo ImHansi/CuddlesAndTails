@@ -61,6 +61,19 @@ const buttonFormSubmit = ()=>{
                     alert("Save successfully.. !");
                     formScan.reset();
                     refreshScanForm();
+                    // Clear image preview
+                    const imgPreview = document.getElementById('imagePreview');
+                    if (imgPreview) {
+                        imgPreview.src = '';
+                        imgPreview.style.display = 'none';
+                    }
+        
+                    // Clear PDF preview
+                    const pdfPreview = document.getElementById('pdfPreview');
+                    if (pdfPreview) {
+                        pdfPreview.src = '';
+                        pdfPreview.style.display = 'none';
+                    }
                     
                 } else {
                     alert('Save not completed..You have following errors \n' + postServiceResponse);
@@ -158,3 +171,49 @@ const filterAppointments=()=>{
   }
 
 }
+
+
+const buttonClearImagecon = () => {
+    if (consultation.consulfile != null) {
+        const userConfirmImgDlt = confirm("Are you sure to delete this file?");
+        if (userConfirmImgDlt) {
+            // Clear the object property
+            consultation.consulfile = null;
+
+            // Clear image preview
+            const imgPreview = document.getElementById('imagePreview');
+            if (imgPreview) {
+                imgPreview.src = '';
+                imgPreview.style.display = 'none';
+            }
+
+            // Clear PDF preview
+            const pdfPreview = document.getElementById('pdfPreview');
+            if (pdfPreview) {
+                pdfPreview.src = '';
+                pdfPreview.style.display = 'none';
+            }
+
+            // Clear the file input
+            const fileInput = document.getElementById('fileImage');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        }
+    }
+};
+
+/* const buttonClearImagecon = () => {
+    if (consultation.consulfile != null) {
+        let userConfirmImgDlt = confirm("Are you sure to delete this File?");
+        if (userConfirmImgDlt) {
+            consultation.consulfile = null; 
+
+            // Clear preview image
+            document.getElementById('imagePreview').src = null;
+
+            // Clear file input (if used)
+            document.getElementById('fileImage').value = '';
+        }
+    }
+}; */

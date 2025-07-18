@@ -1,9 +1,13 @@
 package com.cuddlesandtails.vaccination;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+
 
 public interface VaccinationrecordRepository extends JpaRepository<Vaccinationrecord,Integer>{
     
@@ -22,5 +26,18 @@ public interface VaccinationrecordRepository extends JpaRepository<Vaccinationre
     //for the bar chart
     @Query("SELECT FUNCTION('MONTHNAME', v.dateofvaccination), COUNT(v) FROM Vaccinationrecord v GROUP BY FUNCTION('MONTHNAME', v.dateofvaccination)")
     List<Object[]> getMonthlyVaccinationCount();
+
+    //for the vaccination report get vaccination records to the given owner and pet
+    @Query(value = "SELECT v FROM Vaccinationrecord v WHERE v.pet_id.id = :petId AND v.owner_id.id = :ownerId")
+    public List<Vaccinationrecord> findVrecordsByOwnerAndPet(@Param("ownerId") Integer ownerId, @Param("petId") Integer petId);
+
+
+    //to the report daily vaccination payments
+    @Query("SELECT v FROM Vaccinationrecord v WHERE DATE(v.addeddatetime) = :date")
+    List<Vaccinationrecord> findDailyVacPayments(@Param("date") LocalDate date);
+
+    //to the monthly income report
+    @Query(value = "SELECT IFNULL(SUM(totalamount), 0) FROM vaccinationrecord WHERE MONTH(addeddatetime) = MONTH(CURRENT_DATE()) AND YEAR(addeddatetime) = YEAR(CURRENT_DATE())", nativeQuery = true)
+    Double getTotalVaccinationIncomeThisMonth();
 
 }

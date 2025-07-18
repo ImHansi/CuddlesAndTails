@@ -132,8 +132,8 @@
                                         Owners Name : <span class="text-danger">*</span>
                                       </label>
                                     </div>
-                                    <div class="input-group">
-                                      <span class="input-group-text">
+                                    <div>
+                                      <!-- <span class="input-group-text">
                                         <i class="fa-solid fa-user"></i>
                                       </span>
             
@@ -143,7 +143,11 @@
                                           <option value="" selected disabled>
                                             Select Owner
                                           </option>
-                                        </select>
+                                        </select> -->
+                                        <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'appointment','owner_id');">
+                                        <datalist id="ownerList">
+                                        <option value="">
+                                        </datalist>
                                     </div>
                                     <!--collapse owner-->
                                     <div class="collapse mt-2" id="collapseOwner">
@@ -316,15 +320,15 @@
                                             <div class="col-4">
                                               <div>
                                                 <label
-                                                  for="textOwnerName"
+                                                  for="textpetOwnerName"
                                                   class="col-form-label fw-bold"
                                                 >
                                                   Owner : <span class="text-danger">*</span>
                                                 </label>
                                               </div>
                                               <div>
-                                                <input type="text" placeholder="Enter Owner" id="textOwnerName" class="form-control" list="ownerList" onchange="dataListValidator(this,'petob','owner_id');">
-                                                <datalist id="ownerList">
+                                                <input type="text" placeholder="Enter Owner" id="textpetOwnerName" class="form-control" list="petownerList" onchange="dataListValidator(this,'petob','owner_id');">
+                                                <datalist id="petownerList">
                                                   <option value="">
                                                 </datalist>
                                               </div>
@@ -790,6 +794,18 @@
             
         </div>
         <!--here-->
+
+        <!-- toggle button starts -->
+    <div class="row mt-2">
+      <div class="col-1"></div>
+      <div class="col-10 text-end">
+        <a href="/payment" class="btn btn-primary">
+          Full Payment Receipt
+        </a>
+      </div>
+      <div class="col-1"></div>
+    </div>
+    <!-- toggle button ends here -->
         
         
     </div>

@@ -1,7 +1,9 @@
 package com.cuddlesandtails.logerrrdash;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cuddlesandtails.employee.*;
+import com.cuddlesandtails.privilege.ModuleRepository;
+import com.cuddlesandtails.privilege.Module;
 import com.cuddlesandtails.privilege.Role;
 import com.cuddlesandtails.privilege.RoleRepository;
 import com.cuddlesandtails.user.User;
 import com.cuddlesandtails.user.UserRepository;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 
 @RestController
@@ -30,6 +36,9 @@ public class LoginController {
 
 	@Autowired
 	private RoleRepository roleDao;
+
+    @Autowired
+    private ModuleRepository moduleDao;
 
 	@Autowired
 	private UserRepository userDao;
@@ -91,6 +100,18 @@ public class LoginController {
 	}
 	
    
+    @RequestMapping(value = "/modulewithoutuser")
+    public List<Module> getModuleListByUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User logedUser = userDao.getUserByUsername(auth.getName());
+        if (auth.getName().equalsIgnoreCase("Admin")) {
+            return new ArrayList<>();
+        } else {
+            return moduleDao.getModuleByUser(logedUser.getUsername());
+        }
+        
+    }
+    
 
 
 }

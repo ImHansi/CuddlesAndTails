@@ -1,5 +1,6 @@
 package com.cuddlesandtails.doctor;
 
+import java.time.LocalDate;
 //import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.format.annotation.DateTimeFormat;
 //import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -70,6 +72,19 @@ public class DoctorController {
             return new ArrayList<Doctor>();
         }
         return DoctorDao.findAll(Sort.by(Direction.DESC,"id"));
+    }
+
+    //to get logged doctor
+    @GetMapping(value = "/showloggeddoctor" , produces = "application/json")
+    public Doctor showLoggedDoctor(){
+        //get logged user authentication object
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = userDao.getUserByUsername(auth.getName());
+        if (loggedUser.getDoctor_id() != null) {
+            return DoctorDao.getReferenceById(loggedUser.getDoctor_id().getId());
+        }
+        return null;
+        
     }
 
     //create post mapping for save doctor record
@@ -257,9 +272,19 @@ public List<Doctor> getWorkingDoctorsByService(@RequestParam Integer serviceId) 
     return DoctorDao.findWorkingDoctorsByService(serviceId);
 }
 
+@GetMapping("/todayworkingDoctorByService")
+public List<Doctor> getWorkingDoctorsByServicesandToday(@RequestParam Integer serviceId) {
+    return DoctorDao.findWorkingDoctorsByServiceAndToday(serviceId);
+}
+
 /* @GetMapping("/workingDoctorByServiceAndDate")
 public List<Doctor> getWorkingDoctorsByServiceandDate(@RequestParam Integer serviceId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-    return DoctorDao.findWorkingDoctorsAvailableByServiceAndDate(serviceId, date);
+    return DoctorDao.findWorkingDoctorsByServiceAndDate(serviceId, date);
 } */
+@GetMapping("/workingDoctorByServiceAndDate")
+public List<Doctor> getWorkingDoctorsByServiceandDate(@RequestParam Integer serviceId,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateofappointment) {
+    return DoctorDao.findWorkingDoctorsByServiceAndDate(serviceId, dateofappointment);
+}
+
 
 }
