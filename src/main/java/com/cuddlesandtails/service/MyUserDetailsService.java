@@ -3,7 +3,7 @@ package com.cuddlesandtails.service;
 import java.util.*;
 
 //import org.apache.catalina.Role;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 //import org.springframework.security.core.userdetails.User;
@@ -20,8 +20,12 @@ import com.cuddlesandtails.privilege.Role;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
+
+
+    MyUserDetailsService(UserRepository userDao) {
+        this.userDao = userDao;
+    }
 
 
     @Override

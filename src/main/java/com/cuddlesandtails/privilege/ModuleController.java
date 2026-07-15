@@ -2,7 +2,7 @@ package com.cuddlesandtails.privilege;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class ModuleController {
-    @Autowired  //inject module repository object into dao variable
-    private ModuleRepository dao; //create module dao object
+    //inject module repository object into dao variable
+    private final ModuleRepository dao;
+
+    ModuleController(ModuleRepository dao) {
+        this.dao = dao;
+    } //create module dao object
 
 
     @GetMapping(value = "/module/showmodules", produces = "application/JSON")

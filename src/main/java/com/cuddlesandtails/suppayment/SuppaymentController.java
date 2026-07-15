@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -29,20 +29,23 @@ import com.cuddlesandtails.user.UserRepository;
 @RequestMapping(value = "/supplierpayment")
 public class SuppaymentController {
 
-    @Autowired
-    private SuppaymentRepository SuppaymentDao;
+    private final SuppaymentRepository SuppaymentDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private ReceiveRepository receiveDao;
+    private final ReceiveRepository receiveDao;
 
-    @Autowired
-    private RnstatusRepository rnstatusDao;
+    private final RnstatusRepository rnstatusDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    SuppaymentController(SuppaymentRepository SuppaymentDao, UserRepository userDao, ReceiveRepository receiveDao, RnstatusRepository rnstatusDao, PrivilegeController privilegeController) {
+        this.SuppaymentDao = SuppaymentDao;
+        this.userDao = userDao;
+        this.receiveDao = receiveDao;
+        this.rnstatusDao = rnstatusDao;
+        this.privilegeController = privilegeController;
+    }
 
     //create mapping UI service [/suppayment -- return supplierpayment UI]
     @GetMapping()

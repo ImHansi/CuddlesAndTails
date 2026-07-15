@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -35,17 +35,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/employee")
 public class EmployeeController {
 
-    @Autowired //for inject employeedao object into dao variable
-    private EmployeeDao EmployeeDao; //define variable dao
+    //for inject employeedao object into dao variable
+    private final EmployeeDao EmployeeDao; //define variable dao
 
-    @Autowired
-    private EmployeeStatusRepository employeeStatusDao; //define variable for status dao--> 
+    private final EmployeeStatusRepository employeeStatusDao; //define variable for status dao--> 
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    EmployeeController(EmployeeDao EmployeeDao, EmployeeStatusRepository employeeStatusDao, UserRepository userDao, PrivilegeController privilegeController) {
+        this.EmployeeDao = EmployeeDao;
+        this.employeeStatusDao = employeeStatusDao;
+        this.userDao = userDao;
+        this.privilegeController = privilegeController;
+    }
 
     //@Autowired
     //private BCryptPasswordEncoder bCryptPasswordEncoder;

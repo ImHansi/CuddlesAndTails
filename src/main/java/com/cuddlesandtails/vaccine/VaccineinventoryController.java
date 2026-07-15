@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -22,11 +22,14 @@ import com.cuddlesandtails.privilege.PrivilegeController;
 @RequestMapping(value = "/vaccineinventory")
 public class VaccineinventoryController {
 
-    @Autowired
-    private VaccineinventoryRepository vaccineinventoryDao;
+    private final VaccineinventoryRepository vaccineinventoryDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    VaccineinventoryController(VaccineinventoryRepository vaccineinventoryDao, PrivilegeController privilegeController) {
+        this.vaccineinventoryDao = vaccineinventoryDao;
+        this.privilegeController = privilegeController;
+    }
 
     //create mapping UI service [/vaccineinventory -- return vaccineinventory UI]
     @GetMapping()

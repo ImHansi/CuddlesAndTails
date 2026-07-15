@@ -3,7 +3,7 @@ package com.cuddlesandtails.pet;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/owner")
 public class OwnerController {
 
-    @Autowired
-    private OwnerRepository dao;
+    private final OwnerRepository dao;
 
    // @Autowired
    // private RecordstatusRepository recordStatusDao;
@@ -34,8 +33,13 @@ public class OwnerController {
     //@Autowired
     //private UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+
+    OwnerController(OwnerRepository dao, PrivilegeController privilegeController) {
+        this.dao = dao;
+        this.privilegeController = privilegeController;
+    }
 
     
     @GetMapping(value = "/showOwner", produces = "application/json")

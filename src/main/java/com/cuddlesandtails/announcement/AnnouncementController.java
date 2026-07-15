@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,17 +27,21 @@ import jakarta.transaction.Transactional;
 @RestController
 @RequestMapping(value = "/announcement")
 public class AnnouncementController {
-    @Autowired //for inject announcementdao object into dao variable
-    private AnnouncementRepository AnnouncementDao;
+    //for inject announcementdao object into dao variable
+    private final AnnouncementRepository AnnouncementDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private RecordstatusRepository recordstatusDao;
+    private final RecordstatusRepository recordstatusDao;
+
+    AnnouncementController(AnnouncementRepository AnnouncementDao, PrivilegeController privilegeController, UserRepository userDao, RecordstatusRepository recordstatusDao) {
+        this.AnnouncementDao = AnnouncementDao;
+        this.privilegeController = privilegeController;
+        this.userDao = userDao;
+        this.recordstatusDao = recordstatusDao;
+    }
 
     @GetMapping()
     public ModelAndView announcementUI(){

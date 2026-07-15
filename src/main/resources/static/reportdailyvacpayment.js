@@ -51,3 +51,21 @@ const generateReport=()=> {
     document.getElementById("textTotalFee").value = total.toFixed(2);
 
 }
+
+//to set the date range from todays date to next 6 days
+
+const setAppointmentDateRange = () => {
+  const dateInput = document.getElementById("reportDate");
+  const today = new Date();
+
+  const toDateString = (date) => date.toISOString().split('T')[0];
+
+  const minDate = toDateString(today);
+
+  const maxDateObj = new Date(today);
+  maxDateObj.setDate(today.getDate() + 6);
+  const maxDate = toDateString(maxDateObj);
+
+  dateInput.min = minDate;
+  dateInput.max = maxDate;
+};

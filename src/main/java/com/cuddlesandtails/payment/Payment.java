@@ -62,6 +62,9 @@ public class Payment {
 
     @Column(name ="referenceno")
     private String referenceno;
+
+    //@Column(name ="consulappno")
+    //private Integer consulappno;
     
 /* 
     @Column(name = "vaccinationfee")

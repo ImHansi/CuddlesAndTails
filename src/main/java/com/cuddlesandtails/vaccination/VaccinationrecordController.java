@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,20 +35,23 @@ import jakarta.transaction.Transactional;
 @RequestMapping(value = "/vaccinationrecord")
 public class VaccinationrecordController {
 
-    @Autowired
-    private VaccinationrecordRepository VaccinationrecordDao;
+    private final VaccinationrecordRepository VaccinationrecordDao;
 
-    @Autowired
-    private RecordstatusRepository recordStatusDao;
+    private final RecordstatusRepository recordStatusDao;
 
-    @Autowired
-    private VaccineinventoryRepository vaccineinventoryDao;
+    private final VaccineinventoryRepository vaccineinventoryDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    VaccinationrecordController(VaccinationrecordRepository VaccinationrecordDao, VaccineinventoryRepository vaccineinventoryDao, RecordstatusRepository recordStatusDao, PrivilegeController privilegeController, UserRepository userDao) {
+        this.VaccinationrecordDao = VaccinationrecordDao;
+        this.vaccineinventoryDao = vaccineinventoryDao;
+        this.recordStatusDao = recordStatusDao;
+        this.privilegeController = privilegeController;
+        this.userDao = userDao;
+    }
 
     //create mapping UI service [/vaccination record -- return vaccinationrecord UI]
     @GetMapping()

@@ -2,7 +2,7 @@ package com.cuddlesandtails.doctor;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/specialization")
 public class SpecializationController {
 
-    @Autowired  //inject module repository object into dao variable
-    private SpecializationRepository dao; //create module dao object
+    //inject module repository object into dao variable
+    private final SpecializationRepository dao;
+
+    SpecializationController(SpecializationRepository dao) {
+        this.dao = dao;
+    } //create module dao object
 
 
     @GetMapping(value = "/showspecialization", produces = "application/JSON")

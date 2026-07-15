@@ -3,7 +3,7 @@ package com.cuddlesandtails.privilege;
 import java.util.List;
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -24,6 +24,12 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class PrivilegeController {
 
+    private final PrivilegeRepository dao;
+
+    PrivilegeController(PrivilegeRepository dao) {
+        this.dao = dao;
+    }
+
     //get mapping for generate privilege UI
     @GetMapping(value = "/privilege")
     public ModelAndView privilegeUI(){
@@ -39,8 +45,7 @@ public class PrivilegeController {
         return privilegeView;
     }
 
-    @Autowired
-    private PrivilegeRepository dao;
+    
 
 
     //get mapping for genarate privilege find all data 

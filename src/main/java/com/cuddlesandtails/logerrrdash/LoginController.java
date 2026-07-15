@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,20 +28,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
 public class LoginController {
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-	private EmployeeDao employeeDao;
+    private final EmployeeDao employeeDao;
 
-	@Autowired
-	private RoleRepository roleDao;
+	private final RoleRepository roleDao;
 
-    @Autowired
-    private ModuleRepository moduleDao;
+    private final ModuleRepository moduleDao;
 
-	@Autowired
-	private UserRepository userDao;
+	private final UserRepository userDao;
+
+    LoginController(BCryptPasswordEncoder bCryptPasswordEncoder, EmployeeDao employeeDao, RoleRepository roleDao, ModuleRepository moduleDao, UserRepository userDao) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.employeeDao = employeeDao;
+        this.roleDao = roleDao;
+        this.moduleDao = moduleDao;
+        this.userDao = userDao;
+    }
 
     @GetMapping(value="/login")
     public ModelAndView loginUI(){

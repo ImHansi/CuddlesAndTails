@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -32,29 +32,32 @@ import com.cuddlesandtails.vaccine.VaccineinventoryRepository;
 @RestController
 @RequestMapping(value = "/receive")
 public class ReceiveController {
-    @Autowired
-    private ReceiveRepository ReceiveDao;
+    private final ReceiveRepository ReceiveDao;
 
-    @Autowired
-    private VaccineinventoryRepository vinventoryDao;
+    private final VaccineinventoryRepository vinventoryDao;
 
-    @Autowired
-    private VaccineRepository vaccineDao;
+    private final VaccineRepository vaccineDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private RnstatusRepository rnstatusDao;
+    private final RnstatusRepository rnstatusDao;
 
-    @Autowired
-    private OrderRepository orderDao;
+    private final OrderRepository orderDao;
 
-    @Autowired
-    private OrderstatusRepository orderSDao;
+    private final OrderstatusRepository orderSDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    ReceiveController(ReceiveRepository ReceiveDao, VaccineinventoryRepository vinventoryDao, VaccineRepository vaccineDao, UserRepository userDao, RnstatusRepository rnstatusDao, OrderRepository orderDao, OrderstatusRepository orderSDao, PrivilegeController privilegeController) {
+        this.ReceiveDao = ReceiveDao;
+        this.vinventoryDao = vinventoryDao;
+        this.vaccineDao = vaccineDao;
+        this.userDao = userDao;
+        this.rnstatusDao = rnstatusDao;
+        this.orderDao = orderDao;
+        this.orderSDao = orderSDao;
+        this.privilegeController = privilegeController;
+    }
 
     //create mapping UI service [/receive -- return receive UI]
     @GetMapping()

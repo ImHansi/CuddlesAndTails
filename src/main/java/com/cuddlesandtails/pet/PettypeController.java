@@ -2,7 +2,7 @@ package com.cuddlesandtails.pet;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
 @RequestMapping(value = "/pettype")
 public class PettypeController {
-    @Autowired
-    private PettypeRepository dao;
+    private final PettypeRepository dao;
+
+    PettypeController(PettypeRepository dao) {
+        this.dao = dao;
+    }
 
     @GetMapping(value = "/showPettype" , produces = "application/json")
     public List<Pettype> showAllData() {

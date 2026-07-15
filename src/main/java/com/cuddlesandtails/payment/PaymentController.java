@@ -2,11 +2,12 @@ package com.cuddlesandtails.payment;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+//import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,7 @@ import com.cuddlesandtails.user.UserRepository;
 import com.cuddlesandtails.appointment.Appointment;
 import com.cuddlesandtails.appointment.AppointmentRepository;
 import com.cuddlesandtails.appointment.AppointmentstatusRepository;
+//import com.cuddlesandtails.consultation.Consultation;
 import com.cuddlesandtails.privilege.PrivilegeController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,20 +32,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value= "/payment")
 public class PaymentController {
 
-    @Autowired
-    private PaymentRepository PaymentDao;
+    private final PaymentRepository PaymentDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
 
-    @Autowired
-    private AppointmentRepository appointmentDao;
+    private final AppointmentRepository appointmentDao;
 
-    @Autowired
-    private AppointmentstatusRepository appointmentstatusDao;
+    private final AppointmentstatusRepository appointmentstatusDao;
+
+    PaymentController(PaymentRepository PaymentDao, UserRepository userDao, PrivilegeController privilegeController, AppointmentRepository appointmentDao, AppointmentstatusRepository appointmentstatusDao) {
+        this.PaymentDao = PaymentDao;
+        this.userDao = userDao;
+        this.privilegeController = privilegeController;
+        this.appointmentDao = appointmentDao;
+        this.appointmentstatusDao = appointmentstatusDao;
+    }
 
     //@Autowired
     //private VaccinationrecordRepository vaccinationrecordDao;
@@ -93,20 +98,6 @@ public class PaymentController {
             return "Payment save not completed : You don't have permission";
         }
 
-        /* Payment extPaymentInvoice = PaymentDao.getInvoiceNoByOrderId(payment.getOrder_id().getId());
-        if (extPaymentInvoice != null) {
-
-            return "Save not completed : This Invoice is already existing..!";
-            
-        } */
-
-        // String extPaymentVaccineNo = PaymentDao.getVaccineNoByVaccinationrecordId(payment.getVaccinationrecord_id().getId());
-        // if (extPaymentVaccineNo != null) {
-
-        //     return "Save not completed : This Vaccination No is already existing..!";
-            
-        // }
-
         try{
             //set auto generate values
             //set added date time
@@ -120,12 +111,17 @@ public class PaymentController {
             appointmentDao.save(appointment);
            }
 
-           //set vaccination recordstatus as complete id=4
-           /* if (payment.getVaccinationrecord_id() != null) {
-            Vaccinationrecord vr = vaccinationrecordDao.getReferenceById(payment.getVaccinationrecord_id().getId());
-            vr.setRecordstatus_id(recordstatusDao.getReferenceById(4)); 
-            vaccinationrecordDao.save(vr);
-            } */
+        // Get existing appointments for the same service and date
+
+        /* List<Payment> nextConsulappno = new ArrayList<>();
+        if(payment.getConsulappno()!= null){
+            payment.setConsulappno(nextConsulappno.size() + 1);
+
+        }
+
+        if (nextConsulappno.equals(null) || nextConsulappno.equals("")) {
+            
+        } */
 
            //set nextPaymentNo 
            String nextPaymentNo = PaymentDao.getNextPaymentNo();

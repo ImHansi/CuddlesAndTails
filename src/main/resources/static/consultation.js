@@ -625,7 +625,10 @@ const generateAppointmentOtherDetails =()=>{
     const appointmentDate = selectedAppointment.dateofappointment;
     const mobile = selectedAppointment.mobile;
     //document.getElementById('textDoctor').value = selectedAppointment.doctor_id.fullname;
+
     const channelingNo = selectedAppointment.channelingno;
+
+    
 
     dateOfConsultation.value = appointmentDate;
     textMobile.value = mobile;

@@ -55,21 +55,6 @@ const generateReport=()=> {
 
 }
 
-const setAppointmentDateRange = () => {
-  const dateInput = document.getElementById("dateOfAppointment");
-  const today = new Date();
-
-  const toDateString = (date) => date.toISOString().split('T')[0];
-
-  const minDate = toDateString(today);
-
-  const maxDateObj = new Date(today);
-  maxDateObj.setDate(today.getDate() + 6);
-  const maxDate = toDateString(maxDateObj);
-
-  dateInput.min = minDate;
-  dateInput.max = maxDate;
-};
 
 
 //function for appointment form refill
@@ -302,4 +287,22 @@ const dataListValidator = (element, objectName, property) => {
 
         alert("Invalid selection. Please choose a valid option from the list.");
     }
+};
+
+
+//to set date range from todays date to 6 days ahead
+const setAppointmentDateRange = () => {
+  const dateInput = document.getElementById("dateOfAppointment");
+  const today = new Date();
+
+  const toDateString = (date) => date.toISOString().split('T')[0];
+
+  const minDate = toDateString(today);
+
+  const maxDateObj = new Date(today);
+  maxDateObj.setDate(today.getDate() + 6);
+  const maxDate = toDateString(maxDateObj);
+
+  dateInput.min = minDate;
+  dateInput.max = maxDate;
 };

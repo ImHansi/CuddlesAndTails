@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,20 +26,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/quickappointment")
 public class QuickappointmentController {
 
-    @Autowired
-    private PaymentRepository PaymentDao;
+    private final PaymentRepository PaymentDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
 
-    @Autowired
-    private AppointmentRepository appointmentDao;
+    private final AppointmentRepository appointmentDao;
 
-    @Autowired
-    private AppointmentstatusRepository appointmentstatusDao;
+    private final AppointmentstatusRepository appointmentstatusDao;
+
+
+    QuickappointmentController(PaymentRepository PaymentDao, UserRepository userDao, PrivilegeController privilegeController, AppointmentRepository appointmentDao, AppointmentstatusRepository appointmentstatusDao) {
+        this.PaymentDao = PaymentDao;
+        this.userDao = userDao;
+        this.privilegeController = privilegeController;
+        this.appointmentDao = appointmentDao;
+        this.appointmentstatusDao = appointmentstatusDao;
+    }
 
 
     @GetMapping()

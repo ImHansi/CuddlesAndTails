@@ -2,7 +2,7 @@ package com.cuddlesandtails.report;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,8 +13,11 @@ import com.cuddlesandtails.employee.Employee;
 @RestController
 public class ReportDataController {
 
-    @Autowired
-    private ReportRepository ReportDao;
+    private final ReportRepository ReportDao;
+
+    ReportDataController(ReportRepository ReportDao) {
+        this.ReportDao = ReportDao;
+    }
 
     //[/reportdataonleaveemployees]
     @GetMapping(value="/reportdataonleaveemployees", produces = "application/json")

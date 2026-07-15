@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -29,17 +29,20 @@ import jakarta.transaction.Transactional;
 @RestController
 @RequestMapping(value = "/vaccine")
 public class VaccineController {
-    @Autowired
-    private VaccineRepository VaccineDao;
+    private final VaccineRepository VaccineDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private RecordstatusRepository recordStatusDao;
+    private final RecordstatusRepository recordStatusDao;
+
+    VaccineController(VaccineRepository VaccineDao, PrivilegeController privilegeController, UserRepository userDao, RecordstatusRepository recordStatusDao) {
+        this.VaccineDao = VaccineDao;
+        this.privilegeController = privilegeController;
+        this.userDao = userDao;
+        this.recordStatusDao = recordStatusDao;
+    }
 
     //create mapping UI service [/vaccine -- return vaccine UI]
     @GetMapping()

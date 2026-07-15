@@ -58,6 +58,10 @@ public class Consultation {
     @NotNull
     private String note;
 
+    //@Column(name = "consulappno")
+    //private String consulappno;
+    
+
     @Column(name = "addeduser_id")
     private Integer addeduser_id;
     

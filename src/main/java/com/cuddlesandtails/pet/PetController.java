@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -29,17 +29,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/pet")
 public class PetController {
 
-    @Autowired
-    private PetRepository PetDao;
+    private final PetRepository PetDao;
 
-    @Autowired
-    private StatusRepository statusDao;
+    private final StatusRepository statusDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    PetController(PetRepository PetDao, StatusRepository statusDao, UserRepository userDao, PrivilegeController privilegeController) {
+        this.PetDao = PetDao;
+        this.statusDao = statusDao;
+        this.userDao = userDao;
+        this.privilegeController = privilegeController;
+    }
 
     //create mapping UI service [/pet -- return pet UI]
     @GetMapping()

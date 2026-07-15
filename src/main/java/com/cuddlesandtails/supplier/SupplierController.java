@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -25,17 +25,21 @@ import com.cuddlesandtails.user.UserRepository;
 @RestController
 @RequestMapping(value = "/supplier")
 public class SupplierController {
-    @Autowired //inject module repository object onto doa variable
-    private SupplierRepository dao; //create module dao object
+    //inject module repository object onto doa variable
+    private final SupplierRepository dao; //create module dao object
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
     
-    @Autowired
-    private SupplierstatusRepository supplierstatusDao;
+    private final SupplierstatusRepository supplierstatusDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    SupplierController(SupplierRepository dao, UserRepository userDao, SupplierstatusRepository supplierstatusDao, PrivilegeController privilegeController) {
+        this.dao = dao;
+        this.userDao = userDao;
+        this.supplierstatusDao = supplierstatusDao;
+        this.privilegeController = privilegeController;
+    }
 
     @GetMapping()
     public ModelAndView supplierUI() {

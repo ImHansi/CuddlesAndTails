@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,20 +33,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/appointment")
 public class AppointmentController {
 
-    @Autowired
-    private AppointmentRepository AppointmentDao;
+    private final AppointmentRepository AppointmentDao;
 
     //@Autowired
     //private AvailabilityRepository availabilityRepository;
 
-    @Autowired
-    private AppointmentstatusRepository appointmentStatusDao;
+    private final AppointmentstatusRepository appointmentStatusDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    AppointmentController(AppointmentRepository AppointmentDao, AppointmentstatusRepository appointmentStatusDao, UserRepository userDao, PrivilegeController privilegeController) {
+        this.AppointmentDao = AppointmentDao;
+        this.appointmentStatusDao = appointmentStatusDao;
+        this.userDao = userDao;
+        this.privilegeController = privilegeController;
+    }
 
     // create mapping UI service [/appointment -- return appointment UI]
     @GetMapping()
@@ -137,6 +140,9 @@ public String saveAppointment(@RequestBody Appointment appointment) {
             appointment.setEndtime(appointment.getStarttime().plusMinutes(duration));
             //appointment.setEndtime(appointment.getEndtime().plusMinutes(timeMin + duration)); // this way is wrong cuz here it takes end time as the doctors endtime not last appintment end time
         }
+
+
+        
 
         AppointmentDao.save(appointment);
         return "OK";

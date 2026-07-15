@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,17 +37,21 @@ import jakarta.transaction.Transactional;
 @RequestMapping(value="/doctor")
 public class DoctorController {
 
-     @Autowired //for inject doctordao object into dao variable
-    private DoctorRepository DoctorDao; //define variable dao
+     //for inject doctordao object into dao variable
+    private final DoctorRepository DoctorDao; //define variable dao
 
-    @Autowired
-    private EmployeeStatusRepository employeeStatusDao;
+    private final EmployeeStatusRepository employeeStatusDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    DoctorController(DoctorRepository DoctorDao, EmployeeStatusRepository employeeStatusDao, UserRepository userDao, PrivilegeController privilegeController) {
+        this.DoctorDao = DoctorDao;
+        this.employeeStatusDao = employeeStatusDao;
+        this.userDao = userDao;
+        this.privilegeController = privilegeController;
+    }
 
     @GetMapping()
     public ModelAndView doctorUI(){

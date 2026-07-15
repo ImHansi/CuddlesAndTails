@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,16 +31,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/availability")
 public class AvailabilityController {
 
-    @Autowired // for inject employeedao object into dao variable
-    private AvailabilityRepository AvailabilityDao; // define variable dao
+    // for inject employeedao object into dao variable
+    private final AvailabilityRepository AvailabilityDao; // define variable dao
 
     // @Autowired
     // private UserRepository userDao;
-    @Autowired
-    private DoctorRepository doctorDao;
+    private final DoctorRepository doctorDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    AvailabilityController(AvailabilityRepository AvailabilityDao, DoctorRepository doctorDao, PrivilegeController privilegeController) {
+        this.AvailabilityDao = AvailabilityDao;
+        this.doctorDao = doctorDao;
+        this.privilegeController = privilegeController;
+    }
 
     @GetMapping(value = "/showall", produces = "application/json")
     public List<Availability> showAll() {

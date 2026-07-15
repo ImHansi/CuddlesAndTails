@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -35,8 +35,14 @@ public class UserController {
     //define request mapping for return user UI[/user]
     
 
-    @Autowired //no need to make an instance when using this annotation
-    private UserRepository dao;
+    //no need to make an instance when using this annotation
+    private final UserRepository dao;
+
+    UserController(BCryptPasswordEncoder bCryptPasswordEncoder, PrivilegeController privilegeController, UserRepository dao) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.privilegeController = privilegeController;
+        this.dao = dao;
+    }
 
     @GetMapping()
     public ModelAndView userUI(){
@@ -53,11 +59,9 @@ public class UserController {
         return userView;
     }
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
 
     @GetMapping(value = "/showallusers", produces = "application/json")
     public List<User> showAllData(){

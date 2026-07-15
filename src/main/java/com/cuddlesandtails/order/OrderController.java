@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -26,17 +26,21 @@ import com.cuddlesandtails.user.UserRepository;
 @RestController
 @RequestMapping(value = "/order")
 public class OrderController {
-    @Autowired // inject module repository object into dao variable
-    private OrderRepository dao; // create module dao object
+    // inject module repository object into dao variable
+    private final OrderRepository dao; // create module dao object
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private OrderstatusRepository orderStatusDao;
+    private final OrderstatusRepository orderStatusDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    OrderController(OrderRepository dao, UserRepository userDao, OrderstatusRepository orderStatusDao, PrivilegeController privilegeController) {
+        this.dao = dao;
+        this.userDao = userDao;
+        this.orderStatusDao = orderStatusDao;
+        this.privilegeController = privilegeController;
+    }
 
     @GetMapping()
     public ModelAndView orderUI() {

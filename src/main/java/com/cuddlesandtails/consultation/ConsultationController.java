@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -33,23 +33,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/consultation")
 public class ConsultationController {
 
-    @Autowired
-    private ConsultationRepository ConsultationDao;
+    private final ConsultationRepository ConsultationDao;
 
-    @Autowired
-    private RecordstatusRepository recordStatusDao;
+    private final RecordstatusRepository recordStatusDao;
 
-    @Autowired
-    private AppointmentRepository appointmentDao;
+    private final AppointmentRepository appointmentDao;
 
-    @Autowired
-    private AppointmentstatusRepository appointmentstatusDao;
+    private final AppointmentstatusRepository appointmentstatusDao;
 
-    @Autowired
-    private UserRepository userDao;
+    private final UserRepository userDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+
+    ConsultationController(ConsultationRepository ConsultationDao, RecordstatusRepository recordStatusDao, AppointmentRepository appointmentDao, AppointmentstatusRepository appointmentstatusDao, UserRepository userDao, PrivilegeController privilegeController) {
+        this.ConsultationDao = ConsultationDao;
+        this.recordStatusDao = recordStatusDao;
+        this.appointmentDao = appointmentDao;
+        this.appointmentstatusDao = appointmentstatusDao;
+        this.userDao = userDao;
+        this.privilegeController = privilegeController;
+    }
 
 
     //create mapping UI service [/consultation -- return consultation UI]

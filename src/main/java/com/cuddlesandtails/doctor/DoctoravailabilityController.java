@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
@@ -38,17 +38,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/doctoravailability")
 public class DoctoravailabilityController {
 
-    @Autowired
-    private DoctoravailabilityRepository doctoravailabilityDao;
+    private final DoctoravailabilityRepository doctoravailabilityDao;
 
-    @Autowired
-    private AppointmentstatusRepository appointmentSDao;
+    private final AppointmentstatusRepository appointmentSDao;
 
-    @Autowired
-    private AppointmentRepository appointmentDao;
+    private final AppointmentRepository appointmentDao;
 
-    @Autowired
-    private PrivilegeController privilegeController;
+    private final PrivilegeController privilegeController;
+
+    DoctoravailabilityController(DoctoravailabilityRepository doctoravailabilityDao, AppointmentstatusRepository appointmentSDao, AppointmentRepository appointmentDao, PrivilegeController privilegeController) {
+        this.doctoravailabilityDao = doctoravailabilityDao;
+        this.appointmentSDao = appointmentSDao;
+        this.appointmentDao = appointmentDao;
+        this.privilegeController = privilegeController;
+    }
 
     @GetMapping(value = "/showall" , produces = "application/json")
     public List<Doctoravailability> showAll(){
